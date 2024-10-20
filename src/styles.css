@@ -7,6 +7,7 @@
   --text-color: #333333; /* Gris oscuro */
   --button-bg-color: #b4d7ffce; /* Fondo de botones claros */
   --button-text-color: white; /* Texto de botones claros */
+  --icon-color: #333333; /* Color de íconos en tema claro */
 }
 
 /* Definir el tema oscuro (Noche) */
@@ -15,9 +16,10 @@
   --accent-color: #ff9800; /* Naranja brillante */
   --background-color: #181818; /* Gris muy oscuro */
   --background: #aaaaaa; /* Blanco */
-  --text-color: #e0e0e0; /* Gris claro */
+  --text-color: #ffffff; /* Gris claro */
   --button-bg-color: #ff9800; /* Fondo de botones oscuros */
   --button-text-color: black; /* Texto de botones oscuros */
+  --icon-color: #ffffff; /* Color de íconos en tema oscuro */
 }
 
 /* Aplicar estilos globales */
@@ -51,7 +53,8 @@ button[mat-button]:focus {
 .dark-theme button[mat-button]:hover {
   box-shadow: 0 4px 10px rgba(255, 156, 64, 0.433); /* Sombra más intensa al pasar el mouse */
 }
-/* Estilos para los botones de íconos */
+
+/* Estilos para los íconos */
 button[mat-icon-button] {
-  color: var(--accent-color);
+  color: var(--icon-color); /* Color de íconos */
 }

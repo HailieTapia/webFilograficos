@@ -1,10 +1,16 @@
+
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/config'; 
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private user: { isAuthenticated: boolean; roles: string[] } | null = null;
+ /* private user: { isAuthenticated: boolean; roles: string[] } | null = null;
 
   constructor() {
     // Puedes inicializar el usuario desde localStorage o cualquier otra fuente
@@ -44,5 +50,19 @@ export class AuthService {
   // Método para obtener el usuario actual
   getCurrentUser() {
     return this.user;
-  }
+  }*/
+    private apiUrl = `${environment.baseUrl}`; 
+    private userRoleSubject = new BehaviorSubject<string | null>(null);
+    userRole$ = this.userRoleSubject.asObservable();
+    constructor(private http: HttpClient) { }
+  
+  
+    login(credentials: { email: string; password: string; /*recaptchaToken: string*/ }): Observable<any> {
+      return this.http.post(`${this.apiUrl}/auth/login/`, credentials).pipe(
+        tap((response: any) => {
+          this.userRoleSubject.next(response.tipo);
+        })
+      );
+    }
+
 }

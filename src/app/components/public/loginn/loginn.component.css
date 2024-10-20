@@ -2,7 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh; /* Opcional, para centrar verticalmente */
+  padding: 0 20px; /* Espacio en los laterales */ 
   background-color: var(--background-color); /* Fondo del tema */
 }
 
@@ -26,6 +27,7 @@ mat-card-header {
   font-size: 24px; /* Tamaño de fuente aumentado */
   color: var(--text-color); /* Color del texto */
   margin: 0; /* Eliminar márgenes */
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 
@@ -56,4 +58,13 @@ mat-card-header {
 
 .footer a:hover {
   text-decoration: underline; /* Subrayado en hover */
+}
+@media (max-width: 600px) {
+  .login-card {
+    padding: 20px; /* Ajustar padding para pantallas más pequeñas */
+  }
+
+  .footer {
+    font-size: 0.9rem; /* Ajustar el tamaño de la fuente */
+  }
 }
