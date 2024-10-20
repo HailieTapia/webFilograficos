@@ -3,16 +3,18 @@
   --primary-color: #4a90e2; /* Azul claro */
   --accent-color: #50e3c2; /* Verde esmeralda */
   --background-color: #ffffff; /* Blanco */
+  --background: #ffffffc5; /* Blanco */
   --text-color: #333333; /* Gris oscuro */
-  --button-bg-color: #ffffffce; /* Fondo de botones claros */
+  --button-bg-color: #b4d7ffce; /* Fondo de botones claros */
   --button-text-color: white; /* Texto de botones claros */
 }
 
 /* Definir el tema oscuro (Noche) */
 .dark-theme {
-  --primary-color: #1f2937; /* Azul oscuro */
+  --primary-color: #202f44; /* Azul oscuro */
   --accent-color: #ff9800; /* Naranja brillante */
   --background-color: #181818; /* Gris muy oscuro */
+  --background: #aaaaaa; /* Blanco */
   --text-color: #e0e0e0; /* Gris claro */
   --button-bg-color: #ff9800; /* Fondo de botones oscuros */
   --button-text-color: black; /* Texto de botones oscuros */

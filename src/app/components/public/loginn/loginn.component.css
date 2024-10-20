@@ -1,0 +1,59 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-color); /* Fondo del tema */
+}
+
+.login-card {
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  background-color: var(--background); /* Fondo del card */
+}
+mat-card-header {
+  display: flex; /* Usar Flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin-bottom: 35px;
+}
+
+.login-title {
+  font-weight: bold;
+  font-size: 24px; /* Tamaño de fuente aumentado */
+  color: var(--text-color); /* Color del texto */
+  margin: 0; /* Eliminar márgenes */
+}
+
+
+.full-width {
+  width: 100%; /* Campos de entrada de ancho completo */
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.error-message {
+  color: #d9534f; /* Color rojo para mensajes de error */
+  text-align: center;
+  margin-top: 10px;
+}
+
+.footer {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--primary-color); /* Color del enlace */
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}

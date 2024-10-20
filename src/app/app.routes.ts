@@ -1,18 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component'; // Ajusta la ruta si es necesario
-import { FooterComponent } from './components/footer/footer.component'; // Ajusta la ruta si es necesario
+import { Routes } from '@angular/router';
+import { LoginnComponent } from './components/public/loginn/loginn.component'; 
 
-const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  // Otras rutas...
+export const routes: Routes = [
+    { path: 'login', component: LoginnComponent },
 ];
-
-@NgModule({
-  imports: [
-    RouterModule.forRoot(routes),
-    // Otros módulos...
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}
