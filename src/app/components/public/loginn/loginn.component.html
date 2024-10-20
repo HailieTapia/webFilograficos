@@ -3,67 +3,45 @@
     <mat-card-header class="text-center">
       <mat-card-title class="login-title">Iniciar Sesión</mat-card-title>
     </mat-card-header>
-    
+
     <mat-card-content>
-      <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
-        
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
         <!-- Correo Electrónico -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Correo Electrónico</mat-label>
-          <input 
-            matInput 
-            type="email" 
-            name="email" 
-            [(ngModel)]="email" 
-            required 
-            email
-            #emailInput="ngModel"
-            placeholder="Ingresa tu correo electrónico"
-          />
-          <mat-error *ngIf="emailInput.errors?.['required'] && emailInput.touched">
-            Correo electrónico es requerido.
-          </mat-error>
-          <mat-error *ngIf="emailInput.errors?.['email'] && emailInput.touched">
-            El formato del correo no es válido.
-          </mat-error>
+          <input matInput type="email" formControlName="email" required placeholder="Ingresa tu correo electrónico" />
         </mat-form-field>
 
         <!-- Contraseña -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
-          <input
-            matInput
-            [type]="hide ? 'password' : 'text'"
-            name="password"
-            [(ngModel)]="password"
-            required
-            minlength="8"
-            #passwordInput="ngModel"
-            placeholder="Ingresa tu contraseña"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="hide = !hide"
-            aria-label="Toggle password visibility"
-          >
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required minlength="8" placeholder="Ingresa tu contraseña" />
+          <button mat-icon-button matSuffix (click)="hide = !hide" aria-label="Toggle password visibility">
             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          <mat-error *ngIf="passwordInput.errors?.['required'] && passwordInput.touched">
-            La contraseña es requerida.
-          </mat-error>
-          <mat-error *ngIf="passwordInput.errors?.['minlength'] && passwordInput.touched">
-            La contraseña debe tener al menos 8 caracteres.
-          </mat-error>
+  
         </mat-form-field>
-        
+
+        <!-- reCAPTCHA -->
+        <re-captcha siteKey="6Lck9V8qAAAAAEnjZRJxMKa27R1P_GWppjLuxmbG"
+          (resolved)="onRecaptchaResolved($event)"></re-captcha>
+
         <!-- Botón de Enviar -->
         <div class="actions">
-          <button mat-button type="submit" class="full-width" [disabled]="loginForm.invalid">
-            Entrar
+          <button mat-button type="submit" class="full-width" [disabled]="loginForm.invalid || loading">
+       Entrar
           </button>
         </div>
       </form>
+
+      <!-- Mensajes de error o éxito -->
+      <div *ngIf="errorMessage" class="error-message text-center">
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="successMessage" class="success-message text-center">
+        {{ successMessage }}
+      </div>
 
       <div class="footer text-center">
         ¿Olvidaste tu contraseña?<a routerLink="/recupera"> Recupérala aquí</a>

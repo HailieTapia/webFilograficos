@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,11 +10,25 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha-2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-loginn',
   standalone: true,
-  imports: [MatSnackBarModule,MatIconModule,CommonModule,FormsModule,MatCardModule,MatFormFieldModule,MatInputModule,MatButtonModule,],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    ReactiveFormsModule // Asegúrate de incluir este módulo aquí
+  ],
   templateUrl: './loginn.component.html',
   styleUrls: ['./loginn.component.css'],
   animations: [
@@ -32,36 +46,74 @@ import { AuthService } from '../../services/auth.service';
 export class LoginnComponent {
   email: string = '';
   password: string = '';
-  errorMessage: string = '';
-  hide: boolean = true; 
+  recaptchaToken: string = ''; // Variable para almacenar el token
+  errorMessage: string | null = null; 
+  successMessage: string | null = null;
+  hide: boolean = true;
+  loading: boolean = false;
+  loginForm: FormGroup;
 
-  constructor(private snackBar: MatSnackBar, private authService: AuthService) {}
-
-  showAlert(message: string) {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      recaptcha: ['', Validators.required],
     });
   }
+  get f() {
+    return this.loginForm.controls; 
+  }
 
-  onSubmit(loginForm: any) {
-    if (loginForm.valid) {
-      const { email, password } = loginForm.value;
-
-      this.authService.login({ email, password}).subscribe(
-        (response) => {
-          // Maneja la respuesta exitosa (ejemplo: redireccionar o guardar token)
-          console.log('Inicio de sesión exitoso:', response);
-          this.showAlert('Inicio de sesión exitoso');
-        },
-        (error) => {
-          // Maneja el error (ejemplo: mostrar mensaje de error)
-          console.error('Error en el inicio de sesión:', error);
-          this.errorMessage = 'Error en el inicio de sesión. Verifica tus credenciales.';
-          this.showAlert(this.errorMessage);
-        }
-      );
-    } else {
-      this.showAlert('Por favor completa el formulario correctamente.');
+  showAlert(message: string | null) {
+    if (message) { // Verifica que no sea null o undefined
+      this.snackBar.open(message, 'Cerrar', {
+        duration: 3000,
+      });
     }
   }
+  
+
+  onRecaptchaResolved(captchaResponse: string | null) {
+    if (captchaResponse) {
+      this.loginForm.patchValue({ recaptcha: captchaResponse }); // Almacena el token en el formulario
+    }
+  }
+
+  onSubmit() {
+    this.errorMessage = null;
+    this.successMessage = null;
+  
+    if (this.loginForm.valid) {
+      this.loading = true;
+      const { email, password, recaptcha } = this.loginForm.value;
+  
+      // Verifica que recaptcha tenga un valor
+      if (recaptcha) {
+        this.authService.login({ email, password, recaptchaToken: recaptcha }).subscribe({
+          next: (response: any) => {
+            this.successMessage = 'Inicio de sesión exitoso';
+            this.showAlert(this.successMessage);
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 2000);
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Error en el inicio de sesión';
+            this.showAlert(this.errorMessage);
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
+      } else {
+        this.errorMessage = 'El reCAPTCHA es obligatorio.';
+        this.showAlert(this.errorMessage);
+        this.loading = false;
+      }
+    } else {
+      this.errorMessage = 'Por favor completa todos los campos requeridos.';
+      this.showAlert(this.errorMessage);
+    }
+  }
+  
 }
