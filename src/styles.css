@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+/*@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Definir el tema claro (Día) */
+:root {
+  --primary-color: #3f51b5; /* Azul */
+  --accent-color: #e91e63; /* Rosa */
+}
+
+/* Definir el tema oscuro (Noche) */
+.dark-theme {
+  --primary-color: #607d8b; /* Azul grisáceo */
+  --accent-color: #ffc107; /* Ámbar */
+}
+
+/* Aplicar estilos globales */
+body {
+  background-color: white; /* Fondo blanco para el tema claro */
+  color: black; /* Color de texto para el tema claro */
+}
+
+.dark-theme body {
+  background-color: #121212; /* Fondo oscuro para el tema oscuro */
+  color: white; /* Color de texto para el tema oscuro */
+}

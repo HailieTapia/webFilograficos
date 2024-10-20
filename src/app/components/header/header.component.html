@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+    <span class="title">Filograficos</span>
+    <span class="spacer"></span>
+    <nav>
+      <a mat-button routerLink="/home" routerLinkActive="active">Home</a>
+      <a mat-button routerLink="/about" routerLinkActive="active">About</a>
+      <a mat-button routerLink="/services" routerLinkActive="active">Services</a>
+    </nav>
+    <mat-slide-toggle
+      (change)="toggleTheme()"
+      [checked]="isDarkTheme"
+      aria-label="Toggle theme"
+      color="accent"
+    >
+      {{ isDarkTheme ? 'Noche' : 'Día' }}
+    </mat-slide-toggle>
+    <button mat-icon-button (click)="isMenuOpen = !isMenuOpen" aria-label="Toggle menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar>
+  
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over" [opened]="isMenuOpen" (closed)="isMenuOpen = false" class="sidenav">
+      <mat-list>
+        <a mat-list-item routerLink="/home" routerLinkActive="active">Home</a>
+        <a mat-list-item routerLink="/about" routerLinkActive="active">About</a>
+        <a mat-list-item routerLink="/services" routerLinkActive="active">Services</a>
+      </mat-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
