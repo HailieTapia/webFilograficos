@@ -1,24 +1,55 @@
-/*@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-
 /* Definir el tema claro (Día) */
 :root {
-  --primary-color: #3f51b5; /* Azul */
-  --accent-color: #e91e63; /* Rosa */
+  --primary-color: #4a90e2; /* Azul claro */
+  --accent-color: #50e3c2; /* Verde esmeralda */
+  --background-color: #ffffff; /* Blanco */
+  --text-color: #333333; /* Gris oscuro */
+  --button-bg-color: #ffffffce; /* Fondo de botones claros */
+  --button-text-color: white; /* Texto de botones claros */
 }
 
 /* Definir el tema oscuro (Noche) */
 .dark-theme {
-  --primary-color: #607d8b; /* Azul grisáceo */
-  --accent-color: #ffc107; /* Ámbar */
+  --primary-color: #1f2937; /* Azul oscuro */
+  --accent-color: #ff9800; /* Naranja brillante */
+  --background-color: #181818; /* Gris muy oscuro */
+  --text-color: #e0e0e0; /* Gris claro */
+  --button-bg-color: #ff9800; /* Fondo de botones oscuros */
+  --button-text-color: black; /* Texto de botones oscuros */
 }
 
 /* Aplicar estilos globales */
 body {
-  background-color: white; /* Fondo blanco para el tema claro */
-  color: black; /* Color de texto para el tema claro */
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-.dark-theme body {
-  background-color: #121212; /* Fondo oscuro para el tema oscuro */
-  color: white; /* Color de texto para el tema oscuro */
+/* Estilos de botones */
+button[mat-button] {
+  background-color: var(--button-bg-color); /* Fondo del botón */
+  color: var(--button-text-color); /* Texto del botón */
+  transition: background-color 0.3s, color 0.3s; /* Suaviza la transición */
+  margin-right: 15px; /* Ajusta según lo que necesites */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Añade una sombra ligera */
+}
+
+button[mat-button]:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra más intensa al pasar el mouse */
+}
+
+button[mat-button]:focus {
+  outline: 2px solid var(--accent-color); /* Añade un borde de enfoque */
+}
+
+/* Tema oscuro para los botones */
+.dark-theme button[mat-button] {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+}
+.dark-theme button[mat-button]:hover {
+  box-shadow: 0 4px 10px rgba(255, 156, 64, 0.433); /* Sombra más intensa al pasar el mouse */
+}
+/* Estilos para los botones de íconos */
+button[mat-icon-button] {
+  color: var(--accent-color);
 }

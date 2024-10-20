@@ -1,0 +1,25 @@
+.custom-footer {
+    background-color: var(--primary-color); /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 20px; /* Espaciado interno */
+    text-align: center; /* Centrar el contenido */
+    width: 100%; /* Ocupa todo el ancho */
+    position: relative; /* Asegura que se mantenga en su lugar */
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between; /* Espacio entre contenido */
+    align-items: center; /* Alinear verticalmente */
+  }
+  
+  .footer-content nav a {
+    color: white; /* Color de los enlaces */
+    margin: 0 10px; /* Espacio entre enlaces */
+    text-decoration: none; /* Sin subrayado */
+  }
+  
+  .footer-content nav a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+  }
+  
