@@ -26,6 +26,7 @@
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+  padding-top: 50px;
 }
 
 /* Estilos de botones */

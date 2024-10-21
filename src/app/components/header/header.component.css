@@ -13,8 +13,20 @@
 mat-toolbar {
   background-color: var(--primary-color);
   color: var(--text-color);
-  height: 80px; /* Ajusta la altura según tus necesidades */
+  height: 90px; /* Ajusta la altura según tus necesidades */
   font-size: 18px; /* Ajusta el tamaño de la fuente para hacer más grande el contenido */
   line-height: 80px; /* Alinea verticalmente el contenido dentro de la barra */
 }
 
+.custom-toolbar {
+  position: fixed; /* Fija el header */
+  top: 0; /* Alinea en la parte superior */
+  left: 0; /* Alinea en la parte izquierda */
+  right: 0; /* Alinea en la parte derecha */
+  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+/* Para evitar que el contenido debajo del header se superponga */
+body {
+  padding-top: 50px; /* Ajusta según la altura de tu toolbar */
+}
