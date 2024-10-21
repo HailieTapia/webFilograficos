@@ -67,16 +67,18 @@ mat-card-header {
 }
 
 .footer {
-  margin-top: 20px;
+  margin-top: 15px;
+  text-align: left;
 }
 
 .footer a {
-  color: #3f51b5; /* Color del enlace */
-  text-decoration: underline;
+  color: var(--primary-color); /* Color del enlace */
+  text-decoration: none;
+  margin-bottom: 10px;
 }
 
 .footer a:hover {
-  text-decoration: none; /* Sin subrayado al pasar el mouse */
+  text-decoration: underline; /* Subrayado en hover */
 }
 @media (max-width: 500px) {
   .register-card {
