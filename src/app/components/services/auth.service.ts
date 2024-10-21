@@ -64,5 +64,9 @@ export class AuthService {
       })
     );
   }
+    // Método para registrar un nuevo usuario
+    register(userData: any): Observable<any> {
+      return this.http.post(`${this.apiUrl}/auth/register/`, userData);
+    }
 
 }

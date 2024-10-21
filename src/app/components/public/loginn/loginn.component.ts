@@ -115,5 +115,4 @@ export class LoginnComponent {
       this.showAlert(this.errorMessage);
     }
   }
-  
 }

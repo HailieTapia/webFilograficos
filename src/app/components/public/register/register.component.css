@@ -1,0 +1,89 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Opcional, para centrar verticalmente */
+  padding: 0 20px; /* Espacio en los laterales */ 
+  background-color: var(--background-color); /* Fondo del tema */
+}
+.register-card {
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  background-color: var(--background); /* Fondo del card */
+}
+mat-card-header {
+  display: flex; /* Usar Flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin-bottom: 35px;
+}
+
+.register-title {
+  font-weight: bold;
+  font-size: 24px; /* Tamaño de fuente aumentado */
+  color: var(--text-color); /* Color del texto */
+  margin: 0; /* Eliminar márgenes */
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+.full-width {
+  width: 100%;
+}
+.actions {
+  margin-top: 20px;
+}
+.alert {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.password-status {
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+}
+
+.success-message {
+  color: green;
+  font-size: 12px;
+}
+
+.error-alert {
+  color: #d9534f; /* Color rojo */
+  background-color: rgba(255, 141, 137, 0.218);
+  
+}
+
+.success-alert {
+  color: #5cb85c; /* Color verde */
+  background-color: rgba(92, 184, 92, 0.1);
+}
+
+.footer {
+  margin-top: 20px;
+}
+
+.footer a {
+  color: #3f51b5; /* Color del enlace */
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  text-decoration: none; /* Sin subrayado al pasar el mouse */
+}
+@media (max-width: 500px) {
+  .register-card {
+    padding: 15px;
+  }
+
+  .alert {
+    font-size: 14px;
+  }
+}
