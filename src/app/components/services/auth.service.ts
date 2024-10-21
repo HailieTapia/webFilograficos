@@ -64,9 +64,22 @@ export class AuthService {
       })
     );
   }
-    // Método para registrar un nuevo usuario
-    register(userData: any): Observable<any> {
-      return this.http.post(`${this.apiUrl}/auth/register/`, userData);
-    }
+  // Método para registrar un nuevo usuario
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register/`, userData);
+  }
+  //RECUPERACION DE CONTRASE
+  //iniciar el proceso de recuperación de contraseña
+  recu(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/initiate-password-recovery`, credentials);
+  }
+  //verificar el código OTP
+  verOTP(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/verify-otp`, credentials);
+  }
+  //reestablecer la contraseña
+  resContra(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, credentials);
+  }
 
 }
