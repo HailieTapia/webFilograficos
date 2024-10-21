@@ -3,57 +3,51 @@
         <mat-card-header class="text-center">
             <mat-card-title class="recu-title">Recuperar Contraseña</mat-card-title>
         </mat-card-header>
+        <div>
+            <!-- Paso 1: Ingreso del Correo Electrónico -->
+            <div *ngIf="recoveryStep === 0">
+                <form [formGroup]="emailForm" (ngSubmit)="sendToken()">
+                    <div class="input-wrapper">
+                        <label for="email">Ingresa tu correo electrónico:</label>
+                        <input id="email" type="email" formControlName="email" required />
+                        <mat-error *ngIf="emailForm.get('email')?.errors?.['required']">El correo es requerido.</mat-error>
+                        <mat-error *ngIf="emailForm.get('email')?.errors?.['email']">El formato del correo es inválido.</mat-error>
+                    </div>
+                    <button mat-button type="submit" class="full-width">Enviar Token</button>
+                </form>
+            </div>
 
-        <!-- Paso 1: Ingreso del Correo Electrónico -->
-        <div *ngIf="recoveryStep === 0">
-            <form [formGroup]="emailForm" (ngSubmit)="sendToken()">
-                <div class="input-wrapper">
-                    <label for="email">Ingresa tu correo electrónico:</label>
-                    <input id="email" type="email" formControlName="email" required />
-                    <mat-error *ngIf="emailForm.get('email')?.errors?.['required']">
-                        El correo es requerido.
-                    </mat-error>
-                    <mat-error *ngIf="emailForm.get('email')?.errors?.['email']">
-                        El formato del correo es inválido.
-                    </mat-error>
-                </div>
-                <button mat-button type="submit" class="full-width">Enviar Token</button>
-            </form>
-        </div>
+            <!-- Paso 2: Ingreso del Token -->
+            <div *ngIf="recoveryStep === 1">
+                <form [formGroup]="tokenForm" (ngSubmit)="verifyToken()">
+                    <div class="otp-container">
+                        <label for="token">Ingresa el token enviado a tu correo:</label>
+                        <div class="otp-inputs">
+                            <input *ngFor="let control of otpArray; let i = index" type="text" maxlength="1"
+                                [formControlName]="control" (input)="moveToNext(i, $event)" placeholder="0" />
+                        </div>
+                    </div>
+                    <button mat-raised-button color="primary" type="submit">Verificar Token</button>
+                </form>
+            </div>
 
-        <!-- Paso 2: Ingreso del Token -->
-        <div *ngIf="recoveryStep === 1">
-            <form [formGroup]="tokenForm" (ngSubmit)="verifyToken()">
-                <div class="input-wrapper">
-                    <label for="token">Ingresa el token enviado a tu correo:</label>
-                    <input id="token" type="text" formControlName="token" required />
-                    <mat-error *ngIf="tokenForm.get('token')?.errors?.['required']">El token es requerido.</mat-error>
-                </div>
-                <button mat-raised-button color="primary" type="submit">Verificar Token</button>
-            </form>
-        </div>
-
-        <!-- Paso 3: Crear Nueva Contraseña -->
-        <div *ngIf="recoveryStep === 2">
-            <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
-                <div class="input-wrapper">
-                    <label for="new-password">Nueva contraseña:</label>
-                    <input id="new-password" type="password" formControlName="newPassword" required />
-                    <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['required']">La contraseña es
-                        requerida.</mat-error>
-                    <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">La contraseña debe tener
-                        al menos 6 caracteres.</mat-error>
-                </div>
-
-                <div class="input-wrapper">
-                    <label for="confirm-password">Confirma tu contraseña:</label>
-                    <input id="confirm-password" type="password" formControlName="confirmPassword" required />
-                    <mat-error *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">La confirmación es
-                        requerida.</mat-error>
-                </div>
-
-                <button mat-raised-button color="primary" type="submit">Actualizar Contraseña</button>
-            </form>
+            <!-- Paso 3: Crear Nueva Contraseña -->
+            <div *ngIf="recoveryStep === 2">
+                <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+                    <div class="input-wrapper">
+                        <label for="new-password">Nueva contraseña:</label>
+                        <input id="new-password" type="password" formControlName="newPassword" required />
+                        <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['required']">La contraseña esrequerida.</mat-error>
+                        <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">La contraseña debetener al menos 8 caracteres.</mat-error>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="confirm-password">Confirma tu contraseña:</label>
+                        <input id="confirm-password" type="password" formControlName="confirmPassword" required />
+                        <mat-error *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">La confirmación esrequerida.</mat-error>
+                    </div>
+                    <button mat-raised-button color="primary" type="submit">Actualizar Contraseña</button>
+                </form>
+            </div>
         </div>
     </mat-card>
 </div>

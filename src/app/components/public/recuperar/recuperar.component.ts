@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-recuperar',
   standalone: true,
@@ -43,24 +44,40 @@ export class RecuperarComponent {
   passwordForm: FormGroup;
   successMessage: string = '';
   errorMessage: string = '';
-
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,  private authService: AuthService, private router: Router) {
+  otpArray = ['digit1', 'digit2', 'digit3', 'digit4', 'digit5', 'digit6', 'digit7', 'digit8'];
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
     this.tokenForm = this.fb.group({
-      token: ['', Validators.required]
+      digit1: ['', Validators.required],
+      digit2: ['', Validators.required],
+      digit3: ['', Validators.required],
+      digit4: ['', Validators.required],
+      digit5: ['', Validators.required],
+      digit6: ['', Validators.required],
+      digit7: ['', Validators.required],
+      digit8: ['', Validators.required],
     });
     this.passwordForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     });
   }
   showAlert(message: string | null) {
-    if (message) { 
+    if (message) {
       this.snackBar.open(message, 'Cerrar', {
         duration: 3000,
       });
+    }
+  }
+  moveToNext(index: number, event: any) {
+    const inputValue = event.target.value;
+    if (inputValue && index < this.otpArray.length - 1) {
+      const nextElement = document.querySelectorAll('input')[index + 1];
+      if (nextElement) {
+        (nextElement as HTMLElement).focus();
+      }
     }
   }
   // Enviando el token al correo electrónico
@@ -93,15 +110,18 @@ export class RecuperarComponent {
   verifyToken() {
     this.successMessage = '';
     this.errorMessage = '';
+
     if (this.tokenForm.valid) {
-      const otp = this.tokenForm.value.token; 
-      const email = this.emailForm.value.email; 
-      this.authService.verOTP({ email, otp }).subscribe({ 
+      // Combina los dígitos del OTP en una sola cadena
+      const otp = this.otpArray.map(control => this.tokenForm.get(control)?.value).join('');
+      const email = this.emailForm.value.email;
+
+      this.authService.verOTP({ email, otp }).subscribe({
         next: (response) => {
           this.successMessage = 'Verificación con éxito.';
           this.showAlert(this.successMessage);
-          this.errorMessage = response.message;;
-          this.recoveryStep = 2; 
+          this.errorMessage = response.message; // O ajusta según la respuesta real
+          this.recoveryStep = 2;
         },
         error: (error) => {
           this.errorMessage = 'Error al verificar el OTP. Por favor, inténtalo nuevamente.';
@@ -115,23 +135,25 @@ export class RecuperarComponent {
       this.showAlert(this.errorMessage);
     }
   }
-  
+
   updatePassword() {
     this.successMessage = '';
     this.errorMessage = '';
-  
+
     if (this.passwordForm.valid) {
       const newPassword = this.passwordForm.value.newPassword;
       const confirmPassword = this.passwordForm.value.confirmPassword;
-      const email = this.emailForm.value.email;  
+      const email = this.emailForm.value.email;
       if (newPassword !== confirmPassword) {
         this.errorMessage = 'Las contraseñas no coinciden.';
+        this.showAlert(this.errorMessage);
         return;
       }
-  
+
       this.authService.resContra({ email, newPassword }).subscribe({
         next: (response) => {
           this.successMessage = 'Contraseña actualizada con éxito.';
+          this.showAlert(this.successMessage);
           this.errorMessage = '';
           setTimeout(() => {
             this.router.navigate(['/login']);
@@ -139,12 +161,14 @@ export class RecuperarComponent {
         },
         error: (error) => {
           this.errorMessage = 'Error al actualizar la contraseña. Por favor, inténtalo de nuevo.';
+          this.showAlert(this.errorMessage);
           this.successMessage = '';
           console.error(error);
         }
       });
     } else {
       this.errorMessage = 'Por favor, completa los campos de manera válida.';
+      this.showAlert(this.errorMessage);
     }
   }
 }
