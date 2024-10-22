@@ -12,23 +12,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha-2';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service'; // Importa el servicio
 
 @Component({
   selector: 'app-loginn',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSnackBarModule,
-    RecaptchaModule,
-    RecaptchaFormsModule,
-    ReactiveFormsModule // Asegúrate de incluir este módulo aquí
-  ],
+  imports: [CommonModule, FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatSnackBarModule, RecaptchaModule, RecaptchaFormsModule, ReactiveFormsModule],
   templateUrl: './loginn.component.html',
   styleUrls: ['./loginn.component.css'],
   animations: [
@@ -46,14 +35,14 @@ import { Router } from '@angular/router';
 export class LoginnComponent {
   email: string = '';
   password: string = '';
-  recaptchaToken: string = ''; // Variable para almacenar el token
-  errorMessage: string | null = null; 
+  recaptchaToken: string = '';
+  errorMessage: string | null = null;
   successMessage: string | null = null;
   hide: boolean = true;
   loading: boolean = false;
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router, private userService: UserService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -61,7 +50,7 @@ export class LoginnComponent {
     });
   }
   get f() {
-    return this.loginForm.controls; 
+    return this.loginForm.controls;
   }
 
   showAlert(message: string | null) {
@@ -71,7 +60,7 @@ export class LoginnComponent {
       });
     }
   }
-  
+
 
   onRecaptchaResolved(captchaResponse: string | null) {
     if (captchaResponse) {
@@ -82,15 +71,39 @@ export class LoginnComponent {
   onSubmit() {
     this.errorMessage = null;
     this.successMessage = null;
-  
+
     if (this.loginForm.valid) {
       this.loading = true;
       const { email, password, recaptcha } = this.loginForm.value;
-  
-      // Verifica que recaptcha tenga un valor
+
+      console.log('Email:', email);
+      console.log('Password:', password);
+
       if (recaptcha) {
         this.authService.login({ email, password, recaptchaToken: recaptcha }).subscribe({
           next: (response: any) => {
+            const userId = response?.userId;  
+            const tipo_usuario = response?.tipo;  
+
+            if (userId && tipo_usuario) {
+              this.userService.setUserId(userId); 
+              this.userService.setTipoUsuario(tipo_usuario);
+
+              // Redirigir según el tipo de usuario
+              if (tipo_usuario === 'cliente') {
+                this.router.navigate(['/login']);
+              }
+              // Redirigir según el tipo de admin
+              else if (tipo_usuario === 'administrador') {
+                this.router.navigate(['/login']);
+              } else {
+                this.router.navigate(['/registro']);
+              }
+
+            } else {
+              console.error('Los campos userId o tipo no existen en la respuesta');
+            }
+
             this.successMessage = 'Inicio de sesión exitoso';
             this.showAlert(this.successMessage);
             setTimeout(() => {

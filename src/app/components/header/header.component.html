@@ -1,12 +1,23 @@
-<mat-toolbar class="custom-toolbar"  color="primary">
+<mat-toolbar class="custom-toolbar" color="primary">
   <span class="title">Filograficos</span>
   <span class="spacer"></span>
-<nav>
-  <button mat-button routerLink="/home" routerLinkActive="active">Inicio</button>
-  <button mat-button routerLink="/login" routerLinkActive="active">Inicio Sesión</button>
-  <button mat-button routerLink="/registro" routerLinkActive="active">Registro</button>
-</nav>
 
+  <nav>
+    <!-- Si no hay usuario logeado, mostramos las opciones de Inicio, Iniciar Sesión y Registro -->
+    <button *ngIf="!tipoUsuario" mat-button routerLink="/home" routerLinkActive="active">Inicio</button>
+    <button *ngIf="!tipoUsuario" mat-button routerLink="/login" routerLinkActive="active">Inicio Sesión</button>
+    <button *ngIf="!tipoUsuario" mat-button routerLink="/registro" routerLinkActive="active">Registro</button>
+
+    <!-- Si es cliente, mostramos el perfil y la opción de cerrar sesión -->
+    <button *ngIf="tipoUsuario === 'cliente'" mat-button routerLink="/perfil" routerLinkActive="active">Mi Perfil</button>
+    <button *ngIf="tipoUsuario === 'cliente'" mat-button (click)="logout()">Cerrar Sesión</button>
+
+    <!-- Si es admin, mostramos la opción de empresa y cerrar sesión -->
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button (click)="logout()">Cerrar Sesión</button>
+  </nav>
+
+  <!-- Toggle para cambiar el tema entre claro y oscuro -->
   <mat-slide-toggle (change)="toggleTheme()" [checked]="isDarkTheme" aria-label="Toggle theme" color="accent">
     {{ isDarkTheme ? 'Noche' : 'Día' }}
   </mat-slide-toggle>

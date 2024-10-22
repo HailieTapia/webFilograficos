@@ -3,6 +3,7 @@ import { LoginnComponent } from './components/public/loginn/loginn.component';
 import { RegisterComponent } from './components/public/register/register.component'; 
 import { HomeComponent } from './components/home/home.component'; 
 import { RecuperarComponent } from './components/public/recuperar/recuperar.component'; 
+import { ProfileComponent } from './components/autenticado/profile/profile.component'; 
 
 
 export const routes: Routes = [
@@ -10,5 +11,6 @@ export const routes: Routes = [
     { path: 'registro', component: RegisterComponent },
     { path: 'home', component: HomeComponent },
     { path: 'recuperar', component: RecuperarComponent },
+    { path: 'perfil', component: ProfileComponent },
 ];
 
