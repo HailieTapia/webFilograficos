@@ -54,17 +54,15 @@ export class LoginnComponent {
   }
 
   showAlert(message: string | null) {
-    if (message) { // Verifica que no sea null o undefined
+    if (message) {
       this.snackBar.open(message, 'Cerrar', {
         duration: 3000,
       });
     }
   }
-
-
   onRecaptchaResolved(captchaResponse: string | null) {
     if (captchaResponse) {
-      this.loginForm.patchValue({ recaptcha: captchaResponse }); // Almacena el token en el formulario
+      this.loginForm.patchValue({ recaptcha: captchaResponse });
     }
   }
 
@@ -76,17 +74,14 @@ export class LoginnComponent {
       this.loading = true;
       const { email, password, recaptcha } = this.loginForm.value;
 
-      console.log('Email:', email);
-      console.log('Password:', password);
-
       if (recaptcha) {
         this.authService.login({ email, password, recaptchaToken: recaptcha }).subscribe({
           next: (response: any) => {
-            const userId = response?.userId;  
-            const tipo_usuario = response?.tipo;  
+            const userId = response?.userId;
+            const tipo_usuario = response?.tipo;
 
             if (userId && tipo_usuario) {
-              this.userService.setUserId(userId); 
+              this.userService.setUserId(userId);
               this.userService.setTipoUsuario(tipo_usuario);
 
               // Redirigir según el tipo de usuario
@@ -107,12 +102,15 @@ export class LoginnComponent {
             this.successMessage = 'Inicio de sesión exitoso';
             this.showAlert(this.successMessage);
             setTimeout(() => {
-              this.router.navigate(['/']);
+              this.router.navigate(['/home']);
             }, 2000);
           },
           error: (err) => {
             this.errorMessage = err.error?.message || 'Error en el inicio de sesión';
             this.showAlert(this.errorMessage);
+            setTimeout(() => {
+              location.reload();
+            }, 2000);
           },
           complete: () => {
             this.loading = false;
