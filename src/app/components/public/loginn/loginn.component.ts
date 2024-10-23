@@ -12,7 +12,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha-2';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service'; // Importa el servicio
+//import { UserService } from '../../services/user.service'; // Importa el servicio
 
 @Component({
   selector: 'app-loginn',
@@ -42,7 +42,7 @@ export class LoginnComponent {
   loading: boolean = false;
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router, private userService: UserService) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -81,19 +81,15 @@ export class LoginnComponent {
             const tipo_usuario = response?.tipo;
 
             if (userId && tipo_usuario) {
-              this.userService.setUserId(userId);
-              this.userService.setTipoUsuario(tipo_usuario);
+
+              console.log('tu rol es ', this.authService.getTipoUsuario());
+              console.log('tu id es ', this.authService.getId());
+              
+              this.authService.getId();
+              this.authService.getTipoUsuario();
 
               // Redirigir según el tipo de usuario
-              if (tipo_usuario === 'cliente') {
-                this.router.navigate(['/login']);
-              }
               // Redirigir según el tipo de admin
-              else if (tipo_usuario === 'administrador') {
-                this.router.navigate(['/login']);
-              } else {
-                this.router.navigate(['/registro']);
-              }
 
             } else {
               console.error('Los campos userId o tipo no existen en la respuesta');

@@ -8,9 +8,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service'; // Importa el servicio
-
-
 import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-header',
@@ -23,11 +20,15 @@ export class HeaderComponent implements OnInit {
   tipoUsuario: string | null = null;  
   isDarkTheme = false; 
 
-  constructor(private authService: AuthService,private router: Router, private userService: UserService) {}
+  constructor(private authService: AuthService,private router: Router) {}
 
   ngOnInit(): void {
-    this.userService.tipoUsuario$.subscribe(tipoUsuario => {
-      this.tipoUsuario = tipoUsuario;
+    this.authService.currentUser.subscribe(user => {
+      if (user) {
+        this.tipoUsuario = user.tipo; // Asigna el tipo de usuario si está disponible
+      } else {
+        this.tipoUsuario = null; // O bien, puedes manejar lo que sucede si no hay usuario
+      }
     });
   }
 
@@ -42,15 +43,16 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe(
-      () => {
-        // Redirigir al usuario a la página de inicio de sesión u otra ruta
-        this.router.navigate(['/recupera']);
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Sesión cerrada exitosamente');
+        // Redirige al usuario a la página de inicio o login
+        this.router.navigate(['/login']);
       },
-      error => {
-        console.error('Error al cerrar sesión', error);
-      }
-    );
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        // Manejo de errores, por ejemplo, mostrar un mensaje al usuario
+      },
+    });
   }
-
 }

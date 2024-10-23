@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject ,of} from 'rxjs';
 import { environment } from '../../environments/config';
 import { tap } from 'rxjs/operators';
 
@@ -8,22 +8,27 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-
+  public currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
   private apiUrl = `${environment.baseUrl}`;
-  private userRoleSubject = new BehaviorSubject<string | null>(null);
-  userRole$ = this.userRoleSubject.asObservable();
+
   // Recuperar el rol al cargar la aplicación
   constructor(private http: HttpClient) {
-    const savedRole = localStorage.getItem('userRole');
-    if (savedRole) {
-      this.userRoleSubject.next(savedRole);
-    }
+    // Recupera el usuario del localStorage al iniciar la aplicación
+    const storedUser = localStorage.getItem('currentUser');
+
+    // Inicializa currentUserSubject con los datos del localStorage o null si no existe
+    this.currentUserSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
+
+    this.currentUser = this.currentUserSubject.asObservable();
   }
+
   login(credentials: { email: string; password: string; recaptchaToken: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login/`, credentials).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
       tap((response: any) => {
-        localStorage.setItem('userRole', response.tipo);
-        this.userRoleSubject.next(response.tipo);
+        console.log('respuesta ',response); // Agrega esta línea para verificar la respuesta
+        this.currentUserSubject.next(response);
+        localStorage.setItem('currentUser', JSON.stringify(response));
       })
     );
   }
@@ -45,16 +50,24 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/reset-password`, credentials);
   }
 
-  // Método para cerrar sesión
+  // Método para obtener el tipo de usuario actual como un Observable
+  getTipoUsuario(): Observable<string | null> {
+    const currentUser = this.currentUserSubject.getValue();
+    return of(currentUser ? currentUser.tipo : null); // Convertir el tipo a un Observable
+  }
+  // Método para obtener el ID del usuario actual
+  getId(): string | null {
+    const currentUser = this.currentUserSubject.getValue();
+    return currentUser ? currentUser.userId : null;
+  }
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
-        // Limpiar el rol de usuario y eliminar el token del almacenamiento local
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('token'); // Si no necesitas el token, esto es opcional
+        // Al cerrar sesión, limpia el localStorage y actualiza el currentUserSubject
+        localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null); // Actualiza el estado de usuario
       })
     );
-}
-
+  }
 
 }
