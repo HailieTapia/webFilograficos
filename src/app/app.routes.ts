@@ -11,11 +11,7 @@ export const routes: Routes = [
   { path: 'registro', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
   { path: 'recuperar', component: RecuperarComponent },
-  { 
-    path: 'perfil', 
-    component: ProfileComponent, 
-    canActivate: [RoleGuard]  // Proteger la ruta perfil
-  },
+  { path: 'perfil', component: ProfileComponent,  canActivate: [RoleGuard]  },
   // Puedes agregar otras rutas protegidas según el rol de usuario, por ejemplo, para admin:
  /* { 
     path: 'admin', 
