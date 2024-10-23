@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject ,of} from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { environment } from '../../environments/config';
 import { tap } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export class AuthService {
   login(credentials: { email: string; password: string; recaptchaToken: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
       tap((response: any) => {
-        console.log('respuesta ',response); // Agrega esta línea para verificar la respuesta
+        console.log('respuesta ', response); // Agrega esta línea para verificar la respuesta
         this.currentUserSubject.next(response);
         localStorage.setItem('currentUser', JSON.stringify(response));
       })
@@ -60,14 +60,29 @@ export class AuthService {
     const currentUser = this.currentUserSubject.getValue();
     return currentUser ? currentUser.userId : null;
   }
+  //Metodo para cerrar sesion
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
-        // Al cerrar sesión, limpia el localStorage y actualiza el currentUserSubject
         localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null); // Actualiza el estado de usuario
+        this.currentUserSubject.next(null);
       })
     );
   }
+
+  // Método para obtener el perfil del usuario
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/profile`, { withCredentials: true });
+  }
+   // Método para actualizar el perfil del usuario
+   updateProfile(data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/profile`, data, { withCredentials: true });
+  }
+
+  // Método para eliminar la cuenta del usuario
+  deleteAccount(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/user/delete`, { withCredentials: true });
+  }
+
 
 }

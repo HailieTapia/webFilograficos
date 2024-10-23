@@ -81,15 +81,14 @@ export class LoginnComponent {
             const tipo_usuario = response?.tipo;
 
             if (userId && tipo_usuario) {
-
-              console.log('tu rol es ', this.authService.getTipoUsuario());
-              console.log('tu id es ', this.authService.getId());
-              
               this.authService.getId();
               this.authService.getTipoUsuario();
 
-              // Redirigir según el tipo de usuario
-              // Redirigir según el tipo de admin
+              if (tipo_usuario === 'cliente') {
+                this.router.navigate(['/homecliente']); // Redirige a homeclient
+              } else if (tipo_usuario === 'administrador') {
+                this.router.navigate(['/homeadmin']); // Redirige a homeadmin
+              }
 
             } else {
               console.error('Los campos userId o tipo no existen en la respuesta');

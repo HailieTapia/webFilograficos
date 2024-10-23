@@ -9,10 +9,12 @@
     <button *ngIf="!tipoUsuario" mat-button routerLink="/registro" routerLinkActive="active">Registro</button>
 
     <!-- Si es cliente, mostramos el perfil y la opción de cerrar sesión -->
+    <button *ngIf="tipoUsuario === 'cliente'" mat-button routerLink="/homecliente" routerLinkActive="active">Inicio</button>
     <button *ngIf="tipoUsuario === 'cliente'" mat-button routerLink="/perfil" routerLinkActive="active">Mi Perfil</button>
     <button *ngIf="tipoUsuario === 'cliente'" mat-button (click)="logout()">Cerrar Sesión</button>
 
     <!-- Si es admin, mostramos la opción de empresa y cerrar sesión -->
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/homeadmin" routerLinkActive="active">Inicio</button>
     <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
     <button *ngIf="tipoUsuario === 'administrador'" mat-button (click)="logout()">Cerrar Sesión</button>
   </nav>

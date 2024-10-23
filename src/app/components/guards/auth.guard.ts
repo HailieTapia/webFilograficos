@@ -15,29 +15,27 @@ export class RoleGuard implements CanActivate {
     return this.authService.currentUser.pipe(
       map(user => {
         if (!user) {
-          // Si no hay usuario autenticado, redirigir a login
-          this.router.navigate(['/login']);
+          // Si no hay usuario autenticado, redirigir
+          this.router.navigate(['/home']);
           return false;
         }
 
-        // Aquí definimos las rutas permitidas para cada rol
-        const clienteRoutes = ['perfil', 'otraRutaCliente']; // Rutas permitidas para clientes
-        const adminRoutes = ['empresa', 'otraRutaAdmin']; // Rutas permitidas para administradores
+        const clienteRoutes = ['perfil', 'homecliente']; 
+
+        const adminRoutes = ['empresa', 'homeadmin']; 
 
         if (user.tipo === 'cliente') {
-          // Verificar si la ruta a la que se intenta acceder es para clientes
           if (clienteRoutes.includes(route.routeConfig?.path || '')) {
-            return true; // Permitir acceso a la ruta de cliente
+            return true; 
           }
         } else if (user.tipo === 'administrador') {
-          // Verificar si la ruta a la que se intenta acceder es para administradores
           if (adminRoutes.includes(route.routeConfig?.path || '')) {
-            return true; // Permitir acceso a la ruta de administrador
+            return true;
           }
         }
 
-        // Si no tiene acceso a la ruta, redirigir a login
-        this.router.navigate(['/login']);
+        // Si no tiene acceso a la ruta
+        this.router.navigate(['/home']);
         return false;
       })
     );
