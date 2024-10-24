@@ -1,84 +1,71 @@
-<div class="container">
-    <mat-toolbar color="primary">
-      <span>Gestión de Tipos de Email</span>
-    </mat-toolbar>
-  
-    <form [formGroup]="emailTypeForm" (ngSubmit)="createEmailType()">
-      <mat-card>
-        <mat-card-content>
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Código</mat-label>
-              <input matInput formControlName="codigo" placeholder="Ingrese el código" />
-              <mat-error *ngIf="emailTypeForm.get('codigo')?.invalid && (emailTypeForm.get('codigo')?.touched || emailTypeForm.get('codigo')?.dirty)">
-                <span *ngIf="emailTypeForm.get('codigo')?.errors?.['required']">El código es requerido.</span>
-                <span *ngIf="emailTypeForm.get('codigo')?.errors?.['minlength']">El código debe tener al menos 3 caracteres.</span>
-              </mat-error>
-            </mat-form-field>
-          </div>
-  
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Nombre</mat-label>
-              <input matInput formControlName="nombre" placeholder="Ingrese el nombre" />
-              <mat-error *ngIf="emailTypeForm.get('nombre')?.invalid && (emailTypeForm.get('nombre')?.touched || emailTypeForm.get('nombre')?.dirty)">
-                <span *ngIf="emailTypeForm.get('nombre')?.errors?.['required']">El nombre es requerido.</span>
-              </mat-error>
-            </mat-form-field>
-          </div>
-  
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Descripción</mat-label>
-              <textarea matInput formControlName="descripcion" placeholder="Ingrese una descripción opcional"></textarea>
-            </mat-form-field>
-          </div>
-  
-          <div class="form-group">
-            <mat-form-field appearance="fill">
-              <mat-label>Variables Requeridas</mat-label>
-              <input matInput formControlName="variables_requeridas" placeholder="Ingrese variables requeridas (separadas por comas)" (ngModelChange)="updateVariablesRequeridas($event)" />
-              <mat-error *ngIf="emailTypeForm.get('variables_requeridas')?.invalid && (emailTypeForm.get('variables_requeridas')?.touched || emailTypeForm.get('variables_requeridas')?.dirty)">
-                <span *ngIf="emailTypeForm.get('variables_requeridas')?.errors?.['required']">Las variables requeridas son obligatorias.</span>
-              </mat-error>
-            </mat-form-field>
-          </div>
-  
-          <button mat-raised-button color="primary" type="submit" [disabled]="emailTypeForm.invalid">Crear Tipo de Email</button>
-        </mat-card-content>
-      </mat-card>
-  
-      <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-      <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
-  
-      <h3 class="mt-4">Tipos de Email Existentes</h3>
-      <table mat-table [dataSource]="emailTypes" class="mat-elevation-z8">
-        <ng-container matColumnDef="codigo">
-          <th mat-header-cell *matHeaderCellDef>Código</th>
-          <td mat-cell *matCellDef="let emailType">{{ emailType.codigo }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let emailType">{{ emailType.nombre }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="descripcion">
-          <th mat-header-cell *matHeaderCellDef>Descripción</th>
-          <td mat-cell *matCellDef="let emailType">{{ emailType.descripcion }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let emailType">
-            <button mat-button color="warn" (click)="editEmailType(emailType)">Editar</button>
-            <button mat-button color="primary" (click)="deleteEmailType(emailType)">Eliminar</button>
-          </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="['codigo', 'nombre', 'descripcion', 'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['codigo', 'nombre', 'descripcion', 'acciones'];"></tr>
-      </table>
-   
+<mat-card>
+  <mat-toolbar color="primary">
+    <span>Gestión de Tipos de Email</span>
+  </mat-toolbar>
 
-  
+  <form [formGroup]="emailTypeForm" (ngSubmit)="updateEmailType()" *ngIf="isEditMode">
+    <mat-form-field appearance="fill">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" />
+      <mat-error
+        *ngIf="emailTypeForm.get('codigo')?.invalid && (emailTypeForm.get('codigo')?.touched || emailTypeForm.get('codigo')?.dirty)">
+        <span *ngIf="emailTypeForm.get('codigo')?.errors?.['required']">El código es requerido.</span>
+        <span *ngIf="emailTypeForm.get('codigo')?.errors?.['minlength']">El código debe tener al menos 3 caracteres.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+      <mat-error
+        *ngIf="emailTypeForm.get('nombre')?.invalid && (emailTypeForm.get('nombre')?.touched || emailTypeForm.get('nombre')?.dirty)">
+        <span *ngIf="emailTypeForm.get('nombre')?.errors?.['required']">El nombre es requerido.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="descripcion"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Variables Requeridas</mat-label>
+      <input matInput formControlName="variables_requeridas" placeholder="Ingrese variables requeridas (separadas por comas)" />
+      <mat-error
+        *ngIf="emailTypeForm.get('variables_requeridas')?.invalid && (emailTypeForm.get('variables_requeridas')?.touched || emailTypeForm.get('variables_requeridas')?.dirty)">
+        <span *ngIf="emailTypeForm.get('variables_requeridas')?.errors?.['required']">Las variables requeridas son obligatorias.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-button type="submit" color="primary">Actualizar</button>
+    <button mat-button type="button" (click)="emailTypeForm.reset(); selectedEmailType = null; isEditMode = false">Cancelar</button>
+  </form>
+
+  <mat-table [dataSource]="emailTypes" class="mat-elevation-z8">
+    <ng-container matColumnDef="codigo">
+      <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+      <mat-cell *matCellDef="let type"> {{type.codigo}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nombre">
+      <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let type"> {{type.nombre}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="descripcion">
+      <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+      <mat-cell *matCellDef="let type"> {{type.descripcion}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+      <mat-cell *matCellDef="let type">
+        <button mat-button (click)="editEmailType(type)">Editar</button>
+        <button mat-button (click)="deleteEmailType(type)">Eliminar</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['codigo', 'nombre', 'descripcion', 'actions']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['codigo', 'nombre', 'descripcion', 'actions'];"></mat-row>
+  </mat-table>
+</mat-card>
