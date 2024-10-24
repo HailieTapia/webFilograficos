@@ -10,8 +10,11 @@ import { ProfileComponent } from './components/autenticado/profile/profile.compo
 import { HomeclienComponent } from './components/autenticado/homeclien/homeclien.component';
 
 //admin
-import { CompanyComponent } from './components/administrador/company/company.component';
+import { EmpresaComponent } from './components/administrador/empresa/empresa.component';
 import { HomeadminComponent } from './components/administrador/homeadmin/homeadmin.component';
+import { IncidenciaComponent } from './components/administrador/incidencia/incidencia.component';
+import { EmailTemplateListComponent } from './components/administrador/email-template-list/email-template-list.component';
+import { EmailTemplateFormComponent } from './components/administrador/email-template-form/email-template-form.component';
 
 
 export const routes: Routes = [
@@ -26,5 +29,9 @@ export const routes: Routes = [
 
   //admin
   { path: 'homeadmin', component: HomeadminComponent, canActivate: [RoleGuard] },
-  { path: 'empresa', component: CompanyComponent, canActivate: [RoleGuard] }
+  { path: 'empresa', component: EmpresaComponent , canActivate: [RoleGuard] },
+  { path: 'incidencia', component: IncidenciaComponent , canActivate: [RoleGuard] },
+  { path: 'email-templates', component: EmailTemplateListComponent , canActivate: [RoleGuard] },
+  { path: 'email-templates/new', component: EmailTemplateFormComponent , canActivate: [RoleGuard] },
+  { path: 'email-templates/edit/:id', component: EmailTemplateFormComponent , canActivate: [RoleGuard] },
 ];

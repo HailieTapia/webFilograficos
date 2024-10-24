@@ -83,6 +83,8 @@ export class AuthService {
   deleteAccount(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/user/delete`, { withCredentials: true });
   }
-
-
+    // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
+    private getToken(): string | null {
+      return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
+    }
 }

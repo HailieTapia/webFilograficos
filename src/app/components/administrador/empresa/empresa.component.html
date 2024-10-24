@@ -1,0 +1,124 @@
+<div>hoola</div>
+<div>hoola</div>
+
+<div>hoola</div>
+
+<form [formGroup]="companyForm" (ngSubmit)="updateCompanyInfo()">
+  <div>
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" formControlName="nombre" required />
+    <div *ngIf="companyForm.get('nombre')?.invalid && (companyForm.get('nombre')?.touched || companyForm.get('nombre')?.dirty)">
+      <small class="error">El nombre es obligatorio.</small>
+    </div>
+  </div>
+
+  <div>
+    <label for="slogan">Slogan:</label>
+    <input id="slogan" formControlName="slogan" />
+  </div>
+
+  <div>
+    <label for="logo">Logo (URL):</label>
+    <input id="logo" formControlName="logo" />
+  </div>
+
+  <div>
+    <label for="titulo_pagina">Título de la Página:</label>
+    <input id="titulo_pagina" formControlName="titulo_pagina" />
+  </div>
+
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" required />
+    <div *ngIf="companyForm.get('email')?.invalid && (companyForm.get('email')?.touched || companyForm.get('email')?.dirty)">
+      <small class="error">El email es obligatorio y debe ser válido.</small>
+    </div>
+  </div>
+
+  <fieldset formGroupName="direccion">
+    <legend>Dirección</legend>
+    <div>
+      <label for="calle">Calle:</label>
+      <input id="calle" formControlName="calle" required />
+      <div *ngIf="companyForm.get('direccion')?.get('calle')?.invalid && (companyForm.get('direccion')?.get('calle')?.touched || companyForm.get('direccion')?.get('calle')?.dirty)">
+        <small class="error">La calle es obligatoria.</small>
+      </div>
+    </div>
+
+    <div>
+      <label for="ciudad">Ciudad:</label>
+      <input id="ciudad" formControlName="ciudad" required />
+      <div *ngIf="companyForm.get('direccion')?.get('ciudad')?.invalid && (companyForm.get('direccion')?.get('ciudad')?.touched || companyForm.get('direccion')?.get('ciudad')?.dirty)">
+        <small class="error">La ciudad es obligatoria.</small>
+      </div>
+    </div>
+
+    <div>
+      <label for="estado">Estado:</label>
+      <input id="estado" formControlName="estado" required />
+      <div *ngIf="companyForm.get('direccion')?.get('estado')?.invalid && (companyForm.get('direccion')?.get('estado')?.touched || companyForm.get('direccion')?.get('estado')?.dirty)">
+        <small class="error">El estado es obligatorio.</small>
+      </div>
+    </div>
+
+    <div>
+      <label for="codigo_postal">Código Postal:</label>
+      <input id="codigo_postal" formControlName="codigo_postal" required />
+      <div *ngIf="companyForm.get('direccion')?.get('codigo_postal')?.invalid && (companyForm.get('direccion')?.get('codigo_postal')?.touched || companyForm.get('direccion')?.get('codigo_postal')?.dirty)">
+        <small class="error">El código postal es obligatorio.</small>
+      </div>
+    </div>
+
+    <div>
+      <label for="pais">País:</label>
+      <input id="pais" formControlName="pais" required />
+      <div *ngIf="companyForm.get('direccion')?.get('pais')?.invalid && (companyForm.get('direccion')?.get('pais')?.touched || companyForm.get('direccion')?.get('pais')?.dirty)">
+        <small class="error">El país es obligatorio.</small>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset formGroupName="telefono">
+    <legend>Teléfono</legend>
+    <div>
+      <label for="numero">Número:</label>
+      <input id="numero" formControlName="numero" required />
+      <div *ngIf="companyForm.get('telefono')?.get('numero')?.invalid && (companyForm.get('telefono')?.get('numero')?.touched || companyForm.get('telefono')?.get('numero')?.dirty)">
+        <small class="error">El número es obligatorio.</small>
+      </div>
+    </div>
+
+    <div>
+      <label for="extension">Extensión:</label>
+      <input id="extension" formControlName="extension" />
+    </div>
+  </fieldset>
+
+  <fieldset formGroupName="redes_sociales">
+    <legend>Redes Sociales</legend>
+    <div>
+      <label for="facebook">Facebook:</label>
+      <input id="facebook" formControlName="facebook" />
+    </div>
+
+    <div>
+      <label for="twitter">Twitter:</label>
+      <input id="twitter" formControlName="twitter" />
+    </div>
+
+    <div>
+      <label for="linkedin">LinkedIn:</label>
+      <input id="linkedin" formControlName="linkedin" />
+    </div>
+
+    <div>
+      <label for="instagram">Instagram:</label>
+      <input id="instagram" formControlName="instagram" />
+    </div>
+  </fieldset>
+
+  <button type="submit">Actualizar Información</button>
+
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</form>

@@ -1,0 +1,27 @@
+<!-- email-template-list.component.html -->
+<div class="email-template-list-container">
+  <h2>Lista de Plantillas de Correo</h2>
+  <button routerLink="/email-templates/create">Crear Nueva Plantilla</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Asunto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let template of emailTemplates">
+        <td>{{ template.nombre }}</td>
+        <td>{{ template.tipo }}</td>
+        <td>{{ template.asunto }}</td>
+        <td>
+          <button (click)="router.navigate(['/email-templates/edit', template._id])">Editar</button>
+          <button (click)="deleteTemplate(template._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
