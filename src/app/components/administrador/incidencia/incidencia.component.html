@@ -1,20 +1,26 @@
 <div>
-    <h2>Incidencias</h2>
-    <div *ngIf="errorMessage">{{ errorMessage }}</div>
-  
-    <form (ngSubmit)="createIncidencia()">
-      <input [(ngModel)]="newIncidencia.titulo" name="titulo" placeholder="Título" required>
-      <input [(ngModel)]="newIncidencia.descripcion" name="descripcion" placeholder="Descripción" required>
-      <button type="submit">Crear Incidencia</button>
-    </form>
-  
-    <ul>
-      <li *ngFor="let incidencia of incidencias">
-        <h3>{{ incidencia.titulo }}</h3>
-        <p>{{ incidencia.descripcion }}</p>
-        <button (click)="updateIncidencia(incidencia._id, { titulo: incidencia.titulo, descripcion: incidencia.descripcion })">Actualizar</button>
-        <button (click)="deleteIncidencia(incidencia._id)">Eliminar</button>
-      </li>
-    </ul>
+  <h1></h1>
+  <h2>Usuarios con sesiones más recientes</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th>Sesión Activa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of incidencias">
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>{{ usuario.estado }}</td>
+        <td>{{ usuario.sesion_activa ? 'Sí' : 'No' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="incidencias.length === 0">
+    <p>No hay usuarios para mostrar.</p>
   </div>
-  
+</div>
