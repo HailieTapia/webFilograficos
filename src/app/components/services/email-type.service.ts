@@ -13,7 +13,10 @@ export interface EmailType {
   creado_por?: string;
   actualizado_por?: string;
 }
-
+// Crear una nueva interfaz para la respuesta
+export interface EmailTypeResponse {
+  emailTypes: EmailType[];
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -22,11 +25,10 @@ export class EmailTypeService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todos los tipos de email activos
-  getAllEmailTypes(): Observable<EmailType[]> {
-    return this.http.get<EmailType[]>(this.apiUrl, { withCredentials: true });
-  }
-
+  // Cambiar el método en el servicio
+getAllEmailTypes(): Observable<EmailTypeResponse> {
+  return this.http.get<EmailTypeResponse>(this.apiUrl, { withCredentials: true });
+}
   // Obtener un tipo de email por su ID
   getEmailTypeById(id: string): Observable<EmailType> {
     return this.http.get<EmailType>(`${this.apiUrl}/${id}`, { withCredentials: true });

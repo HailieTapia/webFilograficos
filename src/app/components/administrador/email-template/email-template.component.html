@@ -1,0 +1,22 @@
+<div class="container">
+    <h2>Email Templates</h2>
+    <form (ngSubmit)="isEditing ? updateTemplate() : createTemplate()">
+      <input type="text" [(ngModel)]="newTemplate.nombre" name="nombre" placeholder="Nombre" required>
+      <input type="text" [(ngModel)]="newTemplate.tipo" name="tipo" placeholder="Tipo" required>
+      <input type="text" [(ngModel)]="newTemplate.asunto" name="asunto" placeholder="Asunto" required>
+      <textarea [(ngModel)]="newTemplate.contenido_html" name="contenido_html" placeholder="Contenido HTML" required></textarea>
+      <textarea [(ngModel)]="newTemplate.contenido_texto" name="contenido_texto" placeholder="Contenido Texto Plano" required></textarea>
+      <input type="text" [(ngModel)]="newTemplate.variables" name="variables" placeholder="Variables (comma-separated)">
+      <button type="submit">{{ isEditing ? 'Update' : 'Create' }} Template</button>
+      <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
+    </form>
+  
+    <ul>
+      <li *ngFor="let template of templates">
+        <h3>{{ template.nombre }}</h3>
+        <button (click)="editTemplate(template)">Edit</button>
+        <button (click)="deleteTemplate(template._id!)">Delete</button>
+      </li>
+    </ul>
+  </div>
+  

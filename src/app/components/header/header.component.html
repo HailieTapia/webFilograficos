@@ -17,8 +17,9 @@
     <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/homeadmin" routerLinkActive="active">Inicio</button>
     <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
     <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/incidencia" routerLinkActive="active">Incidencias</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/email-templates" routerLinkActive="active">Plantillas de Correo</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/email-templates/new" routerLinkActive="active">Crear correo</button>
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/type" routerLinkActive="active">Tipo de Correo</button>
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/regulatorio" routerLinkActive="active">Doc Regu</button>
+    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/plantilla" routerLinkActive="active">Plantillas de Correo</button>
     <button *ngIf="tipoUsuario === 'administrador'" mat-button (click)="logout()">Cerrar Sesión</button>
   </nav>
 

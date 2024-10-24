@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
 
         const clienteRoutes = ['perfil', 'homecliente']; 
 
-        const adminRoutes = ['empresa', 'homeadmin', 'incidencia','email-templates','email-templates/new','email-templates/edit/:id' ]; 
+        const adminRoutes = ['empresa', 'homeadmin', 'incidencia','type' ,'plantilla' ,'regulatorio' ]; 
 
         if (user.tipo === 'cliente') {
           if (clienteRoutes.includes(route.routeConfig?.path || '')) {
