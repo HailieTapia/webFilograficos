@@ -74,17 +74,24 @@ export class AuthService {
   getProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/profile`, { withCredentials: true });
   }
-   // Método para actualizar el perfil del usuario
-   updateProfile(data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/user/profile`, data, { withCredentials: true });
+  // Método para actualizar el perfil del usuario
+  updateProfile(data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/profile`, data, { withCredentials: true });
   }
 
   // Método para eliminar la cuenta del usuario
   deleteAccount(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/user/delete`, { withCredentials: true });
+    return this.http.delete(`${this.apiUrl}/users/delete-account`, { withCredentials: true })
+      .pipe(
+        tap(() => {
+          // Limpia todo el localStorage al eliminar la cuenta
+          localStorage.clear();
+        })
+      );
   }
-    // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
-    private getToken(): string | null {
-      return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
-    }
+
+  // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
+  private getToken(): string | null {
+    return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
+  }
 }

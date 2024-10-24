@@ -19,6 +19,7 @@ import { RegulatoriosComponent } from './components/administrador/regulatorios/r
 
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },  // Redireccionar por defecto a "home"
   { path: 'login', component: LoginnComponent },
   { path: 'registro', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
