@@ -1,15 +1,74 @@
+/* Estilo general para la contenedor principal */
 .container {
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  input, textarea {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-  }
-  
-  button {
-    margin-right: 10px;
-  }
-  
+  max-width: 600px; /* Limitar el ancho del contenedor */
+  margin: 0 auto; /* Centrar el contenedor */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #f9f9f9; /* Fondo claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Títulos */
+h2 {
+  text-align: center; /* Centrar el texto */
+  color: #333; /* Color del texto */
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+h3 {
+  color: #555; /* Color del subtítulo */
+  margin-top: 30px; /* Espaciado superior */
+}
+
+/* Estilo para las etiquetas */
+label {
+  font-weight: bold; /* Negrita para las etiquetas */
+  margin-bottom: 5px; /* Espaciado inferior */
+  display: block; /* Hacer que las etiquetas sean bloques */
+}
+
+/* Estilo de campos de formulario */
+.form-field {
+  margin-bottom: 15px; /* Espaciado inferior entre campos */
+}
+
+/* Estilo para los botones */
+button {
+  width: 100%; /* Botones ocupan todo el ancho */
+  margin-top: 10px; /* Espaciado superior */
+}
+
+/* Estilo de lista de plantillas */
+.mat-list {
+  margin-top: 20px; /* Espaciado superior de la lista */
+}
+
+/* Estilo para cada elemento de la lista */
+.template-item {
+  border-bottom: 1px solid #eee; /* Línea inferior para separar elementos */
+  padding: 10px 0; /* Espaciado vertical */
+}
+
+.template-item h4 {
+  margin: 0; /* Sin margen para el título */
+  color: #007bff; /* Color para el nombre de la plantilla */
+}
+
+.template-item button {
+  margin-right: 10px; /* Espaciado entre botones */
+}
+
+/* Cambiar color del botón al pasar el mouse */
+button:hover {
+  background-color: #007bff; /* Color de fondo al pasar el mouse */
+  color: white; /* Color del texto al pasar el mouse */
+}
+
+/* Espaciado y estilo en botones secundarios */
+.mat-button {
+  color: #007bff; /* Color de texto */
+}
+
+.mat-button:hover {
+  color: #0056b3; /* Color al pasar el mouse */
+}

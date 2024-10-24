@@ -1,22 +1,49 @@
 <div class="container">
-    <h2>Email Templates</h2>
-    <form (ngSubmit)="isEditing ? updateTemplate() : createTemplate()">
-      <input type="text" [(ngModel)]="newTemplate.nombre" name="nombre" placeholder="Nombre" required>
-      <input type="text" [(ngModel)]="newTemplate.tipo" name="tipo" placeholder="Tipo" required>
-      <input type="text" [(ngModel)]="newTemplate.asunto" name="asunto" placeholder="Asunto" required>
-      <textarea [(ngModel)]="newTemplate.contenido_html" name="contenido_html" placeholder="Contenido HTML" required></textarea>
-      <textarea [(ngModel)]="newTemplate.contenido_texto" name="contenido_texto" placeholder="Contenido Texto Plano" required></textarea>
-      <input type="text" [(ngModel)]="newTemplate.variables" name="variables" placeholder="Variables (comma-separated)">
-      <button type="submit">{{ isEditing ? 'Update' : 'Create' }} Template</button>
-      <button type="button" (click)="cancelEdit()" *ngIf="isEditing">Cancel</button>
-    </form>
+  <h2>Email Templates</h2>
+
+  <!-- Formulario para actualizar una plantilla -->
+  <form (ngSubmit)="updateTemplate()" *ngIf="isEditing">
+    <div class="form-field">
+      <label for="nombre">Nombre:</label>
+      <input matInput type="text" [(ngModel)]="currentTemplate.nombre" name="nombre" placeholder="Nombre" required />
+    </div>
+
+    <!-- Campo tipo omitido en la edición -->
+    <div class="form-field" *ngIf="!isEditing">
+      <label for="tipo">Tipo:</label>
+      <input matInput type="text" [(ngModel)]="currentTemplate.tipo" name="tipo" placeholder="Tipo" required />
+    </div>
+
+    <div class="form-field">
+      <label for="asunto">Asunto:</label>
+      <input matInput type="text" [(ngModel)]="currentTemplate.asunto" name="asunto" placeholder="Asunto" required />
+    </div>
+
+    <div class="form-field">
+      <label for="contenido_html">Contenido HTML:</label>
+      <textarea matInput [(ngModel)]="currentTemplate.contenido_html" name="contenido_html" placeholder="Contenido HTML" required></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="contenido_texto">Contenido Texto Plano:</label>
+      <textarea matInput [(ngModel)]="currentTemplate.contenido_texto" name="contenido_texto" placeholder="Contenido Texto Plano" required></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="variables">Variables (separadas por comas):</label>
+      <input matInput type="text" [(ngModel)]="currentTemplate.variables" name="variables" placeholder="Variables" />
+    </div>
+
+    <button mat-raised-button color="primary" type="submit">Update Template</button>
+    <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+
+  <!-- Lista de plantillas -->
+  <h3>Plantillas Disponibles</h3>
   
-    <ul>
-      <li *ngFor="let template of templates">
-        <h3>{{ template.nombre }}</h3>
-        <button (click)="editTemplate(template)">Edit</button>
-        <button (click)="deleteTemplate(template._id!)">Delete</button>
-      </li>
-    </ul>
-  </div>
-  
+    <mat-list-item *ngFor="let template of templates" class="template-item">
+      <h4>{{ template.nombre }}</h4>
+      <button mat-button (click)="editTemplateDetails(template)">Edit</button>
+      <button mat-button (click)="deleteTemplate(template._id!)">Delete</button>
+    </mat-list-item>
+

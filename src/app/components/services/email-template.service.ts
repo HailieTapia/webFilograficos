@@ -24,15 +24,14 @@ export class EmailTemplateService {
   
     constructor(private http: HttpClient) {}
   
-    // Obtener todas las plantillas activas
-    getAllTemplates(): Observable<any> {
-      return this.http.get(`${this.apiUrl}`, { withCredentials: true });
+    getAllTemplates(): Observable<EmailTemplate[]> {
+      return this.http.get<EmailTemplate[]>(`${this.apiUrl}`, { withCredentials: true });
     }
-  
-    // Obtener una plantilla por su ID
-    getTemplateById(id: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}/${id}`, { withCredentials: true });
+    
+    getTemplateById(id: string): Observable<EmailTemplate> {
+      return this.http.get<EmailTemplate>(`${this.apiUrl}/${id}`, { withCredentials: true });
     }
+    
   
     // Crear una nueva plantilla
     createTemplate(data: any): Observable<any> {
