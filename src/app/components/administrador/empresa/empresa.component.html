@@ -1,8 +1,3 @@
-<div>hoola</div>
-<div>hoola</div>
-
-<div>hoola</div>
-
 <form [formGroup]="companyForm" (ngSubmit)="updateCompanyInfo()">
   <div>
     <label for="nombre">Nombre:</label>
@@ -37,43 +32,11 @@
 
   <fieldset formGroupName="direccion">
     <legend>Dirección</legend>
-    <div>
-      <label for="calle">Calle:</label>
-      <input id="calle" formControlName="calle" required />
-      <div *ngIf="companyForm.get('direccion')?.get('calle')?.invalid && (companyForm.get('direccion')?.get('calle')?.touched || companyForm.get('direccion')?.get('calle')?.dirty)">
-        <small class="error">La calle es obligatoria.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="ciudad">Ciudad:</label>
-      <input id="ciudad" formControlName="ciudad" required />
-      <div *ngIf="companyForm.get('direccion')?.get('ciudad')?.invalid && (companyForm.get('direccion')?.get('ciudad')?.touched || companyForm.get('direccion')?.get('ciudad')?.dirty)">
-        <small class="error">La ciudad es obligatoria.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="estado">Estado:</label>
-      <input id="estado" formControlName="estado" required />
-      <div *ngIf="companyForm.get('direccion')?.get('estado')?.invalid && (companyForm.get('direccion')?.get('estado')?.touched || companyForm.get('direccion')?.get('estado')?.dirty)">
-        <small class="error">El estado es obligatorio.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="codigo_postal">Código Postal:</label>
-      <input id="codigo_postal" formControlName="codigo_postal" required />
-      <div *ngIf="companyForm.get('direccion')?.get('codigo_postal')?.invalid && (companyForm.get('direccion')?.get('codigo_postal')?.touched || companyForm.get('direccion')?.get('codigo_postal')?.dirty)">
-        <small class="error">El código postal es obligatorio.</small>
-      </div>
-    </div>
-
-    <div>
-      <label for="pais">País:</label>
-      <input id="pais" formControlName="pais" required />
-      <div *ngIf="companyForm.get('direccion')?.get('pais')?.invalid && (companyForm.get('direccion')?.get('pais')?.touched || companyForm.get('direccion')?.get('pais')?.dirty)">
-        <small class="error">El país es obligatorio.</small>
+    <div *ngFor="let field of ['calle', 'ciudad', 'estado', 'codigo_postal', 'pais']">
+      <label [for]="field">{{ field.charAt(0).toUpperCase() + field.slice(1) }}:</label>
+      <input [id]="field" [formControlName]="field" required />
+      <div *ngIf="companyForm.get('direccion')?.get(field)?.invalid && (companyForm.get('direccion')?.get(field)?.touched || companyForm.get('direccion')?.get(field)?.dirty)">
+        <small class="error">{{ field.charAt(0).toUpperCase() + field.slice(1) }} es obligatorio.</small>
       </div>
     </div>
   </fieldset>
@@ -96,24 +59,10 @@
 
   <fieldset formGroupName="redes_sociales">
     <legend>Redes Sociales</legend>
-    <div>
-      <label for="facebook">Facebook:</label>
-      <input id="facebook" formControlName="facebook" />
-    </div>
-
-    <div>
-      <label for="twitter">Twitter:</label>
-      <input id="twitter" formControlName="twitter" />
-    </div>
-
-    <div>
-      <label for="linkedin">LinkedIn:</label>
-      <input id="linkedin" formControlName="linkedin" />
-    </div>
-
-    <div>
-      <label for="instagram">Instagram:</label>
-      <input id="instagram" formControlName="instagram" />
+    <div *ngFor="let platform of ['facebook', 'twitter', 'linkedin', 'instagram']">
+      <label [for]="platform">{{ platform.charAt(0).toUpperCase() + platform.slice(1) }}:</label>
+      <input [id]="platform" [formControlName]="platform" />
+      <!-- Eliminado el botón de eliminar redes sociales -->
     </div>
   </fieldset>
 

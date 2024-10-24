@@ -17,21 +17,30 @@ export class EmpresaComponent implements OnInit {
   companyForm: FormGroup;
 
   constructor(private fb: FormBuilder, private empresaService: EmpresaService) {
-    this.companyForm = this.fb.group({
+    this.companyForm = this.createFormGroup();
+  }
+
+  ngOnInit(): void {
+    this.getCompanyInfo(); // Obtener información de la empresa al iniciar
+  }
+
+  // Crear el grupo de formularios
+  private createFormGroup(): FormGroup {
+    return this.fb.group({
       nombre: ['', Validators.required],
       slogan: [''],
       logo: [''],
       titulo_pagina: [''],
       email: ['', [Validators.required, Validators.email]],
       direccion: this.fb.group({
-        calle: ['', ],
-        ciudad: ['', ],
-        estado: ['', ],
-        codigo_postal: ['', ],
-        pais: ['', ]
+        calle: ['', Validators.required],
+        ciudad: ['', Validators.required],
+        estado: ['', Validators.required],
+        codigo_postal: ['', Validators.required],
+        pais: ['', Validators.required]
       }),
       telefono: this.fb.group({
-        numero: ['', ],
+        numero: ['', Validators.required],
         extension: ['']
       }),
       redes_sociales: this.fb.group({
@@ -43,59 +52,60 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.getCompanyInfo(); // Llamar al método para obtener información de la empresa al iniciar
-  }
-
   // Obtener la información de la empresa
   getCompanyInfo(): void {
     this.empresaService.getCompanyInfo().subscribe(
       (data) => {
+        console.log('Datos obtenidos:', data);
         this.company = data.company;
-        this.companyForm.patchValue(this.company); // Rellenar el formulario con la información existente
+        this.companyForm.patchValue(this.company); // Rellenar el formulario
       },
       (error) => {
-        this.errorMessage = 'Error al obtener la información de la empresa. ' + (error?.message || '');
+        console.error('Error al obtener información de la empresa:', error);
+        this.errorMessage = 'Error al obtener la información de la empresa: ' + (error?.message || 'Intenta de nuevo.');
       }
     );
   }
 
   // Actualizar la información de la empresa
   updateCompanyInfo(): void {
-    if (this.companyForm.invalid) {
-      this.errorMessage = 'Por favor, completa todos los campos obligatorios correctamente.';
-      return;
+    if (this.companyForm.valid) {
+      const updatedData = this.companyForm.value; // Obtener los datos del formulario
+  
+      // Validación del objeto antes de enviar
+      console.log('Datos a enviar:', updatedData); // Para verificar estructura en consola
+  
+      this.empresaService.updateCompanyInfo(updatedData).subscribe(
+        (response) => {
+          console.log('Actualización exitosa', response);
+          this.successMessage = 'Información de la empresa actualizada correctamente.';
+          this.getCompanyInfo(); // Actualizar información después de la modificación
+        },
+        (error) => {
+          console.error('Error al actualizar la información de la empresa:', error);
+          this.errorMessage = 'Error al actualizar la información: ' + (error?.message || 'Intenta de nuevo.');
+        }
+      );
+    } else {
+      this.errorMessage = 'Por favor, completa todos los campos requeridos.';
     }
-
-    const updatedData = this.companyForm.value;
-    console.log('Datos a enviar:', updatedData); // Imprimir datos para depuración
-
-    this.empresaService.updateCompanyInfo(updatedData).subscribe(
-      (response) => {
-        console.log('Información actualizada con éxito', response);
-        this.successMessage = 'Información actualizada correctamente.'; // Mensaje de éxito
-        this.errorMessage = ''; // Limpiar mensajes de error
-      },
-      (error) => {
-        this.errorMessage = 'Error al actualizar la información de la empresa. ' + (error?.message || '');
-        console.error('Error detallado:', error); // Imprimir error para depuración
-        
-      }
-    );
   }
-
-  // Eliminar enlaces de redes sociales
-  deleteSocialMediaLinks(): void {
-    const linksToDelete = ['facebook', 'twitter']; // Especifica los enlaces que deseas eliminar
-
-    this.empresaService.deleteSocialMediaLinks(linksToDelete).subscribe(
-      (response) => {
-        alert('Enlaces de redes sociales eliminados correctamente.');
-        this.getCompanyInfo(); // Actualiza la información después de la eliminación
-      },
-      (error) => {
-        this.errorMessage = 'Error al eliminar los enlaces de redes sociales. ' + (error?.message || '');
-      }
-    );
+  
+  //
+  deleteSocialMediaLink(platform: string): void {
+    const confirmation = confirm(`¿Estás seguro de que deseas eliminar el enlace de ${platform}?`);
+    if (confirmation) {
+      const linksToDelete = [platform]; // Solo eliminar el enlace específico
+      this.empresaService.deleteSocialMediaLinks(linksToDelete).subscribe(
+        (response) => {
+          alert(`Enlace de ${platform} eliminado correctamente.`);
+          this.getCompanyInfo(); // Actualizar información después de la eliminación
+        },
+        (error) => {
+          this.errorMessage = 'Error al eliminar el enlace de redes sociales: ' + (error?.message || 'Intenta de nuevo.');
+        }
+      );
+    }
   }
+  
 }

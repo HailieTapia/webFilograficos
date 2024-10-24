@@ -27,7 +27,20 @@ form {
     display: flex;
     flex-direction: column;
 }
-
+button {
+    padding: 5px 10px;
+    margin-left: 10px; /* Agrega un margen para espaciar los botones */
+    border: none;
+    border-radius: 3px;
+    background-color: #f44336; /* Rojo para los botones de eliminar */
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.8; /* Efecto de opacidad al pasar el ratón */
+  }
+  
 label {
     margin-bottom: 8px;
     font-weight: bold;
