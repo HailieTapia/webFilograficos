@@ -65,6 +65,8 @@ export class ProfileComponent implements OnInit {
     this.authService.updateProfile(this.updateData).subscribe(
       (response) => {
         alert('Perfil actualizado exitosamente');
+        localStorage.setItem('currentUser', JSON.stringify(response));
+        this.authService.currentUserSubject.next(response); 
         this.loadUserProfile(); // Recargar el perfil actualizado
       },
       (error) => {
