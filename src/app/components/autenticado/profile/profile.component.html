@@ -2,20 +2,30 @@
   <mat-card class="profile-card">
     <mat-card-title class="card-title">Mi Perfil</mat-card-title>
     <mat-card-content>
-      <form (ngSubmit)="updateProfile()" class="profile-form">
+      <form (ngSubmit)="updateProfile()" #profileForm="ngForm" class="profile-form">
+        
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="updateData.nombre" name="nombre" required />
+          <input matInput [(ngModel)]="updateData.nombre" name="nombre" required #nombre="ngModel" />
+          <mat-error *ngIf="nombre.invalid && nombre.touched">
+            El nombre es requerido.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="updateData.email" name="email" required />
+          <input matInput [(ngModel)]="updateData.email" name="email" required email #email="ngModel" />
+          <mat-error *ngIf="email.invalid && email.touched">
+            Proporcione un correo electrónico válido.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Teléfono</mat-label>
-          <input matInput [(ngModel)]="updateData.telefono" name="telefono" required />
+          <input matInput [(ngModel)]="updateData.telefono" name="telefono" required pattern="[0-9]{10}" #telefono="ngModel" />
+          <mat-error *ngIf="telefono.invalid && telefono.touched">
+            Proporcione un número de teléfono válido (10 dígitos).
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -39,7 +49,9 @@
         </mat-form-field>
 
         <div class="button-group">
-          <button mat-raised-button color="primary" type="submit">Actualizar Perfil</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid">
+            Actualizar Perfil
+          </button>
           <button mat-button color="warn" type="button" (click)="deleteAccount()">Eliminar Cuenta</button>
         </div>
       </form>
