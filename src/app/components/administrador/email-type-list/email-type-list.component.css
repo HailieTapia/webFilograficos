@@ -1,25 +1,116 @@
 .container {
-    margin: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.mat-toolbar {
+  margin-bottom: 20px;
+}
+
+.mat-card {
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* Space between form fields */
+}
+
+.form-field {
+  width: 100%;
+  /* Ensure form fields are responsive */
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  /* Space buttons evenly */
+  margin-top: 20px;
+  /* Space above buttons */
+}
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: var(--text-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+}
+
+
+/* Estilos para las tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+.mat-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.mat-header-cell,
+.mat-cell {
+  text-align: center;
+}
+
+.mat-table-responsive {
+  overflow-x: auto;
+  /* Permite el desplazamiento horizontal en pantallas pequeñas */
+}
+
+@media (max-width: 768px) {
+  .mat-table-responsive {
+    display: block;
+    /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
   }
-  
-  .mat-toolbar {
-    margin-bottom: 20px;
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px;
+    /* Reduce el padding para más espacio */
+    font-size: 14px;
+    /* Tamaño de fuente más pequeño */
   }
-  
-  .mat-card {
-    margin-bottom: 20px;
-  }
-  
-  .table {
+
+  td.mat-cell input {
     width: 100%;
+    /* Hace que los inputs ocupen todo el ancho */
+    box-sizing: border-box;
+    /* Asegura que el padding no afecte el ancho total */
   }
-  
-  .mat-table {
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .form-field {
     width: 100%;
-    margin-top: 20px;
+    /* Ensure form fields take full width on small screens */
   }
-  
-  .mat-header-cell, .mat-cell {
-    text-align: center;
+
+  .form-actions {
+    flex-direction: column;
+    /* Stack buttons on smaller screens */
+    gap: 10px;
+    /* Space between buttons */
   }
-  
+
+  @media (max-width: 480px) {
+    h2 {
+      font-size: 20px;
+      /* Tamaño de fuente más pequeño para el título */
+    }
+
+    .mat-header-cell,
+    .mat-cell {
+      padding: 6px;
+      /* Reduce el padding para más espacio */
+      font-size: 12px;
+      /* Tamaño de fuente aún más pequeño */
+    }
+  }}
