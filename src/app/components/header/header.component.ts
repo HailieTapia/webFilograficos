@@ -9,6 +9,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { EmpresaService } from '../services/empresaService';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -19,15 +21,17 @@ import { AuthService } from '../services/auth.service';
 export class HeaderComponent implements OnInit {
   tipoUsuario: string | null = null;  
   isDarkTheme = false; 
+  companyInfo: any = null; 
 
-  constructor(private authService: AuthService,private router: Router) {}
+  constructor(private authService: AuthService,private router: Router,private empresaService: EmpresaService) {}
 
   ngOnInit(): void {
+    this.getCompanyInfo(); 
     this.authService.currentUser.subscribe(user => {
       if (user) {
-        this.tipoUsuario = user.tipo; // Asigna el tipo de usuario si está disponible
+        this.tipoUsuario = user.tipo;
       } else {
-        this.tipoUsuario = null; // O bien, puedes manejar lo que sucede si no hay usuario
+        this.tipoUsuario = null;
       }
     });
   }
@@ -41,6 +45,17 @@ export class HeaderComponent implements OnInit {
       body.classList.remove('dark-theme'); 
     }
   }
+    // Obtener la información de la empresa
+    getCompanyInfo(): void {
+      this.empresaService.getCompanyInfo().subscribe(
+        (data) => {
+          this.companyInfo = data.company;
+        },
+        (error) => {
+          console.error('Error al obtener información de la empresa:', error);
+        }
+      );
+    }
 
   logout() {
     this.authService.logout().subscribe({
@@ -51,7 +66,6 @@ export class HeaderComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cerrar sesión:', error);
-        // Manejo de errores, por ejemplo, mostrar un mensaje al usuario
       },
     });
   }

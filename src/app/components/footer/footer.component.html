@@ -1,12 +1,39 @@
 <footer class="custom-footer">
   <div class="footer-content">
-    <div class="footer-links">
-      <a routerLink="/privacy" routerLinkActive="active">Política de Privacidad</a>
-      <a routerLink="/terms" routerLinkActive="active">Términos y Condiciones</a>
-      <a routerLink="/contact" routerLinkActive="active">Contacto</a>
+
+    <!-- Información de Dirección -->
+    <div *ngIf="companyInfo?.direccion" class="footer-address">
+      <p>
+        {{ companyInfo.direccion.calle }}, {{ companyInfo.direccion.ciudad }}, {{ companyInfo.direccion.estado }},
+        {{ companyInfo.direccion.codigo_postal }}, {{ companyInfo.direccion.pais }}
+      </p>
     </div>
+
+    <!-- Información de Contacto -->
+    <div class="footer-contact">
+      <p *ngIf="companyInfo?.telefono?.numero">Teléfono: {{ companyInfo.telefono.numero }}</p>
+      <p *ngIf="companyInfo?.email">Correo: <a [href]="'mailto:' + companyInfo.email">{{ companyInfo.email }}</a></p>
+    </div>
+
+    <!-- Redes Sociales -->
+    <div class="footer-social-links">
+      <a *ngIf="companyInfo?.redes_sociales?.facebook" [href]="companyInfo.redes_sociales.facebook" target="_blank" class="social-link">
+        <mat-icon>thumb_up</mat-icon> Facebook
+      </a>
+      <a *ngIf="companyInfo?.redes_sociales?.instagram" [href]="companyInfo.redes_sociales.instagram" target="_blank" class="social-link">
+        <mat-icon>camera_alt</mat-icon> Instagram
+      </a>
+      <a *ngIf="companyInfo?.redes_sociales?.linkedin" [href]="companyInfo.redes_sociales.linkedin" target="_blank" class="social-link">
+        <mat-icon>business_center</mat-icon> LinkedIn
+      </a>
+      <a *ngIf="companyInfo?.redes_sociales?.twitter" [href]="companyInfo.redes_sociales.twitter" target="_blank" class="social-link">
+        <mat-icon>chat_bubble</mat-icon> Twitter
+      </a>
+    </div>
+
+    <!-- Derechos Reservados -->
     <div class="footer-text">
-      <span>&copy; 2024 Filograficos. Todos los derechos reservados.</span>
+      <span>&copy; 2024 {{ companyInfo?.nombre || 'Filográficos' }}. Todos los derechos reservados.</span>
     </div>
   </div>
 </footer>
