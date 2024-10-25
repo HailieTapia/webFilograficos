@@ -16,16 +16,6 @@
     background-color: var(--background);
 }
 
-.recuperacion-contrasena {
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: var(--background);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-}
-
 .recu-title {
     font-weight: bold;
     font-size: 24px;
@@ -52,15 +42,15 @@ form {
 
 .otp-inputs {
     display: flex;
-    gap: 5px;
+    gap: 1px;
 }
 
 .otp-inputs input {
-    width: 35px;
+    width: 30px;
     height: 40px;
     text-align: center;
-    font-size: 18px;
-    border: 2px solid var(--primary-color);
+    font-size: 15px;
+    border: 1px solid var(--primary-color);
     border-radius: 8px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -75,7 +65,6 @@ form {
     color: var(--placeholder-color);
     opacity: 0.7;
 }
-
 
 .input-wrapper input {
     width: 93%;
@@ -98,8 +87,33 @@ mat-error {
     bottom: -18px;
 }
 
+/* Responsividad */
 @media (max-width: 600px) {
-    .recuperacion-contrasena {
+    .recu-card {
         max-width: 90%;
+        padding: 15px;
+    }
+
+    .recu-title {
+        font-size: 20px; /* Ajustar tamaño de fuente */
+    }
+
+    .otp-inputs input {
+        width: 30px; /* Ajustar tamaño de los inputs de OTP */
+        height: 35px; /* Ajustar altura de los inputs de OTP */
+    }
+
+    .input-wrapper input {
+        font-size: 14px; /* Reducir tamaño de fuente en móviles */
+    }
+}
+
+@media (max-width: 400px) {
+    .recu-title {
+        font-size: 18px; /* Aún más pequeño en pantallas muy pequeñas */
+    }
+
+    .input-wrapper input {
+        font-size: 12px; /* Ajustar el tamaño de entrada */
     }
 }

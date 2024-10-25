@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Opcional, para centrar verticalmente */
-  padding: 0 20px; /* Espacio en los laterales */ 
+  height: 100vh; /* Centrar verticalmente */
+  padding: 0 20px; /* Espacio en los laterales */
   background-color: var(--background-color); /* Fondo del tema */
 }
 
@@ -15,6 +15,7 @@
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
   background-color: var(--background); /* Fondo del card */
 }
+
 mat-card-header {
   display: flex; /* Usar Flexbox */
   justify-content: center; /* Centra horizontalmente */
@@ -58,12 +59,28 @@ mat-card-header {
 .footer a:hover {
   text-decoration: underline; /* Subrayado en hover */
 }
+
+/* Responsividad */
 @media (max-width: 600px) {
   .login-card {
-    padding: 20px; /* Ajustar padding para pantallas más pequeñas */
+    padding: 15px; /* Ajustar padding para pantallas más pequeñas */
+  }
+
+  .login-title {
+    font-size: 20px; /* Tamaño de fuente más pequeño en móviles */
   }
 
   .footer {
     font-size: 0.9rem; /* Ajustar el tamaño de la fuente */
+  }
+}
+
+@media (max-width: 400px) {
+  .login-title {
+    font-size: 18px; /* Aún más pequeño en pantallas muy pequeñas */
+  }
+
+  .footer a {
+    font-size: 0.8rem; /* Reducir tamaño de enlace en móviles pequeños */
   }
 }

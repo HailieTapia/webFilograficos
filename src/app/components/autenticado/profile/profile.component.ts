@@ -74,9 +74,16 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
-  ngOnInit(): void {
-    this.loadUserProfile();
+  ngOnInit() {
+    this.authService.currentUser.subscribe(user => {
+      if (!user) {
+        this.router.navigate(['/login']); // Redirigir si no hay usuario
+      } else {
+        this.loadUserProfile(); // Cargar perfil si hay usuario
+      }
+    });
   }
+  
 
   loadUserProfile() {
     this.authService.getProfile().subscribe(
@@ -114,7 +121,6 @@ export class ProfileComponent implements OnInit {
       },
       (error) => {
         this.errorMessage = 'Error al actualizar el perfil';
-        this.showAlert(this.errorMessage);
       }
     );
   }

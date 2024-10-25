@@ -83,7 +83,7 @@ export class RecuperarComponent {
       this.authService.recu({ email }).subscribe({
         next: (response) => {
           console.log(`Enviando token a ${email}`);
-          this.successMessage = 'Se ha enviado un token de recuperación a tu correo.';
+          this.successMessage = 'Se ha enviado un token de recuperación a tu correo, valido por 5 minutos .';
           this.showAlert(this.successMessage);
           this.errorMessage = '';
           this.recoveryStep = 1;

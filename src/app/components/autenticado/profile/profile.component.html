@@ -48,14 +48,12 @@
           <mat-label>Código Postal</mat-label>
           <input matInput [(ngModel)]="updateData.direccion.codigo_postal" name="codigo_postal" />
         </mat-form-field>
-
         <mat-card class="password-card">
           <mat-card-content>
             <div class="password-display">
               <span>Contraseña: *******</span>
               <button mat-button color="warn" (click)="openChangePasswordDialog()"
                 style="float: right;">Modificar</button>
-
             </div>
           </mat-card-content>
         </mat-card>
@@ -70,7 +68,6 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Modal para Cambiar Contraseña -->
   <div class="modal" *ngIf="showModal">
     <div class="modal-content">
       <h2>Cambiar Contraseña</h2>
@@ -81,9 +78,9 @@
         <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" aria-label="Toggle password visibility">
           <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
-          La contraseña actual es obligatoria.
-        </mat-error>
+        <mat-error
+          *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">La
+          contraseña actual es obligatoria.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
@@ -92,9 +89,8 @@
         <button mat-icon-button matSuffix (click)="hideNew = !hideNew" aria-label="Toggle password visibility">
           <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
-          La nueva contraseña es obligatoria y debe tener al menos 8 caracteres.
-        </mat-error>
+        <mat-error *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">La nueva
+          contraseña es obligatoria y debe tener al menos 8 caracteres.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
@@ -103,10 +99,10 @@
         <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" aria-label="Toggle password visibility">
           <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmNewPassword')?.touched">
-          Las contraseñas no coinciden.
-        </mat-error>
+        <mat-error *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmNewPassword')?.touched">Las
+          contraseñas no coinciden.</mat-error>
       </mat-form-field>
+
       <div class="modal-actions">
         <button mat-button (click)="closeModal()">Cancelar</button>
         <button mat-raised-button color="primary" (click)="onChangePassword()">Cambiar Contraseña</button>

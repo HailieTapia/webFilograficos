@@ -12,17 +12,16 @@ export class AuthService {
   public currentUser: Observable<any>;
   private apiUrl = `${environment.baseUrl}`;
 
-  // Recuperar el rol al cargar la aplicación
   constructor(private http: HttpClient) {
-    // Recupera el usuario del localStorage al iniciar la aplicación
     const storedUser = localStorage.getItem('currentUser');
-
-    // Inicializa currentUserSubject con los datos del localStorage o null si no existe
-    this.currentUserSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
-
+    if (storedUser) {
+      this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(storedUser));
+    } else {
+      this.currentUserSubject = new BehaviorSubject<any>(null);
+    }
     this.currentUser = this.currentUserSubject.asObservable();
   }
-
+  
   login(credentials: { email: string; password: string; recaptchaToken: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
       tap((response: any) => {
