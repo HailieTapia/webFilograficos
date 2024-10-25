@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresaService';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [MatInputModule,MatFormFieldModule,CommonModule, ReactiveFormsModule],
   templateUrl: './empresa.component.html',
   styleUrls: ['./empresa.component.css']
 })

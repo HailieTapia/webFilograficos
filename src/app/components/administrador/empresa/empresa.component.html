@@ -1,74 +1,89 @@
- <div class="container">
+<div class="container">
   <h1>Perfil de Empresa</h1>
   <form [formGroup]="companyForm" (ngSubmit)="updateCompanyInfo()">
-    <div class="form-group">
-      <label for="nombre">Nombre: <span class="required">*</span></label>
-      <input id="nombre" formControlName="nombre" required />
-      <div *ngIf="companyForm.get('nombre')?.invalid && (companyForm.get('nombre')?.touched || companyForm.get('nombre')?.dirty)">
-        <small class="error">El nombre es obligatorio.</small>
-      </div>
-    </div>
 
-    <div class="form-group">
-      <label for="slogan">Slogan:</label>
-      <input id="slogan" formControlName="slogan" />
-    </div>
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Nombre: <span class="required">*</span></mat-label>
+      <input matInput id="nombre" formControlName="nombre" required />
+      <mat-error
+        *ngIf="companyForm.get('nombre')?.invalid && (companyForm.get('nombre')?.touched || companyForm.get('nombre')?.dirty)">
+        El nombre es obligatorio.
+      </mat-error>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="logo">Logo (URL):</label>
-      <input id="logo" formControlName="logo" />
-    </div>
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Slogan:</mat-label>
+      <input matInput id="slogan" formControlName="slogan" />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="titulo_pagina">Título de la Página:</label>
-      <input id="titulo_pagina" formControlName="titulo_pagina" />
-    </div>
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Logo (URL):</mat-label>
+      <input matInput id="logo" formControlName="logo" />
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="email">Email: <span class="required">*</span></label>
-      <input id="email" formControlName="email" required />
-      <div *ngIf="companyForm.get('email')?.invalid && (companyForm.get('email')?.touched || companyForm.get('email')?.dirty)">
-        <small class="error">El email es obligatorio y debe ser válido.</small>
-      </div>
-    </div>
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Título de la Página:</mat-label>
+      <input matInput id="titulo_pagina" formControlName="titulo_pagina" />
+    </mat-form-field>
 
-    <fieldset formGroupName="direccion">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Email: <span class="required">*</span></mat-label>
+      <input matInput id="email" formControlName="email" required />
+      <mat-error
+        *ngIf="companyForm.get('email')?.invalid && (companyForm.get('email')?.touched || companyForm.get('email')?.dirty)">
+        El email es obligatorio y debe ser válido.
+      </mat-error>
+    </mat-form-field>
+
+    <fieldset formGroupName="direccion" class="address-fieldset">
       <legend>Dirección</legend>
       <div *ngFor="let field of ['calle', 'ciudad', 'estado', 'codigo_postal', 'pais']" class="form-group">
-        <label [for]="field">{{ field.charAt(0).toUpperCase() + field.slice(1) }}: <span class="required">*</span></label>
-        <input [id]="field" [formControlName]="field" required />
-        <div *ngIf="companyForm.get('direccion')?.get(field)?.invalid && (companyForm.get('direccion')?.get(field)?.touched || companyForm.get('direccion')?.get(field)?.dirty)">
-          <small class="error">{{ field.charAt(0).toUpperCase() + field.slice(1) }} es obligatorio.</small>
-        </div>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>{{ field.charAt(0).toUpperCase() + field.slice(1) }}: <span class="required">*</span></mat-label>
+          <input matInput [id]="field" [formControlName]="field" required />
+          <mat-error
+            *ngIf="companyForm.get('direccion')?.get(field)?.invalid && (companyForm.get('direccion')?.get(field)?.touched || companyForm.get('direccion')?.get(field)?.dirty)">
+            {{ field.charAt(0).toUpperCase() + field.slice(1) }} es obligatorio.
+          </mat-error>
+        </mat-form-field>
       </div>
     </fieldset>
 
-    <fieldset formGroupName="telefono">
+    <fieldset formGroupName="telefono" class="phone-fieldset">
       <legend>Teléfono</legend>
       <div class="form-group">
-        <label for="numero">Número: <span class="required">*</span></label>
-        <input id="numero" formControlName="numero" required />
-        <div *ngIf="companyForm.get('telefono')?.get('numero')?.invalid && (companyForm.get('telefono')?.get('numero')?.touched || companyForm.get('telefono')?.get('numero')?.dirty)">
-          <small class="error">El número es obligatorio.</small>
-        </div>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Número: <span class="required">*</span></mat-label>
+          <input matInput id="numero" formControlName="numero" required />
+          <mat-error
+            *ngIf="companyForm.get('telefono')?.get('numero')?.invalid && (companyForm.get('telefono')?.get('numero')?.touched || companyForm.get('telefono')?.get('numero')?.dirty)">
+            El número es obligatorio.
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="extension">Extensión:</label>
-        <input id="extension" formControlName="extension" />
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Extensión:</mat-label>
+          <input matInput id="extension" formControlName="extension" />
+        </mat-form-field>
       </div>
     </fieldset>
 
-    <fieldset formGroupName="redes_sociales">
+    <fieldset formGroupName="redes_sociales" class="social-fieldset">
       <legend>Redes Sociales</legend>
       <div *ngFor="let platform of ['facebook', 'twitter', 'linkedin', 'instagram']" class="form-group">
-        <label [for]="platform">{{ platform.charAt(0).toUpperCase() + platform.slice(1) }}:</label>
-        <input [id]="platform" [formControlName]="platform" />
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>{{ platform.charAt(0).toUpperCase() + platform.slice(1) }}:</mat-label>
+          <input matInput [id]="platform" [formControlName]="platform" />
+        </mat-form-field>
       </div>
     </fieldset>
 
-    <div class="button-group">
-      <button type="submit" mat-button>Actualizar Información</button>
+    <div class="actions">
+      <button mat-button class="full-width" type="submit">
+        Actualizar
+      </button>
     </div>
 
     <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
