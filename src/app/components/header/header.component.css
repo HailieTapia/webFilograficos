@@ -1,32 +1,45 @@
-/* Estilos básicos del header */
 .title {
   font-size: 1.5rem;
   font-weight: bold;
 }
 
-/* Espaciador para empujar los elementos al lado derecho */
 .spacer {
   flex: 1 1 auto;
 }
 
-/* Ajuste de colores en los temas claro/oscuro */
 mat-toolbar {
   background-color: var(--primary-color);
   color: var(--text-color);
-  height: 90px; /* Ajusta la altura según tus necesidades */
-  font-size: 18px; /* Ajusta el tamaño de la fuente para hacer más grande el contenido */
-  line-height: 80px; /* Alinea verticalmente el contenido dentro de la barra */
+  height: 70px;
+  font-size: 18px;
+  line-height: 70px;
 }
 
 .custom-toolbar {
-  position: fixed; /* Fija el header */
-  top: 0; /* Alinea en la parte superior */
-  left: 0; /* Alinea en la parte izquierda */
-  right: 0; /* Alinea en la parte derecha */
-  z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
 }
 
 /* Para evitar que el contenido debajo del header se superponga */
 body {
-  padding-top: 50px; /* Ajusta según la altura de tu toolbar */
+  padding-top: 70px;
 }
+
+/* Estilos responsivos para el menú */
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.2rem;
+  }
+
+  mat-slide-toggle {
+    margin-left: 0;
+  }
+}
+

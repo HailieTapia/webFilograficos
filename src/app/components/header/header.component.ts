@@ -10,19 +10,20 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { EmpresaService } from '../services/empresaService';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
-  imports: [CommonModule,RouterModule,MatToolbarModule,MatButtonModule,MatSidenavModule,MatIconModule,MatListModule,MatSlideToggleModule, ]
+  imports: [MatMenuModule,CommonModule,RouterModule,MatToolbarModule,MatButtonModule,MatSidenavModule,MatIconModule,MatListModule,MatSlideToggleModule, ]
 })
 export class HeaderComponent implements OnInit {
   tipoUsuario: string | null = null;  
   isDarkTheme = false; 
   companyInfo: any = null; 
-
+  isMenuOpen = false;
   constructor(private authService: AuthService,private router: Router,private empresaService: EmpresaService) {}
 
   ngOnInit(): void {
@@ -34,6 +35,9 @@ export class HeaderComponent implements OnInit {
         this.tipoUsuario = null;
       }
     });
+  }
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   toggleTheme() {

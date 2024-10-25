@@ -22,13 +22,18 @@
   --icon-color: #ffffff; /* Color de íconos en tema oscuro */
 }
 
-/* Aplicar estilos globales */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  padding-top: 50px;
+  padding-top: 50px; /* Mantén este padding si es necesario para el toolbar */
+  margin: 0; /* Elimina el margen por defecto */
+  overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
+/* Opcional: Estilos para el html también */
+html {
+  height: 100%; /* Asegúrate de que el html ocupe toda la altura */
+}
 /* Estilos de botones */
 button[mat-button] {
   background-color: var(--button-bg-color); /* Fondo del botón */

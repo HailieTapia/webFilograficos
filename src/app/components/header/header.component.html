@@ -1,28 +1,34 @@
 <mat-toolbar class="custom-toolbar" color="primary">
-  <span class="title">{{ companyInfo?.nombre }}</span> 
+  <span class="title">{{ companyInfo?.nombre }}</span>
   <span class="spacer"></span>
 
-  <nav>
-    <!-- Si no hay usuario logeado, mostramos las opciones de Inicio, Iniciar Sesión y Registro -->
-    <button *ngIf="!tipoUsuario" mat-button routerLink="/home" routerLinkActive="active">Inicio</button>
-    <button *ngIf="!tipoUsuario" mat-button routerLink="/login" routerLinkActive="active">Inicio Sesión</button>
-    <button *ngIf="!tipoUsuario" mat-button routerLink="/registro" routerLinkActive="active">Registro</button>
+  <button mat-icon-button [matMenuTriggerFor]="appMenu" aria-label="Menu">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-    <!-- Si es cliente, mostramos el perfil y la opción de cerrar sesión -->
-    <button *ngIf="tipoUsuario === 'cliente'" mat-button routerLink="/homecliente" routerLinkActive="active">Inicio</button>
-    <button *ngIf="tipoUsuario === 'cliente'" mat-button routerLink="/perfil" routerLinkActive="active">Mi Perfil</button>
-    <button *ngIf="tipoUsuario === 'cliente'" mat-button (click)="logout()">Cerrar Sesión</button>
+  <mat-menu #appMenu="matMenu">
+    <ng-container *ngIf="!tipoUsuario">
+      <button mat-menu-item routerLink="/home" routerLinkActive="active">Inicio</button>
+      <button mat-menu-item routerLink="/login" routerLinkActive="active">Iniciar Sesión</button>
+      <button mat-menu-item routerLink="/registro" routerLinkActive="active">Registro</button>
+    </ng-container>
 
-    <!-- Si es admin, mostramos la opción de empresa y cerrar sesión -->
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/homeadmin" routerLinkActive="active">Inicio</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/incidencia" routerLinkActive="active">Incidencias</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/type" routerLinkActive="active">Tipo de Correo</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button routerLink="/plantilla" routerLinkActive="active">Plantillas de Correo</button>
-    <button *ngIf="tipoUsuario === 'administrador'" mat-button (click)="logout()">Cerrar Sesión</button>
-  </nav>
+    <ng-container *ngIf="tipoUsuario === 'cliente'">
+      <button mat-menu-item routerLink="/homecliente" routerLinkActive="active">Inicio</button>
+      <button mat-menu-item routerLink="/perfil" routerLinkActive="active">Mi Perfil</button>
+      <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
+    </ng-container>
 
-  <!-- Toggle para cambiar el tema entre claro y oscuro -->
+    <ng-container *ngIf="tipoUsuario === 'administrador'">
+      <button mat-menu-item routerLink="/homeadmin" routerLinkActive="active">Inicio</button>
+      <button mat-menu-item routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
+      <button mat-menu-item routerLink="/incidencia" routerLinkActive="active">Incidencias</button>
+      <button mat-menu-item routerLink="/type" routerLinkActive="active">Tipo de Correo</button>
+      <button mat-menu-item routerLink="/plantilla" routerLinkActive="active">Plantillas de Correo</button>
+      <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
+    </ng-container>
+  </mat-menu>
+
   <mat-slide-toggle (change)="toggleTheme()" [checked]="isDarkTheme" aria-label="Toggle theme" color="accent">
     {{ isDarkTheme ? 'Noche' : 'Día' }}
   </mat-slide-toggle>
