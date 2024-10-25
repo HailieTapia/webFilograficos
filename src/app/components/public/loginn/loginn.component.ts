@@ -84,19 +84,17 @@ export class LoginnComponent {
               this.authService.getTipoUsuario();
 
               if (tipo_usuario === 'cliente') {
-                this.router.navigate(['/homecliente']); // Redirige a homeclient
+                this.router.navigate(['/homecliente']); 
               } else if (tipo_usuario === 'administrador') {
-                this.router.navigate(['/homeadmin']); // Redirige a homeadmin
+                this.router.navigate(['/homeadmin']); 
               }
 
             } else {
               console.error('Los campos userId o tipo no existen en la respuesta');
             }
-
             this.successMessage = 'Inicio de sesión exitoso';
             this.showAlert(this.successMessage);
             setTimeout(() => {
-              this.router.navigate(['/home']);
             }, 2000);
           },
           error: (err) => {
