@@ -77,9 +77,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.authService.currentUser.subscribe(user => {
       if (!user) {
-        this.router.navigate(['/login']); // Redirigir si no hay usuario
+        this.router.navigate(['/login']); 
       } else {
-        this.loadUserProfile(); // Cargar perfil si hay usuario
+        this.loadUserProfile(); 
       }
     });
   }
