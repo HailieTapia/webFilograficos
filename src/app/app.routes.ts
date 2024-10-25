@@ -15,7 +15,7 @@ import { HomeadminComponent } from './components/administrador/homeadmin/homeadm
 import { IncidenciaComponent } from './components/administrador/incidencia/incidencia.component';
 import { EmailTypeListComponent } from './components/administrador/email-type-list/email-type-list.component';
 import { EmailTemplateComponent } from './components/administrador/email-template/email-template.component';
-import { RegulatoriosComponent } from './components/administrador/regulatorios/regulatorios.component';
+import { RegulatoryDocumentComponent } from './components/administrador/regulatory-document/regulatory-document.component';
 
 
 export const routes: Routes = [
@@ -34,6 +34,6 @@ export const routes: Routes = [
   { path: 'empresa', component: EmpresaComponent , canActivate: [RoleGuard] },
   { path: 'incidencia', component: IncidenciaComponent , canActivate: [RoleGuard] },
   { path: 'type', component: EmailTypeListComponent , canActivate: [RoleGuard] },
-  { path: 'regulatorio', component: RegulatoriosComponent , canActivate: [RoleGuard] },
+  { path: 'regulatorio', component: RegulatoryDocumentComponent , canActivate: [RoleGuard] },
   { path: 'plantilla', component: EmailTemplateComponent , canActivate: [RoleGuard] },
 ];
