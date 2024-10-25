@@ -1,30 +1,57 @@
+.container {
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 table {
   width: 100%;
-  border-collapse: collapse;
 }
 
-table, th, td {
-  border: 1px solid black;
-}
-
-th, td {
-  padding: 8px;
-  text-align: left;
-}
-
-button {
-  margin-right: 5px;
-  padding: 5px 10px;
-  background-color: #007bff;
+th.mat-header-cell {
+  background-color: var(--primary-color);
   color: white;
-  border: none;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+td.mat-cell {
+  background-color: var(--background-color);
 }
 
-.error {
-  color: red;
+h2, h3 {
+  color: var(--primary-color);
+}
+
+.results, .error {
+  margin-top: 15px;
+}
+
+.error p {
+  color: #ff4444;
+}
+
+button[mat-button], button[mat-raised-button] {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  transition: background-color 0.3s, color 0.3s;
+  margin: 10px 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+button[mat-button]:hover, button[mat-raised-button]:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+button[mat-button]:focus, button[mat-raised-button]:focus {
+  outline: 2px solid var(--accent-color);
+}
+
+.dark-theme .container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.dark-theme button[mat-button], .dark-theme button[mat-raised-button] {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
 }

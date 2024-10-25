@@ -12,38 +12,47 @@ export class IncidenciaService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtener todos los usuarios con su sesión más reciente
-  getAllUsersWithSessions(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/all-users`, { withCredentials: true });
-  }
 
-  // Eliminar a un cliente
-  deleteCustomer(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete-customer/${id}`, { withCredentials: true });
+  // Obtener historial de intentos fallidos de inicio de sesión
+  getFailedLoginAttempts(periodo: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/failed-attempts`, {
+      params: { periodo },
+      withCredentials: true
+    }).pipe();
   }
-
-  // Obtener lista de intentos fallidos de login
-  getFailedLoginAttempts(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/failed-attempts`, { withCredentials: true });
-  }
-
-  // Actualizar el número máximo de intentos fallidos de login
+  // Actualizar el máximo de intentos fallidos de inicio de sesión
   updateMaxFailedLoginAttempts(maxAttempts: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/update-max-login-attempts`, { maxAttempts }, { withCredentials: true });
+    return this.http.put<any>(`${this.apiUrl}/update-max-login-attempts`,
+      { maxAttempts },
+      { withCredentials: true }
+    ).pipe();
   }
+  // Actualizar los tiempos de vida de tokens y códigos
+  updateTokenLifetime(config: {
+    jwt_lifetime: number,
+    verificacion_correo_lifetime: number,
+    otp_lifetime: number,
+    sesion_lifetime: number,
+    cookie_lifetime: number,
+    expirationThreshold_lifetime: number
+  }): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`,
+      config,
+      { withCredentials: true }
+    ).pipe();
+  }
+    // Desbloquear un usuario por su ID
+    adminUnlockUser(userId: string): Observable<any> {
+      return this.http.put<any>(`${this.apiUrl}/unlock-user/${userId}`, 
+        {}, 
+        { withCredentials: true }
+      ).pipe();
+    }
+  
+    // Obtener configuración existente
+    getConfig(): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/token-lifetime`, { withCredentials: true })
+        .pipe();
+    }
 
-  // Desbloquear a un usuario
-  unlockUser(userId: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/unlock-user/${userId}`, {}, { withCredentials: true });
-  }
-
-  // Actualizar el tiempo de vida de los tokens
-  updateTokenLifetime(lifetime: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/update-token-lifetime`, { lifetime }, { withCredentials: true });
-  }
-
-  // Obtener la configuración de los tiempos de vida de los tokens
-  getTokenLifetime(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/token-lifetime`, { withCredentials: true });
-  }
 }
