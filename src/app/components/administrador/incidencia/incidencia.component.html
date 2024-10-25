@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Historial de Intentos Fallidos</h2>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-responsive">
 
     <!-- Columna para el ID -->
     <ng-container matColumnDef="_id">
@@ -43,21 +43,35 @@
   </table>
 
   <h2>Configuración Existente</h2>
-  <table mat-table [dataSource]="configDataSource" class="mat-elevation-z8">
 
-    <!-- Columna para el Parámetro -->
+  <!-- Columna para el Parámetro -->
+  <table mat-table [dataSource]="configDataSource" class="mat-elevation-z8 mat-table-responsive">
     <ng-container matColumnDef="parametro">
       <th mat-header-cell *matHeaderCellDef> Parámetro </th>
-      <td mat-cell *matCellDef="let row"> {{ row.parametro }} </td>
+      <td mat-cell *matCellDef="let element">
+        <input *ngIf="!element.isEditing" [(ngModel)]="element.parametro" [readonly]="true" />
+        <input *ngIf="element.isEditing" [(ngModel)]="element.parametro" />
+      </td>
     </ng-container>
 
-    <!-- Columna para el Valor -->
     <ng-container matColumnDef="valor">
       <th mat-header-cell *matHeaderCellDef> Valor </th>
-      <td mat-cell *matCellDef="let row"> {{ row.valor }} </td>
+      <td mat-cell *matCellDef="let element">
+        <input *ngIf="!element.isEditing" [(ngModel)]="element.valor" [readonly]="true" />
+        <input *ngIf="element.isEditing" [(ngModel)]="element.valor" />
+      </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['parametro', 'valor']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['parametro', 'valor'];"></tr>
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button *ngIf="!element.isEditing" (click)="editConfig(element)">Editar</button>
+        <button mat-button *ngIf="element.isEditing" (click)="saveConfig(element)">Guardar</button>
+        <button mat-button *ngIf="element.isEditing" (click)="cancelEdit(element)">Cancelar</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
