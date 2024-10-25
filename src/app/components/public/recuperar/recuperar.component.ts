@@ -10,19 +10,11 @@ import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, transition, style, animate } from '@angular/animations';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-recuperar',
   standalone: true,
-  imports: [
-    MatCardModule,
-    ReactiveFormsModule,
-    CommonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSnackBarModule
-  ],
+  imports: [MatIconModule,MatCardModule,ReactiveFormsModule,CommonModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatSnackBarModule ],
   templateUrl: './recuperar.component.html',
   styleUrls: ['./recuperar.component.css'],
   animations: [
@@ -44,6 +36,8 @@ export class RecuperarComponent {
   passwordForm: FormGroup;
   successMessage: string = '';
   errorMessage: string = '';
+  hideNewPassword: boolean = true;
+  hideConfirmPassword: boolean = true;
   otpArray = ['digit1', 'digit2', 'digit3', 'digit4', 'digit5', 'digit6', 'digit7', 'digit8'];
   constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
     this.emailForm = this.fb.group({

@@ -12,7 +12,6 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha-2';
 import { Router } from '@angular/router';
-//import { UserService } from '../../services/user.service'; // Importa el servicio
 
 @Component({
   selector: 'app-loginn',

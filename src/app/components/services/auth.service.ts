@@ -84,7 +84,6 @@ export class AuthService {
     return this.http.delete(`${this.apiUrl}/users/delete-account`, { withCredentials: true })
       .pipe(
         tap(() => {
-          // Limpia todo el localStorage al eliminar la cuenta
           localStorage.clear();
         })
       );
@@ -93,5 +92,12 @@ export class AuthService {
   // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
   private getToken(): string | null {
     return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
+  }
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    // Corrected placement of 'withCredentials' for HTTP request options
+    return this.http.put(`${this.apiUrl}/auth/change-password`,
+      { currentPassword, newPassword },
+      { withCredentials: true } // Moved this parameter to the correct position
+    );
   }
 }
