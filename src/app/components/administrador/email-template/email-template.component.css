@@ -1,74 +1,168 @@
 /* Estilo general para la contenedor principal */
 .container {
-  max-width: 600px; /* Limitar el ancho del contenedor */
-  margin: 0 auto; /* Centrar el contenedor */
-  padding: 20px; /* Espaciado interno */
-  border-radius: 8px; /* Bordes redondeados */
-  background-color: #f9f9f9; /* Fondo claro */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  max-width: 650px;
+  /* Limitar el ancho del contenedor */
+  margin: 0 auto;
+  /* Centrar el contenedor */
+  padding: 30px;
+  /* Espaciado interno */
+  border-radius: 3px;
+  /* Bordes redondeados */
+  background-color: #f9f9f9;
+  /* Fondo claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra suave */
+  display: flex;
+  /* Flexbox para alineación */
+  flex-direction: column;
+  /* Direccionar contenido en columna */
 }
 
 /* Títulos */
 h2 {
-  text-align: center; /* Centrar el texto */
-  color: #333; /* Color del texto */
-  margin-bottom: 20px; /* Espaciado inferior */
+  text-align: center;
+  /* Centrar el texto */
+  color: #333;
+  /* Color del texto */
+  margin-bottom: 20px;
+  /* Espaciado inferior */
+}
+
+.form-field {
+  width: 100%;
+  /* Full width for form fields */
+  margin-bottom: 15px;
+  /* Space between fields */
+}
+
+button {
+  margin-top: 10px;
+  /* Space above buttons */
+  width: 100%;
+  /* Full width for buttons */
 }
 
 h3 {
-  color: #555; /* Color del subtítulo */
-  margin-top: 30px; /* Espaciado superior */
+  color: #555;
+  /* Color del subtítulo */
+  margin-top: 30px;
+  /* Espaciado superior */
 }
 
 /* Estilo para las etiquetas */
 label {
-  font-weight: bold; /* Negrita para las etiquetas */
-  margin-bottom: 5px; /* Espaciado inferior */
-  display: block; /* Hacer que las etiquetas sean bloques */
-}
-
-/* Estilo de campos de formulario */
-.form-field {
-  margin-bottom: 15px; /* Espaciado inferior entre campos */
-}
-
-/* Estilo para los botones */
-button {
-  width: 100%; /* Botones ocupan todo el ancho */
-  margin-top: 10px; /* Espaciado superior */
+  width: 100%;
+  font-weight: bold;
+  /* Negrita para las etiquetas */
+  margin-bottom: 5px;
+  /* Espaciado inferior */
+  display: block;
+  /* Hacer que las etiquetas sean bloques */
 }
 
 /* Estilo de lista de plantillas */
 .mat-list {
-  margin-top: 20px; /* Espaciado superior de la lista */
+  margin-top: 20px;
+  /* Espaciado superior de la lista */
 }
 
 /* Estilo para cada elemento de la lista */
 .template-item {
-  border-bottom: 1px solid #eee; /* Línea inferior para separar elementos */
-  padding: 10px 0; /* Espaciado vertical */
+  border-bottom: 1px solid #eee;
+  /* Línea inferior para separar elementos */
+  padding: 10px 0;
+  /* Espaciado vertical */
 }
 
+/* Estilo para el nombre de la plantilla */
 .template-item h4 {
-  margin: 0; /* Sin margen para el título */
-  color: #007bff; /* Color para el nombre de la plantilla */
+  margin: 0;
+  /* Sin margen para el título */
+  color: #007bff;
+  /* Color para el nombre de la plantilla */
 }
 
+/* Estilo de botones en elementos de lista */
 .template-item button {
-  margin-right: 10px; /* Espaciado entre botones */
+  margin-right: 10px;
+  /* Espaciado entre botones */
 }
 
 /* Cambiar color del botón al pasar el mouse */
 button:hover {
-  background-color: #007bff; /* Color de fondo al pasar el mouse */
-  color: white; /* Color del texto al pasar el mouse */
+  background-color: #007bff;
+  /* Color de fondo al pasar el mouse */
+  color: white;
+  /* Color del texto al pasar el mouse */
 }
 
 /* Espaciado y estilo en botones secundarios */
 .mat-button {
-  color: #007bff; /* Color de texto */
+  color: #007bff;
+  /* Color de texto */
 }
 
 .mat-button:hover {
-  color: #0056b3; /* Color al pasar el mouse */
+  color: #0056b3;
+  /* Color al pasar el mouse */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    /* Menor espaciado en pantallas pequeñas */
+  }
+
+  /* Aumentar tamaño de los campos de entrada */
+  .form-field input,
+  .form-field textarea {
+    font-size: 14px;
+    /* Texto más pequeño */
+    padding: 10px;
+    /* Espaciado interno en campos */
+  }
+
+  button {
+    padding: 10px;
+    /* Mayor espaciado en botones */
+  }
+
+  /* Listar plantillas en formato de bloque */
+  .template-item {
+    display: block;
+    /* Cambiar a bloque en pantallas pequeñas */
+    margin-bottom: 15px;
+    /* Espaciado entre elementos de la lista */
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Ajustes adicionales para pantallas muy pequeñas */
+  .container {
+    max-width: 100%;
+    /* Aumentar contenedor al 100% */
+  }
+
+  h2 {
+    font-size: 1.5em;
+    /* Tamaño de fuente para encabezado */
+  }
+
+  h3 {
+    font-size: 1.2em;
+    /* Tamaño de fuente para subtítulo */
+  }
+
+  /* Ajustar tamaños de botones */
+  button {
+    font-size: 14px;
+    /* Tamaño de fuente en botones */
+  }
+
+  .template-item h4 {
+    font-size: 1em;
+    /* Tamaño de fuente para nombre de plantilla */
+  }
 }
