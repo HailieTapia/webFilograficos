@@ -5,34 +5,6 @@
   font-family: Arial, sans-serif;
 }
 
-.mat-toolbar {
-  margin-bottom: 20px;
-}
-
-.mat-card {
-  margin-bottom: 20px;
-  padding: 20px;
-}
-
-.email-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  /* Space between form fields */
-}
-
-.form-field {
-  width: 100%;
-  /* Ensure form fields are responsive */
-}
-
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  /* Space buttons evenly */
-  margin-top: 20px;
-  /* Space above buttons */
-}
 h2 {
   margin-bottom: 20px;
   font-size: 24px;
@@ -41,76 +13,42 @@ h2 {
   padding-bottom: 10px;
 }
 
+.email-type-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; 
+  padding: 16px;
+}
 
-/* Estilos para las tablas */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px; 
+}
+
+.submit-button {
+  flex-grow: 1; 
+  margin-right: 8px; 
+}
+
+.reset-button {
+  flex-grow: 1; }
+
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 40px;
+  margin-top: 16px;
 }
 
-.mat-table {
-  width: 100%;
-  margin-top: 20px;
+mat-toolbar {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.mat-header-cell,
-.mat-cell {
-  text-align: center;
+.action-buttons {
+  display: flex;
+  justify-content: space-between; 
+  gap: 8px; 
 }
 
-.mat-table-responsive {
-  overflow-x: auto;
-  /* Permite el desplazamiento horizontal en pantallas pequeñas */
+.action-buttons button {
+  flex: 1; 
 }
-
-@media (max-width: 768px) {
-  .mat-table-responsive {
-    display: block;
-    /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
-  }
-
-  .mat-header-cell,
-  .mat-cell {
-    padding: 8px;
-    /* Reduce el padding para más espacio */
-    font-size: 14px;
-    /* Tamaño de fuente más pequeño */
-  }
-
-  td.mat-cell input {
-    width: 100%;
-    /* Hace que los inputs ocupen todo el ancho */
-    box-sizing: border-box;
-    /* Asegura que el padding no afecte el ancho total */
-  }
-}
-
-/* Responsive styles */
-@media (max-width: 600px) {
-  .form-field {
-    width: 100%;
-    /* Ensure form fields take full width on small screens */
-  }
-
-  .form-actions {
-    flex-direction: column;
-    /* Stack buttons on smaller screens */
-    gap: 10px;
-    /* Space between buttons */
-  }
-
-  @media (max-width: 480px) {
-    h2 {
-      font-size: 20px;
-      /* Tamaño de fuente más pequeño para el título */
-    }
-
-    .mat-header-cell,
-    .mat-cell {
-      padding: 6px;
-      /* Reduce el padding para más espacio */
-      font-size: 12px;
-      /* Tamaño de fuente aún más pequeño */
-    }
-  }}

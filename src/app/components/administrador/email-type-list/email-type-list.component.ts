@@ -1,117 +1,128 @@
 import { Component, OnInit } from '@angular/core';
-import { EmailTypeService, EmailType } from '../../services/email-type.service';
+import { EmailTypeService, EmailType, EmailTypeResponse } from '../../services/email-type.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgModule } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-email-type-list',
   standalone: true,
-  imports: [
-    MatSnackBarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatButtonModule,
-    MatCardModule,
-    MatToolbarModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
+  imports: [MatDivider,MatSnackBarModule, MatFormFieldModule, MatInputModule, MatTableModule, MatButtonModule, MatCardModule, MatToolbarModule, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './email-type-list.component.html',
   styleUrls: ['./email-type-list.component.css']
 })
 export class EmailTypeListComponent implements OnInit {
-  emailTypes: EmailType[] = [];
-  error: string = '';
-  successMessage: string = '';
-  selectedEmailType: EmailType | null = null;
   emailTypeForm: FormGroup;
-  isEditMode: boolean = false;
+  emailTypes: EmailType[] = [];
+  editingEmailTypeId: string | null = null; 
 
-  constructor(public emailTypeService: EmailTypeService, private fb: FormBuilder) {
-    // Aquí se eliminará la inicialización del formulario
+  constructor(
+    private fb: FormBuilder,
+    private emailTypeService: EmailTypeService,
+    private authService: AuthService 
+  ) {
     this.emailTypeForm = this.fb.group({
-      codigo: ['', [Validators.required, Validators.minLength(3)]],
+      codigo: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
       descripcion: [''],
-      variables_requeridas: [[], Validators.required]
+      variables_requeridas: [[], [Validators.required]],
     });
   }
-
+  
   ngOnInit(): void {
     this.loadEmailTypes();
   }
-
+  
   loadEmailTypes(): void {
-    this.emailTypeService.getAllEmailTypes().subscribe({
-      next: (data) => {
-        console.log('API Response:', data);
-        this.emailTypes = data.emailTypes || [];
+    this.emailTypeService.getAllEmailTypes().subscribe(
+      (response: EmailTypeResponse) => {
+        this.emailTypes = response.emailTypes;
       },
-      error: (err) => {
-        this.error = 'Error loading email types: ' + err.message;
+      (error) => {
+        console.error('Error al obtener tipos de email:', error);
       }
-    });
+    );
+  }
+
+  onSubmit() {
+    if (this.emailTypeForm.valid) {
+      const formValues = this.emailTypeForm.value;
+      const variablesRequeridas = formValues.variables_requeridas.split(',').map((item: string) => item.trim());
+
+      const userId = this.authService.getId();
+      if (!userId) {
+        console.error('No se pudo obtener el ID del usuario.');
+        return; 
+      }
+
+      const emailType: EmailType = {
+        codigo: formValues.codigo,
+        nombre: formValues.nombre,
+        descripcion: formValues.descripcion,
+        variables_requeridas: variablesRequeridas,
+        creado_por: userId, 
+      };
+      if (this.editingEmailTypeId) {
+        this.emailTypeService.updateEmailType(this.editingEmailTypeId, emailType).subscribe(
+          response => {
+            console.log('Tipo de email actualizado:', response);
+            this.loadEmailTypes(); 
+            this.resetForm();
+          },
+          error => {
+            console.error('Error al actualizar el tipo de email:', error);
+          }
+        );
+      } else {
+        this.emailTypeService.createEmailType(emailType).subscribe(
+          response => {
+            console.log('Tipo de email creado:', response);
+            this.loadEmailTypes(); 
+            this.resetForm();
+          },
+          error => {
+            console.error('Error al crear el tipo de email:', error);
+          }
+        );
+      }
+    } else {
+      console.error('Formulario no válido');
+    }
+  }
+
+  deleteEmailType(id: string): void {
+    this.emailTypeService.deleteEmailType(id).subscribe(
+      response => {
+        console.log('Tipo de email eliminado:', response);
+        this.loadEmailTypes(); 
+      },
+      error => {
+        console.error('Error al eliminar el tipo de email:', error);
+      }
+    );
   }
 
   editEmailType(emailType: EmailType): void {
-    this.selectedEmailType = emailType;
-    this.emailTypeForm.patchValue(emailType);
-    this.isEditMode = true;
+    this.editingEmailTypeId = emailType._id || null;
+    this.emailTypeForm.patchValue({
+      codigo: emailType.codigo,
+      nombre: emailType.nombre,
+      descripcion: emailType.descripcion,
+      variables_requeridas: emailType.variables_requeridas.join(', '), 
+    });
   }
 
-  deleteEmailType(emailType: EmailType): void {
-    if (confirm(`¿Estás seguro de que quieres eliminar el tipo de email "${emailType.nombre}"?`)) {
-      if (emailType._id) {
-        this.emailTypeService.deleteEmailType(emailType._id).subscribe({
-          next: () => {
-            this.emailTypes = this.emailTypes.filter(type => type._id !== emailType._id);
-          },
-          error: (err) => {
-            this.error = 'Error deleting email type: ' + err.message;
-          }
-        });
-      } else {
-        this.error = 'ID de tipo de email no válido.';
-      }
-    }
-  }
-
-  updateEmailType(): void {
-    if (this.emailTypeForm.valid && this.selectedEmailType) {
-      const updatedEmailType: EmailType = {
-        ...this.selectedEmailType,
-        ...this.emailTypeForm.value
-      };
-
-      if (updatedEmailType._id) {
-        this.emailTypeService.updateEmailType(updatedEmailType._id, updatedEmailType).subscribe({
-          next: () => {
-            const index = this.emailTypes.findIndex(emailType => emailType._id === updatedEmailType._id);
-            if (index !== -1) {
-              this.emailTypes[index] = updatedEmailType;
-            }
-            this.emailTypeForm.reset();
-            this.selectedEmailType = null;
-            this.isEditMode = false;
-            this.successMessage = 'Tipo de email actualizado correctamente.';
-          },
-          error: (err) => {
-            this.error = 'Error updating email type: ' + err.message;
-          }
-        });
-      } else {
-        this.error = 'ID de tipo de email no válido.';
-      }
-    }
+  resetForm() {
+    this.editingEmailTypeId = null; 
+    this.emailTypeForm.reset(); 
   }
 }
