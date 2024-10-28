@@ -16,26 +16,33 @@ h2 {
 .email-type-form {
   display: flex;
   flex-direction: column;
-  gap: 16px; 
+  gap: 16px;
   padding: 16px;
 }
 
 .form-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 16px; 
+  margin-top: 16px;
 }
 
 .submit-button {
-  flex-grow: 1; 
-  margin-right: 8px; 
+  flex-grow: 1;
+  margin-right: 8px;
+}
+.reset-button {
+  flex-grow: 1;
 }
 
-.reset-button {
-  flex-grow: 1; }
-
 table {
+  width: 100%; 
   margin-top: 16px;
+  border-collapse: collapse; 
+}
+td, th {
+  padding: 8px; 
+  text-align: left; 
+  border: 1px solid #ddd;
 }
 
 mat-toolbar {
@@ -45,10 +52,84 @@ mat-toolbar {
 
 .action-buttons {
   display: flex;
-  justify-content: space-between; 
-  gap: 8px; 
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .action-buttons button {
-  flex: 1; 
+  flex: 1;
+}
+.mat-table-responsive {
+  overflow-x: auto; 
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 20px; 
+  }
+
+  .email-type-form {
+    padding: 8px; 
+  }
+
+  .form-actions {
+    flex-direction: column; 
+  }
+
+  .submit-button, .reset-button {
+    margin-right: 0; /* Eliminar margen derecho */
+    margin-bottom: 8px; /* Espaciado entre botones en columna */
+  }
+
+  .submit-button:last-child,
+  .reset-button:last-child {
+    margin-bottom: 0; /* Sin margen en el último botón */
+  }
+
+  table {
+    font-size: 14px; /* Disminuir tamaño de texto en la tabla */
+  }
+  .mat-table-responsive {
+    display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
+  }
+
+  .mat-header-cell, .mat-cell {
+    padding: 8px; /* Reduce el padding para más espacio */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+  }
+
+  td.mat-cell input {
+    width: 100%; /* Hace que los inputs ocupen todo el ancho */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  }
+
+  .action-buttons {
+    flex-direction: column; /* Cambiar a columna para botones de acción en pantallas pequeñas */
+  }
+
+  .action-buttons button {
+    margin-bottom: 8px; /* Espacio entre botones de acción */
+  }
+
+  .action-buttons button:last-child {
+    margin-bottom: 0; /* Sin margen en el último botón */
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 18px; 
+  }
+
+  .email-type-form {
+    gap: 12px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+  .mat-header-cell, .mat-cell {
+    padding: 6px; 
+    font-size: 12px; 
+  }
 }
