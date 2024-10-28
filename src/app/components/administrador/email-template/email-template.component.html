@@ -1,58 +1,85 @@
 <div class="container">
-  <!-- Formulario para actualizar una plantilla -->
-  <form (ngSubmit)="updateTemplate()" *ngIf="isEditing">
-    <div class="form-field">
-      <label for="nombre">Nombre:</label>
-      <input matInput type="text" [(ngModel)]="currentTemplate.nombre" name="nombre" placeholder="Nombre" required />
-    </div>
+  <h2>Plantillas de email</h2>
 
-   <!-- Campo tipo omitido en la edición -->
-<div class="form-field" *ngIf="!isEditing">
+<form [formGroup]="emailTemplateForm" (ngSubmit)="onSubmit()" class="email-type-form">
   <mat-form-field appearance="fill">
-    <mat-label>Tipo:</mat-label>
-    <input matInput type="text" [(ngModel)]="currentTemplate.tipo" name="tipo" placeholder="Tipo" required />
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" required />
+    <mat-error *ngIf="emailTemplateForm.get('nombre')?.hasError('required')">
+      El nombre es obligatorio.
+    </mat-error>
   </mat-form-field>
-</div>
 
-<div class="form-field">
   <mat-form-field appearance="fill">
-    <mat-label>Asunto:</mat-label>
-    <input matInput type="text" [(ngModel)]="currentTemplate.asunto" name="asunto" placeholder="Asunto" required />
-  </mat-form-field>
-</div>
-
-<div class="form-field">
-  <mat-form-field appearance="fill">
-    <mat-label>Contenido HTML:</mat-label>
-    <textarea matInput [(ngModel)]="currentTemplate.contenido_html" name="contenido_html" placeholder="Contenido HTML" required></textarea>
-  </mat-form-field>
-</div>
-
-<div class="form-field">
-  <mat-form-field appearance="fill">
-    <mat-label>Contenido Texto Plano:</mat-label>
-    <textarea matInput [(ngModel)]="currentTemplate.contenido_texto" name="contenido_texto" placeholder="Contenido Texto Plano" required></textarea>
-  </mat-form-field>
-</div>
-
-<div class="form-field">
-  <mat-form-field appearance="fill">
-    <mat-label>Variables (separadas por comas):</mat-label>
-    <input matInput type="text" [(ngModel)]="currentTemplate.variables" name="variables" placeholder="Variables" />
-  </mat-form-field>
-</div>
-
-<button mat-raised-button color="primary" type="submit">Update Template</button>
-<button mat-button type="button" (click)="cancelEdit()">Cancel</button>
-
-  </form>
-
-  <!-- Lista de plantillas -->
-  <h3>Plantillas Disponibles</h3>
+    <mat-label>Tipo de Email</mat-label>
+    <mat-select formControlName="tipo">
+      <mat-option *ngFor="let emailType of emailTypes" [value]="emailType._id">
+        {{ emailType.nombre }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>  
   
-    <mat-list-item *ngFor="let template of templates" class="template-item">
-      <h4>{{ template.nombre }}</h4>
-      <button mat-button (click)="editTemplateDetails(template)">Edit</button>
-      <button mat-button (click)="deleteTemplate(template._id!)">Delete</button>
-    </mat-list-item>
+  <mat-form-field appearance="fill">
+    <mat-label>Asunto</mat-label>
+    <input matInput formControlName="asunto" required />
+    <mat-error *ngIf="emailTemplateForm.get('asunto')?.hasError('required')">
+      El asunto es obligatorio.
+    </mat-error>
+  </mat-form-field>
 
+  <mat-form-field appearance="fill">
+    <mat-label>Contenido HTML</mat-label>
+    <textarea matInput formControlName="contenido_html" required></textarea>
+    <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.hasError('required')">
+      El contenido HTML es obligatorio.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Contenido Texto</mat-label>
+    <textarea matInput formControlName="contenido_texto" required></textarea>
+    <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.hasError('required')">
+      El contenido de texto es obligatorio.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Variables Requeridas (separadas por comas)</mat-label>
+    <input matInput formControlName="variables" required>
+    <mat-error *ngIf="emailTemplateForm.get('variables')?.hasError('required')">Este campo es obligatorio.</mat-error>
+  </mat-form-field>
+  <button mat-button color="primary" type="submit">
+    {{ editingEmailTemplateId ? 'Actualizar' : 'Guardar' }}
+  </button>
+</form>
+<mat-divider></mat-divider>
+<h2>Plantillas de email</h2>
+<table mat-table [dataSource]="emailTemplates" class="mat-elevation-z8 mat-table-responsive">
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+    <td mat-cell *matCellDef="let email"> {{ email.nombre }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="tipo">
+    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+    <td mat-cell *matCellDef="let email"> {{ email.tipo.nombre }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contenido_html">
+    <th mat-header-cell *matHeaderCellDef> Contenido</th>
+    <td mat-cell *matCellDef="let email"> {{ email.contenido_html }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td mat-cell *matCellDef="let email">
+      <div class="action-buttons">
+        <button mat-button color="warn" (click)="deleteEmailTemplate(email._id)">Eliminar</button>
+        <button mat-button color="primary" (click)="editEmailTemplate(email)">Editar</button>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['nombre', 'tipo',  'contenido_html','acciones']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['nombre', 'tipo',  'contenido_html','acciones']"></tr>
+</table>

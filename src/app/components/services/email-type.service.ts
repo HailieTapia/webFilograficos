@@ -16,7 +16,6 @@ export interface EmailType {
   __v?: number; // (opcional)
 }
 
-
 export interface EmailTypeResponse {
   emailTypes: EmailType[];
 }

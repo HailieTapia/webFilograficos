@@ -1,168 +1,135 @@
-/* Estilo general para la contenedor principal */
 .container {
-  max-width: 650px;
-  /* Limitar el ancho del contenedor */
+  max-width: 1200px;
   margin: 0 auto;
-  /* Centrar el contenedor */
-  padding: 30px;
-  /* Espaciado interno */
-  border-radius: 3px;
-  /* Bordes redondeados */
-  background-color: #f9f9f9;
-  /* Fondo claro */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Sombra suave */
-  display: flex;
-  /* Flexbox para alineación */
-  flex-direction: column;
-  /* Direccionar contenido en columna */
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-/* Títulos */
 h2 {
-  text-align: center;
-  /* Centrar el texto */
-  color: #333;
-  /* Color del texto */
   margin-bottom: 20px;
-  /* Espaciado inferior */
+  font-size: 24px;
+  color: var(--text-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
 }
 
-.form-field {
-  width: 100%;
-  /* Full width for form fields */
-  margin-bottom: 15px;
-  /* Space between fields */
+.email-type-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
 }
 
-button {
-  margin-top: 10px;
-  /* Space above buttons */
-  width: 100%;
-  /* Full width for buttons */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
 }
 
-h3 {
-  color: #555;
-  /* Color del subtítulo */
-  margin-top: 30px;
-  /* Espaciado superior */
+.submit-button {
+  flex-grow: 1;
+  margin-right: 8px;
+}
+.reset-button {
+  flex-grow: 1;
 }
 
-/* Estilo para las etiquetas */
-label {
-  width: 100%;
+table {
+  width: 100%; 
+  margin-top: 16px;
+  border-collapse: collapse; 
+}
+td, th {
+  padding: 8px; 
+  text-align: left; 
+  border: 1px solid #ddd;
+}
+
+mat-toolbar {
+  font-size: 20px;
   font-weight: bold;
-  /* Negrita para las etiquetas */
-  margin-bottom: 5px;
-  /* Espaciado inferior */
-  display: block;
-  /* Hacer que las etiquetas sean bloques */
 }
 
-/* Estilo de lista de plantillas */
-.mat-list {
-  margin-top: 20px;
-  /* Espaciado superior de la lista */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-/* Estilo para cada elemento de la lista */
-.template-item {
-  border-bottom: 1px solid #eee;
-  /* Línea inferior para separar elementos */
-  padding: 10px 0;
-  /* Espaciado vertical */
+.action-buttons button {
+  flex: 1;
+}
+.mat-table-responsive {
+  overflow-x: auto; 
 }
 
-/* Estilo para el nombre de la plantilla */
-.template-item h4 {
-  margin: 0;
-  /* Sin margen para el título */
-  color: #007bff;
-  /* Color para el nombre de la plantilla */
-}
-
-/* Estilo de botones en elementos de lista */
-.template-item button {
-  margin-right: 10px;
-  /* Espaciado entre botones */
-}
-
-/* Cambiar color del botón al pasar el mouse */
-button:hover {
-  background-color: #007bff;
-  /* Color de fondo al pasar el mouse */
-  color: white;
-  /* Color del texto al pasar el mouse */
-}
-
-/* Espaciado y estilo en botones secundarios */
-.mat-button {
-  color: #007bff;
-  /* Color de texto */
-}
-
-.mat-button:hover {
-  color: #0056b3;
-  /* Color al pasar el mouse */
-}
-
-/* Media Queries para Responsividad */
 @media (max-width: 768px) {
-  .container {
-    padding: 15px;
-    /* Menor espaciado en pantallas pequeñas */
+  h2 {
+    font-size: 16px; 
   }
 
-  /* Aumentar tamaño de los campos de entrada */
-  .form-field input,
-  .form-field textarea {
-    font-size: 14px;
-    /* Texto más pequeño */
-    padding: 10px;
-    /* Espaciado interno en campos */
+  .email-type-form {
+    padding: 8px; 
   }
 
-  button {
-    padding: 10px;
-    /* Mayor espaciado en botones */
+  .form-actions {
+    flex-direction: column; 
   }
 
-  /* Listar plantillas en formato de bloque */
-  .template-item {
-    display: block;
-    /* Cambiar a bloque en pantallas pequeñas */
-    margin-bottom: 15px;
-    /* Espaciado entre elementos de la lista */
+  .submit-button, .reset-button {
+    margin-right: 0; /* Eliminar margen derecho */
+    margin-bottom: 8px; /* Espaciado entre botones en columna */
+  }
+
+  .submit-button:last-child,
+  .reset-button:last-child {
+    margin-bottom: 0; /* Sin margen en el último botón */
+  }
+
+  table {
+    font-size: 12px; /* Disminuir tamaño de texto en la tabla */
+  }
+  .mat-table-responsive {
+    display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
+  }
+
+  .mat-header-cell, .mat-cell {
+    padding: 8px; /* Reduce el padding para más espacio */
+    font-size: 12px; /* Tamaño de fuente más pequeño */
+  }
+
+  td.mat-cell input {
+    width: 100%; /* Hace que los inputs ocupen todo el ancho */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  }
+
+  .action-buttons {
+    flex-direction: column; /* Cambiar a columna para botones de acción en pantallas pequeñas */
+  }
+
+  .action-buttons button {
+    margin-bottom: 8px; /* Espacio entre botones de acción */
+  }
+
+  .action-buttons button:last-child {
+    margin-bottom: 0; /* Sin margen en el último botón */
   }
 }
 
 @media (max-width: 480px) {
-
-  /* Ajustes adicionales para pantallas muy pequeñas */
-  .container {
-    max-width: 100%;
-    /* Aumentar contenedor al 100% */
-  }
-
   h2 {
-    font-size: 1.5em;
-    /* Tamaño de fuente para encabezado */
+    font-size: 16px; 
   }
 
-  h3 {
-    font-size: 1.2em;
-    /* Tamaño de fuente para subtítulo */
+  .email-type-form {
+    gap: 12px;
   }
 
-  /* Ajustar tamaños de botones */
-  button {
-    font-size: 14px;
-    /* Tamaño de fuente en botones */
+  table {
+    font-size: 11px;
   }
-
-  .template-item h4 {
-    font-size: 1em;
-    /* Tamaño de fuente para nombre de plantilla */
+  .mat-header-cell, .mat-cell {
+    padding: 6px; 
+    font-size: 11px; 
   }
 }
