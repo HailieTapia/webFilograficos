@@ -20,14 +20,6 @@ export class IncidenciaService {
     }).pipe();
   }
 
-  // Actualizar el máximo de intentos fallidos de inicio de sesión
-  updateMaxFailedLoginAttempts(maxAttempts: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/update-max-login-attempts`,
-      { maxAttempts },
-      { withCredentials: true }
-    ).pipe();
-  }
-
   // Actualizar los tiempos de vida de tokens y códigos
   updateTokenLifetime(config: {
     jwt_lifetime: number,
@@ -35,7 +27,11 @@ export class IncidenciaService {
     otp_lifetime: number,
     sesion_lifetime: number,
     cookie_lifetime: number,
-    expirationThreshold_lifetime?: number
+    expirationThreshold_lifetime?: number,
+    maximo_intentos_fallidos_login: number,
+    maximo_bloqueos_en_n_dias: number,
+    dias_periodo_de_bloqueo: number,
+
   }): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`,
       config,

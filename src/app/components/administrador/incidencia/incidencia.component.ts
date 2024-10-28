@@ -78,19 +78,6 @@ export class IncidenciaComponent implements OnInit {
       }
     });
   }
-
-
-  // Método para actualizar el máximo de intentos fallidos de inicio de sesión
-  updateMaxFailedLoginAttempts(maxAttempts: number): void {
-    this.incidenciaService.updateMaxFailedLoginAttempts(maxAttempts).subscribe({
-      next: (response) => {
-        console.log('Máximo de intentos fallidos actualizado:', response);
-      },
-      error: (error) => {
-        console.error('Error al actualizar el máximo de intentos fallidos:', error);
-      }
-    });
-  }
   // Método para actualizar los tiempos de vida de tokens y códigos
   updateTokenLifetime(config: { parametro: string, valor: any }[]): void {
     // Convertir la configuración a un objeto con los parámetros correctos
@@ -101,6 +88,9 @@ export class IncidenciaComponent implements OnInit {
       sesion_lifetime: config.find(c => c.parametro === 'Tiempo de vida de la sesión')?.valor,
       cookie_lifetime: config.find(c => c.parametro === 'Tiempo de vida de cookies')?.valor,
       expirationThreshold_lifetime: config.find(c => c.parametro === 'Umbral de expiración')?.valor,
+      maximo_intentos_fallidos_login: config.find(c => c.parametro === 'Máximo intentos fallidos')?.valor,
+      maximo_bloqueos_en_n_dias: config.find(c => c.parametro === 'Máximo bloqueos en días')?.valor,
+      dias_periodo_de_bloqueo: config.find(c => c.parametro === 'Días de bloqueo')?.valor,
     };
 
     this.incidenciaService.updateTokenLifetime(updatedConfig).subscribe({
