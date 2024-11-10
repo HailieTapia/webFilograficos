@@ -96,8 +96,7 @@
   <!-- Modal para actualizar documento -->
   <ng-template #updateModal let-data>
     <div mat-dialog-content class="update-modal">
-      <h3>Actualizar documento regulatorio</h3>
-
+      <h3>Actualizar</h3>
       <form (ngSubmit)="updateDocument(data.id)" #updateForm="ngForm" class="form-container">
         <mat-form-field appearance="outline">
           <mat-label>Título</mat-label>
@@ -134,7 +133,7 @@
   <!-- Add a modal for version history -->
   <ng-template #versionHistoryModal let-data>
     <div mat-dialog-content class="version-history-modal">
-      <h3>Historial de Versiones - {{ data.documentTitle }}</h3>
+      <h3>Historial de Versiones {{ data.documentTitle }}</h3>
 
       <table mat-table [dataSource]="data.versions" class="mat-elevation-z8">
         <ng-container matColumnDef="version">
