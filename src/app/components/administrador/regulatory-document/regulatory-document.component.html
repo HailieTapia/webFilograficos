@@ -1,6 +1,6 @@
 <div class="container">
   <div *ngIf="isLoading" class="loading-spinner">
-    <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
 
@@ -64,19 +64,20 @@
       <form (ngSubmit)="createDocument()" #documentForm="ngForm" class="form-container">
         <mat-form-field appearance="outline">
           <mat-label>Título</mat-label>
-          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required>
+          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required #titulo="ngModel">
             <mat-option value="Política de privacidad">Política de privacidad</mat-option>
             <mat-option value="Términos y condiciones">Términos y condiciones</mat-option>
             <mat-option value="Deslinde legal">Deslinde legal</mat-option>
           </mat-select>
+          <mat-error *ngIf="titulo.invalid && titulo.touched">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Contenido</mat-label>
           <textarea matInput placeholder="Contenido del documento en Markdown" [(ngModel)]="newDocument.contenido"
-            name="contenido" required></textarea>
+            name="contenido" required #contenido="ngModel"></textarea>
+          <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>Fecha de Vigencia</mat-label>
           <input matInput [matDatepicker]="picker" [(ngModel)]="newDocument.fecha_vigencia" name="fecha_vigencia">
@@ -100,17 +101,19 @@
       <form (ngSubmit)="updateDocument(data.id)" #updateForm="ngForm" class="form-container">
         <mat-form-field appearance="outline">
           <mat-label>Título</mat-label>
-          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required>
+          <mat-select [(ngModel)]="newDocument.titulo" name="titulo" required #titulo="ngModel">
             <mat-option value="Política de privacidad">Política de privacidad</mat-option>
             <mat-option value="Términos y condiciones">Términos y condiciones</mat-option>
             <mat-option value="Deslinde legal">Deslinde legal</mat-option>
           </mat-select>
+          <mat-error *ngIf="titulo.invalid && titulo.touched">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Contenido</mat-label>
           <textarea matInput placeholder="Contenido del documento en Markdown" [(ngModel)]="newDocument.contenido"
-            name="contenido" required></textarea>
+            name="contenido" required #contenido="ngModel"></textarea>
+          <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -147,9 +150,7 @@
         <tr mat-header-row *matHeaderRowDef="['version', 'contenido']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['version', 'contenido'];"></tr>
       </table>
-      
     </div>
-
     <div mat-dialog-actions>
       <button mat-button (click)="closeModal()">Cerrar</button>
     </div>
