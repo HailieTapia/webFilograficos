@@ -5,8 +5,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -22,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-regulatory-document',
   standalone: true,
-  imports: [MatTooltipModule,MatDialogModule, MatButtonModule, MatIconModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatIconModule, FormsModule, CommonModule, MatTableModule, MatPaginatorModule, MatSortModule, MatInputModule, MatFormFieldModule],
+  imports: [MatTooltipModule,MatDialogModule, MatButtonModule, MatIconModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatIconModule, FormsModule, CommonModule, MatTableModule, MatInputModule, MatFormFieldModule],
   templateUrl: './regulatory-document.component.html',
   styleUrls: ['./regulatory-document.component.css']
 })
@@ -130,7 +128,7 @@ export class RegulatoryDocumentComponent implements OnInit {
   // Método para cerrar el modal
   closeModal(): void {
     if (this.modalRef) {
-      this.modalRef.close(); // Cierra el modal si existe
+      this.modalRef.close();
     }
   }
   
@@ -179,7 +177,6 @@ export class RegulatoryDocumentComponent implements OnInit {
       verticalPosition: 'bottom',
     });
   
-    // Cuando el usuario haga clic en el botón "Sí"
     snackBarRef.onAction().subscribe(() => {
       this.isLoading = true;
       this.documentService.deleteDocument(documentId).subscribe({
@@ -203,7 +200,6 @@ export class RegulatoryDocumentComponent implements OnInit {
       });
     });
   
-    // Si el usuario hace clic en el botón "Cerrar", puedes cancelar la eliminación
     snackBarRef.afterDismissed().subscribe(() => {
       console.log('Eliminación cancelada');
     });

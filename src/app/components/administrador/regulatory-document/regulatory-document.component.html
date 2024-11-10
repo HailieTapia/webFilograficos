@@ -1,19 +1,14 @@
-<!-- Contenedor principal -->
 <div class="container">
-
   <div *ngIf="isLoading" class="loading-spinner">
     <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
-
   <div class="header-container">
     <h2>Documentos Regulatorios</h2>
     <button mat-raised-button color="primary" (click)="openCreateModal(createModal)">
       Crear Documento
     </button>
   </div>
-
-  <!-- Tabla de documentos -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-responsive">
     <ng-container matColumnDef="titulo">
       <th mat-header-cell *matHeaderCellDef> Título </th>
@@ -53,8 +48,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
-  <!-- Modal para crear documento -->
   <ng-template #createModal>
     <div mat-dialog-content class="create-modal">
       <h3>Nuevo documento regulatorio</h3>
@@ -90,11 +83,9 @@
     </div>
   </ng-template>
 
-  <!-- Modal para actualizar documento -->
   <ng-template #updateModal let-data>
     <div mat-dialog-content class="update-modal">
       <h3>Actualizar documento regulatorio</h3>
-
       <form (ngSubmit)="updateDocument(data.id)" #updateForm="ngForm" class="form-container">
         <mat-form-field appearance="outline">
           <mat-label>Título</mat-label>
