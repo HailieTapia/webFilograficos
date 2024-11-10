@@ -1,8 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RegulatorioService } from '../../services/regulatorios.service';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-regulatory-document',
   standalone: true,
-  imports: [MatTooltipModule,MatDialogModule, MatButtonModule, MatIconModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatIconModule, FormsModule, CommonModule, MatTableModule, MatInputModule, MatFormFieldModule],
+  imports: [MatTooltipModule,MatDialogModule, MatButtonModule, MatIconModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatProgressSpinnerModule, MatIconModule, FormsModule, CommonModule, MatTableModule],
   templateUrl: './regulatory-document.component.html',
   styleUrls: ['./regulatory-document.component.css']
 })
@@ -202,30 +200,6 @@ export class RegulatoryDocumentComponent implements OnInit {
   
     snackBarRef.afterDismissed().subscribe(() => {
       console.log('Eliminación cancelada');
-    });
-  }
-  
-  // Restaurar un documento
-  restoreDocument(documentId: string): void {
-    this.isLoading = true;
-    this.documentService.restoreDocument(documentId).subscribe({
-      next: (response) => {
-        this.snackBar.open('Documento restaurado', 'Cerrar', {
-          duration: 3000, 
-          panelClass: ['success-snackbar'], 
-          horizontalPosition: 'center', 
-        });
-        this.fetchAllDocuments();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.snackBar.open('Error al restaurar los documentos', 'Cerrar', {
-          duration: 3000, 
-          panelClass: ['error-snackbar'], 
-          horizontalPosition: 'center', 
-        });
-        this.isLoading = false;
-      }
     });
   }
 }
