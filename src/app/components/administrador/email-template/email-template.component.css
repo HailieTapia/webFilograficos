@@ -1,135 +1,95 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: var(--background);
 }
-
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: var(--text-color);
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
-}
-
-.email-type-form {
+.header-container {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.h2 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.header-container button {
+  border-radius: 5px;
+}
+
+.create-modal, .update-modal {
+  margin: 20px;
+}
+
+h3 {
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #000000;
+  font-size: 25px;
+  text-align: center;
+}
+
+.form-container mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.form-container mat-form-field label {
+  font-size: 1rem; 
+  font-weight: 500;
 }
 
 .form-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
+  justify-content: flex-end;
+  gap: 10px;
 }
-
-.submit-button {
-  flex-grow: 1;
-  margin-right: 8px;
+.form-actions button {
+  padding: 10px 20px;
+  font-size: 1rem;
 }
-.reset-button {
-  flex-grow: 1;
+.btn:hover {
+  background-color: var(--primary-color);
 }
-
-table {
-  width: 100%; 
-  margin-top: 16px;
-  border-collapse: collapse; 
-}
-td, th {
-  padding: 8px; 
-  text-align: left; 
-  border: 1px solid #ddd;
-}
-
-mat-toolbar {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.action-buttons button {
-  flex: 1;
-}
-.mat-table-responsive {
-  overflow-x: auto; 
-}
-
 @media (max-width: 768px) {
-  h2 {
-    font-size: 16px; 
+  .container {
+      padding: 15px;
   }
 
-  .email-type-form {
-    padding: 8px; 
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  .form-actions {
-    flex-direction: column; 
+  .form-control {
+      font-size: 0.9rem;
+      padding: 10px;
   }
 
-  .submit-button, .reset-button {
-    margin-right: 0; /* Eliminar margen derecho */
-    margin-bottom: 8px; /* Espaciado entre botones en columna */
-  }
-
-  .submit-button:last-child,
-  .reset-button:last-child {
-    margin-bottom: 0; /* Sin margen en el último botón */
-  }
-
-  table {
-    font-size: 12px; /* Disminuir tamaño de texto en la tabla */
-  }
-  .mat-table-responsive {
-    display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
-  }
-
-  .mat-header-cell, .mat-cell {
-    padding: 8px; /* Reduce el padding para más espacio */
-    font-size: 12px; /* Tamaño de fuente más pequeño */
-  }
-
-  td.mat-cell input {
-    width: 100%; /* Hace que los inputs ocupen todo el ancho */
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-  }
-
-  .action-buttons {
-    flex-direction: column; /* Cambiar a columna para botones de acción en pantallas pequeñas */
-  }
-
-  .action-buttons button {
-    margin-bottom: 8px; /* Espacio entre botones de acción */
-  }
-
-  .action-buttons button:last-child {
-    margin-bottom: 0; /* Sin margen en el último botón */
+  .btn {
+      font-size: 0.9rem;
+      padding: 10px 0;
   }
 }
 
 @media (max-width: 480px) {
-  h2 {
-    font-size: 16px; 
+  .container {
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: none;
+  }
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  .email-type-form {
-    gap: 12px;
+  .form-control {
+      font-size: 0.85rem;
+      padding: 8px;
   }
 
-  table {
-    font-size: 11px;
-  }
-  .mat-header-cell, .mat-cell {
-    padding: 6px; 
-    font-size: 11px; 
+  .btn {
+      font-size: 0.85rem;
+      padding: 8px 0;
   }
 }

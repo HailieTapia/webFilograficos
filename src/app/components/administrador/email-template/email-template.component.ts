@@ -1,34 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { EmailTemplateService, EmailTemplate } from '../../services/email-template.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button'; 
-import { MatInputModule } from '@angular/material/input'; 
-import { MatFormFieldModule } from '@angular/material/form-field'; 
-import { MatListModule } from '@angular/material/list'; 
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../services/auth.service';
 import { MatTableModule } from '@angular/material/table';
-import { EmailTypeService, EmailType } from '../../services/email-type.service'; 
-import { MatSelectModule } from '@angular/material/select'; // Importar MatSelectModule
-
+import { EmailTypeService, EmailType } from '../../services/email-type.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-email-template',
   standalone: true,
-  imports: [MatSelectModule,ReactiveFormsModule, MatTableModule, CommonModule, FormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatListModule],
+  imports: [MatProgressSpinnerModule, MatTooltipModule, MatIconModule, MatSelectModule, ReactiveFormsModule, MatTableModule, CommonModule, FormsModule, MatButtonModule, MatInputModule, MatFormFieldModule],
   templateUrl: './email-template.component.html',
-  styleUrls: ['./email-template.component.css'],
+  styleUrls: ['./email-template.component.css', '../../estilos/spinner.css', '../../estilos/tablas.css', '../../estilos/snackbar.css', '../../estilos/botonesIcon.css'],
 })
 export class EmailTemplateComponent implements OnInit {
+  @ViewChild('createOrUpdateModal', { static: true }) createOrUpdateModal!: TemplateRef<any>;
   emailTemplateForm: FormGroup;
   emailTemplates: EmailTemplate[] = [];
-  editingEmailTemplateId: string | null = null; 
-  emailTypes: EmailType[] = []; 
-
+  editingEmailTemplateId: string | null | undefined = null;
+  emailTypes: EmailType[] = [];
+  isLoading: boolean = false;
+  modalRef: MatDialogRef<any> | null = null;
   constructor(
     private fb: FormBuilder,
     private emailTemplateService: EmailTemplateService,
     private authService: AuthService,
-    private emailTypeService: EmailTypeService
+    private emailTypeService: EmailTypeService,
+    private snackBar: MatSnackBar, private dialog: MatDialog
   ) {
     this.emailTemplateForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -38,54 +44,72 @@ export class EmailTemplateComponent implements OnInit {
       contenido_texto: ['', [Validators.required]],
       variables: [[], [Validators.required]],
     });
-  } 
-
+  }
   ngOnInit(): void {
     this.loadEmailTemplates();
-    this.loadEmailTypes(); 
+    this.loadEmailTypes();
   }
-  
-  loadEmailTemplates(): void {
+  openModal(template: EmailTemplate | null = null): void {
+    if (template) {
+      this.editingEmailTemplateId = template._id;
+      this.emailTemplateForm.patchValue({
+        nombre: template.nombre,
+        tipo: template.tipo,
+        asunto: template.asunto,
+        contenido_html: template.contenido_html,
+        contenido_texto: template.contenido_texto,
+        variables: template.variables.join(', ')
+      });
+    } else {
+      this.resetForm();
+    }
+    this.modalRef = this.dialog.open(this.createOrUpdateModal);
+  }
+  //cargar plantillas email
+  private loadEmailTemplates(): void {
+    this.isLoading = true;
     this.emailTemplateService.getAllTemplates().subscribe(
-      (response) => {
-        console.log('API Response:', response); 
-        this.emailTemplates = response; 
-        const activeTemplates = this.emailTemplates.filter(template => template.activo);
-        console.log('Active Email Templates:', activeTemplates); 
+      response => {
+        this.emailTemplates = response.filter(template => template.activo);
+        this.isLoading = false;
       },
       (error) => {
-        console.error('Error al obtener plantillas de email:', error);
+        const errorMessage = error?.error?.message || 'Error al obtener plantillas de email';
+        this.snackBar.open(errorMessage, 'Cerrar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+          horizontalPosition: 'center',
+        });
+        this.isLoading = false;
       }
     );
   }
 
-  loadEmailTypes(): void {
+  private loadEmailTypes(): void {
+    this.isLoading = true;
     this.emailTypeService.getAllEmailTypes().subscribe(
-      (response) => {
-        this.emailTypes = response.emailTypes; // Ensure response has the correct structure
-        console.log('Tipos de Email Cargados:', this.emailTypes);
+      response => {
+        this.emailTypes = response.emailTypes;
+        this.isLoading = false;
       },
       (error) => {
-        console.error('Error al cargar tipos de email:', error);
+        const errorMessage = error?.error?.message || 'Error al obtener tipos de email';
+        this.snackBar.open(errorMessage, 'Cerrar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+          horizontalPosition: 'center',
+        });
+        this.isLoading = false;
       }
     );
   }
-  onSubmit() {
+  onSubmit(): void {
     if (this.emailTemplateForm.valid) {
       const formValues = this.emailTemplateForm.value;
-    
-      const variables: string[] = formValues.variables
-        ? formValues.variables.split(',')
-            .map((item: string) => item.trim())
-            .filter((item: string) => item.length > 0)
-        : [];
-    
+      const variables = formValues.variables.split(',').map((item: string) => item.trim()).filter((item: string) => item.length > 0);
       const userId = this.authService.getId();
-      if (!userId) {
-        console.error('No se pudo obtener el ID del usuario.');
-        return; 
-      }
-    
+      if (!userId) return;
+
       const emailTemplate: EmailTemplate = {
         nombre: formValues.nombre,
         tipo: formValues.tipo,
@@ -93,52 +117,96 @@ export class EmailTemplateComponent implements OnInit {
         contenido_html: formValues.contenido_html,
         contenido_texto: formValues.contenido_texto,
         variables: variables,
-        creado_por: userId,
+        creado_por: userId
       };
-    
-      // Verificar si estamos editando una plantilla existente
       if (this.editingEmailTemplateId) {
         this.emailTemplateService.updateTemplate(this.editingEmailTemplateId, emailTemplate).subscribe(
-          response => {
-            console.log('Plantilla de email actualizada:', response);
+          () => {
+            this.snackBar.open('Plantilla actualizada', 'Cerrar', {
+              duration: 3000,
+              panelClass: ['success-snackbar'],
+              horizontalPosition: 'center',
+            });
             this.loadEmailTemplates();
             this.resetForm();
+            this.closeModal();
           },
-          error => {
-            console.error('Error al actualizar plantilla de email:', error);
+          (error) => {
+            const errorMessage = error?.error?.message || 'Error al actualizar plantillas de email';
+            this.snackBar.open(errorMessage, 'Cerrar', {
+              duration: 3000,
+              panelClass: ['error-snackbar'],
+              horizontalPosition: 'center',
+            });
+            this.isLoading = false;
           }
         );
       } else {
-        // Crear una nueva plantilla
         this.emailTemplateService.createTemplate(emailTemplate).subscribe(
-          response => {
-            console.log('Plantilla de email creada:', response);
+          () => {
+            this.snackBar.open('Plantilla creada', 'Cerrar', {
+              duration: 3000,
+              panelClass: ['success-snackbar'],
+              horizontalPosition: 'center',
+            });
             this.loadEmailTemplates();
             this.resetForm();
+            this.closeModal();
           },
-          error => {
-            console.error('Error al crear plantilla de email:', error);
+          (error) => {
+            const errorMessage = error?.error?.message || 'Error al crear plantillas de email';
+            this.snackBar.open(errorMessage, 'Cerrar', {
+              duration: 3000,
+              panelClass: ['error-snackbar'],
+              horizontalPosition: 'center',
+            });
+            this.isLoading = false;
           }
         );
       }
-    } else {
-      console.error('Formulario no válido');
     }
   }
-  
-  
+  // eliminar plantilla email
   deleteEmailTemplate(id: string): void {
-    this.emailTemplateService.deleteTemplate(id).subscribe(
-      response => {
-        console.log('Plantilla de email eliminada:', response);
-        this.loadEmailTemplates(); 
-      },
-      error => {
-        console.error('Error al eliminar plantilla de email:', error);
-      }
-    );
-  }
+    const snackBarRef = this.snackBar.open('¿Estás seguro de que quieres eliminar esta plantilla?', 'Sí', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    let actionConfirmed = false;
+    snackBarRef.onAction().subscribe(() => {
+      this.emailTemplateService.deleteTemplate(id).subscribe({
+        next: () => {
+          this.snackBar.open('Plantilla eliminada exitosamente', 'Cerrar', {
+            duration: 3000,
+            panelClass: ['success-snackbar'],
+            horizontalPosition: 'center',
+          });
+          this.loadEmailTemplates(); 
+        },
+        error: (error) => {
+          const errorMessage = error?.error?.message || 'Error al eliminar plantilla de email';
+          this.snackBar.open(errorMessage, 'Cerrar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+            horizontalPosition: 'center',
+          });
+        }
+      });
+      actionConfirmed = true;
+    });
 
+    snackBarRef.afterDismissed().subscribe(() => {
+      if (!actionConfirmed) {
+        this.snackBar.open('Eliminación cancelada', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+          horizontalPosition: 'center',
+        });
+      }
+    });
+  }
+  //editar plantila email
   editEmailTemplate(emailTemplate: EmailTemplate): void {
     this.editingEmailTemplateId = emailTemplate._id || null;
     this.emailTemplateForm.patchValue({
@@ -147,12 +215,18 @@ export class EmailTemplateComponent implements OnInit {
       asunto: emailTemplate.asunto,
       contenido_html: emailTemplate.contenido_html,
       contenido_texto: emailTemplate.contenido_texto,
-      variables: emailTemplate.variables.join(', '), 
+      variables: emailTemplate.variables.join(', '),
     });
   }
-  
-  resetForm() {
-    this.editingEmailTemplateId = null; 
-    this.emailTemplateForm.reset(); 
+
+  resetForm(): void {
+    this.editingEmailTemplateId = null;
+    this.emailTemplateForm.reset();
+  }
+
+  closeModal(): void {
+    if (this.modalRef) {
+      this.modalRef.close();
+    }
   }
 }
