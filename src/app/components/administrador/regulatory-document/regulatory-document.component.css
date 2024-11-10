@@ -1,70 +1,132 @@
 /* Estilo general del contenedor */
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+     padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     background-color: var(--background);
 }
-
-/* Estilo de las etiquetas */
-label {
-    font-weight: bold;
-    color: var(--text-color);
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    font-weight: 500;
+    color: #003b76; 
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-/* Estilo para el grupo de formulario */
-.form-group {
+.header-container h2 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.header-container button {
+    border-radius: 5px;
+}
+
+.document-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.document-table th, .document-table td {
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.document-table th {
+    background-color: #0066cc;
+    color: white;
+}
+
+.document-table td {
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.document-table tr:hover {
+    background-color: #f1f9ff; 
+}
+.action-buttons button {
+    margin: 0 5px;
+}
+
+.action-buttons mat-icon {
+    color: #333;
+}
+
+.action-buttons button:hover mat-icon {
+    color: #0066cc;
+}
+.create-modal, .update-modal {
+    margin: 20px;
+}
+
+.create-modal h3, .update-modal h3 {
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: #000000;
+    font-size: 25px;
+    text-align: center;
+}
+
+.form-container mat-form-field {
+    width: 100%;
     margin-bottom: 15px;
 }
+.form-container mat-form-field label {
+    font-size: 1rem; /* Mejora la visibilidad */
+    font-weight: 500; /* Da énfasis a las etiquetas */
+}
 
-/* Estilo de los campos de entrada */
-.form-control {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.form-actions button {
+    padding: 10px 20px; /* Botones más grandes */
     font-size: 1rem;
-    transition: border-color 0.3s;
-    background-color: var(--background-color);
-    color: var(--text-color);
+}
+.custom-snackbar {
+    background-color: #5c5c5c;
+    color: white;
+    font-size: 16px;
 }
 
-.form-control:focus {
-    border-color: var(--primary-color);
-    outline: none;
+.custom-snackbar .mat-button {
+    color: white;
 }
 
-/* Estilo de los botones */
-.btn {
-    width: 100%;
-    padding: 12px 0;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--button-text-color);
-    background-color: var(--button-bg-color);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+.success-snackbar {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
 }
 
+.error-snackbar {
+    background-color: #f44336;  
+    color: white;                      
+    border-radius: 5px;        
+    padding: 10px;      
+  }
+  
 .btn:hover {
     background-color: var(--primary-color);
 }
 
-/* Estilo de mensaje de error */
-.text-danger {
-    color: red;
-    font-size: 0.9rem;
-}
-
+.mat-table-responsive {
+    overflow-x: auto; /* Permite el desplazamiento horizontal en pantallas pequeñas */
+  }
 /* Estilos responsivos adicionales */
 @media (max-width: 768px) {
     .container {
-        max-width: 300px;
         padding: 15px;
     }
 
@@ -81,6 +143,19 @@ label {
         font-size: 0.9rem;
         padding: 10px 0;
     }
+    .mat-table-responsive {
+        display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
+      }
+    
+      .mat-header-cell, .mat-cell {
+        padding: 8px; /* Reduce el padding para más espacio */
+        font-size: 14px; /* Tamaño de fuente más pequeño */
+      }
+    
+      td.mat-cell input {
+        width: 100%; /* Hace que los inputs ocupen todo el ancho */
+        box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+      }
 }
 
 @media (max-width: 480px) {
@@ -103,4 +178,8 @@ label {
         font-size: 0.85rem;
         padding: 8px 0;
     }
+    .mat-header-cell, .mat-cell {
+        padding: 6px; /* Reduce el padding para más espacio */
+        font-size: 12px; /* Tamaño de fuente aún más pequeño */
+      }
 }
