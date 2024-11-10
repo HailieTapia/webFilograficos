@@ -1,0 +1,8 @@
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    font-weight: 500;
+    color: #003b76; 
+}

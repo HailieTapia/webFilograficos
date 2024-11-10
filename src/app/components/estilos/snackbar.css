@@ -1,0 +1,23 @@
+.custom-snackbar {
+    background-color: #5c5c5c;
+    color: white;
+    font-size: 16px;
+}
+
+.custom-snackbar .mat-button {
+    color: white;
+}
+
+.success-snackbar {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.error-snackbar {
+    background-color: #f44336;  
+    color: white;                       
+    border-radius: 5px;        
+    padding: 10px;      
+}

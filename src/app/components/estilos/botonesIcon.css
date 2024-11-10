@@ -1,0 +1,12 @@
+
+.action-buttons button {
+    margin: 0 5px;
+}
+
+.action-buttons mat-icon {
+    color: #333;
+}
+
+.action-buttons button:hover mat-icon {
+    color: #0066cc;
+}
