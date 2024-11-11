@@ -11,11 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgForm } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-incidencia',
   standalone: true,
-  imports: [MatCardModule,MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule, MatTableModule, MatInputModule, FormsModule],
+  imports: [CommonModule,MatCardModule,MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule, MatTableModule, MatInputModule, FormsModule],
   templateUrl: './incidencia.component.html',
   styleUrls: ['./incidencia.component.css', '../../estilos/spinner.css', '../../estilos/tablas.css', '../../estilos/snackbar.css']
 })
