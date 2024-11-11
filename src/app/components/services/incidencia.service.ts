@@ -1,44 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/config';
-
-
+import { HttpParams, HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
 export class IncidenciaService {
-  private apiUrl = `${environment.baseUrl}/admin`;  // Usar la URL base del environment
+  private apiUrl = `${environment.baseUrl}/admin`; 
 
   constructor(private http: HttpClient) { }
-
-  // Obtener historial de intentos fallidos de inicio de sesión
+  // Obtener intentos fallidos de inicio de sesión
   getFailedLoginAttempts(periodo: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/failed-attempts`, {
-      params: { periodo },
-      withCredentials: true
-    }).pipe();
+    const params = new HttpParams().set('periodo', periodo);
+    return this.http.get<any>(`${this.apiUrl}/failed-attempts`, { params, withCredentials: true })
   }
-
-  // Actualizar los tiempos de vida de tokens y códigos
-  updateTokenLifetime(config: {
-    jwt_lifetime: number,
-    verificacion_correo_lifetime: number,
-    otp_lifetime: number,
-    sesion_lifetime: number,
-    cookie_lifetime: number,
-    expirationThreshold_lifetime?: number,
-    maximo_intentos_fallidos_login: number,
-    maximo_bloqueos_en_n_dias: number,
-    dias_periodo_de_bloqueo: number,
-
-  }): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`,
-      config,
-      { withCredentials: true }
-    ).pipe();
+  // Método para actualizar los tiempos de vida de los tokens y códigos
+  updateTokenLifetime(config: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`, config,{ withCredentials: true });
   }
-
   // Desbloquear un usuario por su ID
   adminUnlockUser(userId: string): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/unlock-user/${userId}`, 

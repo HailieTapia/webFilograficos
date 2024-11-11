@@ -1,82 +1,132 @@
-/* Contenedor principal */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: var(--background);
 }
 
-/* Títulos de sección */
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: var(--text-color);
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
 }
 
-/* Estilos para las tablas */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 40px;
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-
-th.mat-header-cell {
-  background-color: var(--primary-color);
-  color: var(--button-text-color);
-  padding: 12px;
-  text-align: left;
-  font-weight: bold;
-  border-bottom: 2px solid #ddd;
+.form-card {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #0066cc2d;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-td.mat-cell {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
-
-td.mat-cell input {
-  border: none;
+.mat-card-header {
+  background-color: #3f51b5;
+  color: #fff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   padding: 8px;
-  width: calc(100% - 16px); /* Ajustar el ancho del input */
-  box-sizing: border-box;
-  transition: border 0.3s;
 }
 
-td.mat-cell input:focus {
-  outline: none;
-  border: 1px solid var(--accent-color); /* Color del borde al enfocar */
+.mat-card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+
 }
 
-/* CSS responsivo para tablas */
-.mat-table-responsive {
-  overflow-x: auto; /* Permite el desplazamiento horizontal en pantallas pequeñas */
+.form-group {
+  width: 100%;
+  margin-top: 10px;
 }
 
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-label {
+  color: #000000;
+}
+
+input[type="number"] {
+  font-size: 1rem;
+}
+
+.mat-error {
+  font-size: 0.9rem;
+  color: #d32f2f;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.responsive-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; 
+}
 @media (max-width: 768px) {
-  .mat-table-responsive {
-    display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
+  .container {
+      padding: 15px;
   }
 
-  .mat-header-cell, .mat-cell {
-    padding: 8px; /* Reduce el padding para más espacio */
-    font-size: 14px; /* Tamaño de fuente más pequeño */
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  td.mat-cell input {
-    width: 100%; /* Hace que los inputs ocupen todo el ancho */
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  .form-control {
+      font-size: 0.9rem;
+      padding: 10px;
+  }
+
+  .btn {
+      font-size: 0.9rem;
+      padding: 10px 0;
+  }
+  .responsive-toggle-group {
+    flex-direction: column;
+    align-items: stretch; 
   }
 }
 
 @media (max-width: 480px) {
-  h2 {
-    font-size: 20px; /* Tamaño de fuente más pequeño para el título */
+  .container {
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: none;
+  }
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  .mat-header-cell, .mat-cell {
-    padding: 6px; /* Reduce el padding para más espacio */
-    font-size: 12px; /* Tamaño de fuente aún más pequeño */
+  .form-control {
+      font-size: 0.85rem;
+      padding: 8px;
+  }
+
+  .btn {
+      font-size: 0.85rem;
+      padding: 8px 0;
+  }
+  .responsive-toggle-group {
+    flex-direction: column;
+    align-items: stretch; 
   }
 }
