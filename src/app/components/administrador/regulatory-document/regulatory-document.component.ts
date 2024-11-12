@@ -80,9 +80,7 @@ export class RegulatoryDocumentComponent implements OnInit {
     this.documentService.updateDocument(documentId, updatedContent).subscribe({
       next: (response) => {
         this.snackBar.open('Documento actualizado correctamente', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['success-snackbar'],
-          horizontalPosition: 'center',
+          duration: 3000
         });
         this.fetchAllDocuments();
         this.resetForm();
@@ -91,9 +89,7 @@ export class RegulatoryDocumentComponent implements OnInit {
       error: (error) => {
         const errorMessage = error?.error?.message || 'Error al actualizar el documento';
         this.snackBar.open(errorMessage, 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
+          duration: 3000
         });
       }
     });
@@ -116,8 +112,6 @@ export class RegulatoryDocumentComponent implements OnInit {
         const errorMessage = error?.error?.message || 'Error al crear el documento';
         this.snackBar.open(errorMessage, 'Cerrar', {
           duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
         });
       }
     });
@@ -149,9 +143,7 @@ export class RegulatoryDocumentComponent implements OnInit {
         error: (error) => {
           const errorMessage = error?.error?.message || 'Error al obtener el historial de versiones';
           this.snackBar.open(errorMessage, 'Cerrar', {
-            duration: 3000,
-            panelClass: ['error-snackbar'],
-            horizontalPosition: 'center',
+            duration: 3000
           });
           reject(error);
         },
@@ -168,9 +160,7 @@ export class RegulatoryDocumentComponent implements OnInit {
       },
       error: (error) => {
         this.snackBar.open('Error al obtener los documentos', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
+          duration: 3000
         });
         this.isLoading = false;
       }
@@ -184,9 +174,7 @@ export class RegulatoryDocumentComponent implements OnInit {
       },
       error: (error) => {
         this.snackBar.open('Error al obtener los documentos', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
+          duration: 3000
         });
       }
     });
@@ -205,17 +193,13 @@ export class RegulatoryDocumentComponent implements OnInit {
       this.documentService.deleteDocument(documentId).subscribe({
         next: (response) => {
           this.snackBar.open('Documento eliminado exitosamente', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['success-snackbar'],
-            horizontalPosition: 'center',
+            duration: 3000
           });
           this.fetchAllDocuments();
         },
         error: (error) => {
           this.snackBar.open('Error al eliminar los documentos', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['error-snackbar'],
-            horizontalPosition: 'center',
+            duration: 3000
           });
         }
       });
@@ -224,9 +208,7 @@ export class RegulatoryDocumentComponent implements OnInit {
     snackBarRef.afterDismissed().subscribe(() => {
       if (!actionConfirmed) {
         this.snackBar.open('Eliminación cancelada', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
+          duration: 3000
         });
       }
     });
