@@ -1,25 +1,19 @@
 .container {
-  padding: 40px;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   background-color: var(--background);
 }
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-top: 30px;
 }
-
-.h2 {
-  margin: 0;
-  font-size: 32px;
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
 }
-
-.header-container button {
-  border-radius: 5px;
-}
-
 .create-modal, .update-modal {
   margin: 20px;
 }
@@ -28,10 +22,15 @@ h3 {
   margin-bottom: 20px;
   font-weight: 500;
   color: #000000;
-  font-size: 25px;
+  font-size: 23px;
   text-align: center;
 }
-
+.config-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
 .form-container mat-form-field {
   width: 100%;
   margin-bottom: 15px;
@@ -41,18 +40,6 @@ h3 {
   font-weight: 500;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-.form-actions button {
-  padding: 10px 20px;
-  font-size: 1rem;
-}
-.btn:hover {
-  background-color: var(--primary-color);
-}
 @media (max-width: 768px) {
   .container {
       padding: 15px;
@@ -62,34 +49,15 @@ h3 {
       font-size: 1.2rem;
   }
 
-  .form-control {
-      font-size: 0.9rem;
-      padding: 10px;
-  }
-
-  .btn {
-      font-size: 0.9rem;
-      padding: 10px 0;
-  }
 }
 
 @media (max-width: 480px) {
   .container {
       padding: 10px;
-      border-radius: 4px;
       box-shadow: none;
   }
   label,h3,h2 {
       font-size: 1.2rem;
   }
 
-  .form-control {
-      font-size: 0.85rem;
-      padding: 8px;
-  }
-
-  .btn {
-      font-size: 0.85rem;
-      padding: 8px 0;
-  }
 }

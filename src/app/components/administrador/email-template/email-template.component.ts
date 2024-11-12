@@ -75,11 +75,7 @@ export class EmailTemplateComponent implements OnInit {
       },
       (error) => {
         const errorMessage = error?.error?.message || 'Error al obtener plantillas de email';
-        this.snackBar.open(errorMessage, 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
-        });
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         this.isLoading = false;
       }
     );
@@ -94,11 +90,7 @@ export class EmailTemplateComponent implements OnInit {
       },
       (error) => {
         const errorMessage = error?.error?.message || 'Error al obtener tipos de email';
-        this.snackBar.open(errorMessage, 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
-        });
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         this.isLoading = false;
       }
     );
@@ -123,9 +115,7 @@ export class EmailTemplateComponent implements OnInit {
         this.emailTemplateService.updateTemplate(this.editingEmailTemplateId, emailTemplate).subscribe(
           () => {
             this.snackBar.open('Plantilla actualizada', 'Cerrar', {
-              duration: 3000,
-              panelClass: ['success-snackbar'],
-              horizontalPosition: 'center',
+              duration: 3000
             });
             this.loadEmailTemplates();
             this.resetForm();
@@ -133,11 +123,7 @@ export class EmailTemplateComponent implements OnInit {
           },
           (error) => {
             const errorMessage = error?.error?.message || 'Error al actualizar plantillas de email';
-            this.snackBar.open(errorMessage, 'Cerrar', {
-              duration: 3000,
-              panelClass: ['error-snackbar'],
-              horizontalPosition: 'center',
-            });
+            this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
             this.isLoading = false;
           }
         );
@@ -145,9 +131,7 @@ export class EmailTemplateComponent implements OnInit {
         this.emailTemplateService.createTemplate(emailTemplate).subscribe(
           () => {
             this.snackBar.open('Plantilla creada', 'Cerrar', {
-              duration: 3000,
-              panelClass: ['success-snackbar'],
-              horizontalPosition: 'center',
+              duration: 3000
             });
             this.loadEmailTemplates();
             this.resetForm();
@@ -155,11 +139,7 @@ export class EmailTemplateComponent implements OnInit {
           },
           (error) => {
             const errorMessage = error?.error?.message || 'Error al crear plantillas de email';
-            this.snackBar.open(errorMessage, 'Cerrar', {
-              duration: 3000,
-              panelClass: ['error-snackbar'],
-              horizontalPosition: 'center',
-            });
+            this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
             this.isLoading = false;
           }
         );
@@ -178,30 +158,22 @@ export class EmailTemplateComponent implements OnInit {
       this.emailTemplateService.deleteTemplate(id).subscribe({
         next: () => {
           this.snackBar.open('Plantilla eliminada exitosamente', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['success-snackbar'],
-            horizontalPosition: 'center',
+            duration: 3000
           });
-          this.loadEmailTemplates(); 
+          this.loadEmailTemplates();
         },
         error: (error) => {
-          const errorMessage = error?.error?.message || 'Error al eliminar plantilla de email';
-          this.snackBar.open(errorMessage, 'Cerrar', {
-            duration: 3000,
-            panelClass: ['error-snackbar'],
-            horizontalPosition: 'center',
-          });
+          const errorMessage = error?.error?.message || 'Error al eliminar plantillas de email';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+          this.isLoading = false;
         }
       });
       actionConfirmed = true;
     });
-
     snackBarRef.afterDismissed().subscribe(() => {
       if (!actionConfirmed) {
         this.snackBar.open('Eliminación cancelada', 'Cerrar', {
           duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'center',
         });
       }
     });

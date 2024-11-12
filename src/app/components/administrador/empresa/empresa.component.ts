@@ -65,7 +65,6 @@ export class EmpresaComponent implements OnInit {
         this.isLoading = false;
         const errorMessage = error?.error?.message || 'Error al actualizar';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-        console.error('Error al actualizar', error);
         this.isLoading = false;
       }
     });
@@ -84,7 +83,6 @@ export class EmpresaComponent implements OnInit {
           this.isLoading = false;
           const errorMessage = error?.error?.message || 'Error al actualizar';
           this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-          console.error('Error al actualizar', error);
         }
       });
     } else {
@@ -106,7 +104,6 @@ export class EmpresaComponent implements OnInit {
       error: (error) => {
         const errorMessage = error?.error?.message || 'Error al eliminar el enlace';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-        console.error('Error al eliminar el enlace', error);
         this.isLoading = false;
       }
     });
