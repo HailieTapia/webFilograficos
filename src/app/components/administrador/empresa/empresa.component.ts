@@ -1,113 +1,114 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresaService';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgForm } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [MatInputModule,MatFormFieldModule,CommonModule, ReactiveFormsModule],
+  imports: [MatTooltipModule,MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatInputModule, MatFormFieldModule, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './empresa.component.html',
-  styleUrls: ['./empresa.component.css']
+  styleUrls: ['./empresa.component.css','../../estilos/tablas.css',  '../../estilos/botonesIcon.css','../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
 export class EmpresaComponent implements OnInit {
-  company: any = null;
   successMessage: string = '';
   errorMessage: string = '';
-  companyForm: FormGroup;
+  company: any = {
+    direccion: {
+      calle: '',
+      ciudad: '',
+      estado: '',
+      codigo_postal: '',
+      pais: ''
+    },
+    telefono: {
+      numero: '',
+      extension: ''
+    },
+    redes_sociales: {
+      facebook: '',
+      instagram: '',
+      linkedin: '',
+      twitter: ''
+    },
+    nombre: '',
+    email: '',
+    slogan: '',
+    logo: ''
+  };
+  isLoading: boolean = false;
 
-  constructor(private fb: FormBuilder, private empresaService: EmpresaService) {
-    this.companyForm = this.createFormGroup();
-  }
+  constructor(private fb: FormBuilder, private empresaService: EmpresaService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.getCompanyInfo(); // Obtener información de la empresa al iniciar
+    this.getCompanyInfo();
   }
-
-  // Crear el grupo de formularios
-  private createFormGroup(): FormGroup {
-    return this.fb.group({
-      nombre: ['', Validators.required],
-      slogan: [''],
-      logo: [''],
-      titulo_pagina: [''],
-      email: ['', [Validators.required, Validators.email]],
-      direccion: this.fb.group({
-        calle: ['', Validators.required],
-        ciudad: ['', Validators.required],
-        estado: ['', Validators.required],
-        codigo_postal: ['', Validators.required],
-        pais: ['', Validators.required]
-      }),
-      telefono: this.fb.group({
-        numero: ['', Validators.required],
-        extension: ['']
-      }),
-      redes_sociales: this.fb.group({
-        facebook: [''],
-        twitter: [''],
-        linkedin: [''],
-        instagram: ['']
-      })
-    });
-  }
-
   // Obtener la información de la empresa
   getCompanyInfo(): void {
-    this.empresaService.getCompanyInfo().subscribe(
-      (data) => {
-        console.log('Datos obtenidos:', data);
-        this.company = data.company;
-        this.companyForm.patchValue(this.company); // Rellenar el formulario
+    this.isLoading = true;
+    this.empresaService.getCompanyInfo().subscribe({
+      next: (data) => {
+        if (data && data.company) {
+          this.company = data.company;
+          this.isLoading = false;
+        }
       },
-      (error) => {
-        console.error('Error al obtener información de la empresa:', error);
-        this.errorMessage = 'Error al obtener la información de la empresa: ' + (error?.message || 'Intenta de nuevo.');
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage = error?.error?.message || 'Error al actualizar';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        console.error('Error al actualizar', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
-
-  // Actualizar la información de la empresa
-  updateCompanyInfo(): void {
-    if (this.companyForm.valid) {
-      const updatedData = this.companyForm.value; // Obtener los datos del formulario
-  
-      // Validación del objeto antes de enviar
-      console.log('Datos a enviar:', updatedData); // Para verificar estructura en consola
-  
-      this.empresaService.updateCompanyInfo(updatedData).subscribe(
-        (response) => {
-          console.log('Actualización exitosa', response);
-          this.successMessage = 'Información de la empresa actualizada correctamente.';
-          this.getCompanyInfo(); // Actualizar información después de la modificación
+  // Método para actualizar 
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      this.isLoading = true;
+      this.empresaService.updateCompanyInfo(this.company).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          const successMessage = response?.message || 'Actualización correctamente';
+          this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
         },
-        (error) => {
-          console.error('Error al actualizar la información de la empresa:', error);
-          this.errorMessage = 'Error al actualizar la información: ' + (error?.message || 'Intenta de nuevo.');
+        error: (error) => {
+          this.isLoading = false;
+          const errorMessage = error?.error?.message || 'Error al actualizar';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+          console.error('Error al actualizar', error);
         }
-      );
+      });
     } else {
-      this.errorMessage = 'Por favor, completa todos los campos requeridos.';
+      this.snackBar.open('Formulario inválido', 'Cerrar', { duration: 3000 });
     }
   }
-  
-  //
-  deleteSocialMediaLink(platform: string): void {
-    const confirmation = confirm(`¿Estás seguro de que deseas eliminar el enlace de ${platform}?`);
-    if (confirmation) {
-      const linksToDelete = [platform]; // Solo eliminar el enlace específico
-      this.empresaService.deleteSocialMediaLinks(linksToDelete).subscribe(
-        (response) => {
-          alert(`Enlace de ${platform} eliminado correctamente.`);
-          this.getCompanyInfo(); // Actualizar información después de la eliminación
-        },
-        (error) => {
-          this.errorMessage = 'Error al eliminar el enlace de redes sociales: ' + (error?.message || 'Intenta de nuevo.');
-        }
-      );
-    }
+  // Método para eliminar enlaces de redes sociales
+  deleteSocialMediaLink(redSocial: string): void {
+    this.isLoading = true;
+    const redesSocialesToDelete = {
+      [redSocial]: true
+    };
+    this.empresaService.deleteSocialMediaLinks(redesSocialesToDelete).subscribe({
+      next: (response) => {
+        this.snackBar.open('Enlace de red social eliminado correctamente', 'Cerrar', { duration: 3000 });
+        this.company.redes_sociales[redSocial] = '';
+        this.isLoading = false;
+      },
+      error: (error) => {
+        const errorMessage = error?.error?.message || 'Error al eliminar el enlace';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        console.error('Error al eliminar el enlace', error);
+        this.isLoading = false;
+      }
+    });
   }
-  
 }
