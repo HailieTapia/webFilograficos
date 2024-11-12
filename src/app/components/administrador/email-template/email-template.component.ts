@@ -29,6 +29,7 @@ export class EmailTemplateComponent implements OnInit {
   emailTypes: EmailType[] = [];
   isLoading: boolean = false;
   modalRef: MatDialogRef<any> | null = null;
+  originalEmailTemplateValues: any = null;
   constructor(
     private fb: FormBuilder,
     private emailTemplateService: EmailTemplateService,
@@ -60,6 +61,7 @@ export class EmailTemplateComponent implements OnInit {
         contenido_texto: template.contenido_texto,
         variables: template.variables.join(', ')
       });
+      this.originalEmailTemplateValues = this.emailTemplateForm.getRawValue();
     } else {
       this.resetForm();
     }
@@ -94,9 +96,15 @@ export class EmailTemplateComponent implements OnInit {
         this.isLoading = false;
       }
     );
-  }
+  };
   onSubmit(): void {
     if (this.emailTemplateForm.valid) {
+      const currentValues = this.emailTemplateForm.getRawValue();
+      const isChanged = JSON.stringify(currentValues) !== JSON.stringify(this.originalEmailTemplateValues);
+      if (!isChanged) {
+        this.closeModal();
+        return;
+      }
       const formValues = this.emailTemplateForm.value;
       const variables = formValues.variables.split(',').map((item: string) => item.trim()).filter((item: string) => item.length > 0);
       const userId = this.authService.getId();
@@ -111,6 +119,7 @@ export class EmailTemplateComponent implements OnInit {
         variables: variables,
         creado_por: userId
       };
+
       if (this.editingEmailTemplateId) {
         this.emailTemplateService.updateTemplate(this.editingEmailTemplateId, emailTemplate).subscribe(
           () => {

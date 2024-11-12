@@ -1,135 +1,63 @@
 .container {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--background);
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+}
+.create-modal, .update-modal {
+  margin: 20px;
+}
+
+h3 {
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #000000;
+  font-size: 23px;
+  text-align: center;
+}
+.config-form {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: var(--text-color);
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
-}
-
-.email-type-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
 }
-
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
+.form-container mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
 }
-
-.submit-button {
-  flex-grow: 1;
-  margin-right: 8px;
-}
-.reset-button {
-  flex-grow: 1;
-}
-
-table {
-  width: 100%; 
-  margin-top: 16px;
-  border-collapse: collapse; 
-}
-td, th {
-  padding: 8px; 
-  text-align: left; 
-  border: 1px solid #ddd;
-}
-
-mat-toolbar {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.action-buttons button {
-  flex: 1;
-}
-.mat-table-responsive {
-  overflow-x: auto; 
+.form-container mat-form-field label {
+  font-size: 1rem; 
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  h2 {
-    font-size: 20px; 
+  .container {
+      padding: 15px;
   }
 
-  .email-type-form {
-    padding: 8px; 
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  .form-actions {
-    flex-direction: column; 
-  }
-
-  .submit-button, .reset-button {
-    margin-right: 0; /* Eliminar margen derecho */
-    margin-bottom: 8px; /* Espaciado entre botones en columna */
-  }
-
-  .submit-button:last-child,
-  .reset-button:last-child {
-    margin-bottom: 0; /* Sin margen en el último botón */
-  }
-
-  table {
-    font-size: 14px; /* Disminuir tamaño de texto en la tabla */
-  }
-  .mat-table-responsive {
-    display: block; /* Asegura que la tabla se comporta como bloque en dispositivos pequeños */
-  }
-
-  .mat-header-cell, .mat-cell {
-    padding: 8px; /* Reduce el padding para más espacio */
-    font-size: 14px; /* Tamaño de fuente más pequeño */
-  }
-
-  td.mat-cell input {
-    width: 100%; /* Hace que los inputs ocupen todo el ancho */
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-  }
-
-  .action-buttons {
-    flex-direction: column; /* Cambiar a columna para botones de acción en pantallas pequeñas */
-  }
-
-  .action-buttons button {
-    margin-bottom: 8px; /* Espacio entre botones de acción */
-  }
-
-  .action-buttons button:last-child {
-    margin-bottom: 0; /* Sin margen en el último botón */
-  }
 }
 
 @media (max-width: 480px) {
-  h2 {
-    font-size: 18px; 
+  .container {
+      padding: 10px;
+      box-shadow: none;
+  }
+  label,h3,h2 {
+      font-size: 1.2rem;
   }
 
-  .email-type-form {
-    gap: 12px;
-  }
-
-  table {
-    font-size: 12px;
-  }
-  .mat-header-cell, .mat-cell {
-    padding: 6px; 
-    font-size: 12px; 
-  }
 }
