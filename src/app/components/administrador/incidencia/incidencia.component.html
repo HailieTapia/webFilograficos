@@ -3,9 +3,132 @@
     <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
+
+  <form #configForm="ngForm" (ngSubmit)="onSubmit(configForm)" class="config-form">
+    <div class="form-actions">
+      <h2>Configuración Existente</h2>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.valid || isLoading">
+        Actualizar
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>JWT Lifetime (segundos)</mat-label>
+      <input matInput id="jwt_lifetime" name="jwt_lifetime" type="number" min="300" max="2592000"
+        [(ngModel)]="config.jwt_lifetime" required />
+      <mat-error *ngIf="configForm.submitted && !config.jwt_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="config.jwt_lifetime && (config.jwt_lifetime < 300 || config.jwt_lifetime > 2592000)">
+        El valor debe estar entre 300 y 2592000 segundos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Verificación Correo Lifetime (segundos)</mat-label>
+      <input id="verificacion_correo_lifetime" name="verificacion_correo_lifetime" matInput type="number" min="300"
+        max="2592000" [(ngModel)]="config.verificacion_correo_lifetime" required />
+      <mat-error *ngIf="configForm.submitted && !config.verificacion_correo_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error
+        *ngIf="config.verificacion_correo_lifetime && (config.verificacion_correo_lifetime < 300 || config.verificacion_correo_lifetime > 2592000)">
+        El valor debe estar entre 300 y 2592000 segundos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>OTP Lifetime (segundos)</mat-label>
+      <input min="60" max="1800" matInput type="number" id="otp_lifetime" name="otp_lifetime"
+        [(ngModel)]="config.otp_lifetime" required />
+      <mat-error *ngIf="configForm.submitted && !config.otp_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="config.otp_lifetime && (config.otp_lifetime < 60 || config.otp_lifetime > 1800)">
+        El valor debe estar entre 60 y 1800 segundos.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Sesión Lifetime (segundos)</mat-label>
+      <input min="300" max="2592000" matInput type="number" id="sesion_lifetime" name="sesion_lifetime"
+        [(ngModel)]="config.sesion_lifetime" required />
+      <mat-error *ngIf="configForm.submitted && !config.sesion_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="config.sesion_lifetime && (config.sesion_lifetime < 300 || config.sesion_lifetime > 2592000)">
+        El valor debe estar entre 300 y 2592000 segundos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Duración de la cookie (segundos)</mat-label>
+      <input min="300" max="2592000" matInput type="number" id="cookie_lifetime" name="cookie_lifetime"
+        [(ngModel)]="config.cookie_lifetime" required />
+      <mat-error *ngIf="configForm.submitted && !config.cookie_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error *ngIf="config.cookie_lifetime && (config.cookie_lifetime < 300 || config.cookie_lifetime > 2592000)">
+        El valor debe estar entre 300 y 2592000 segundos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Días de Periodo de Bloqueo</mat-label>
+      <input min="1" max="365" matInput type="number" id="dias_periodo_de_bloqueo" name="dias_periodo_de_bloqueo"
+        [(ngModel)]="config.dias_periodo_de_bloqueo" required min="1" max="365" />
+      <mat-error *ngIf="configForm.submitted && !config.dias_periodo_de_bloqueo">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error
+        *ngIf="config.dias_periodo_de_bloqueo && (config.dias_periodo_de_bloqueo < 1 || config.dias_periodo_de_bloqueo > 365)">
+        El valor debe estar entre 1 y 365 días.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Máximo Bloqueos en N Días</mat-label>
+      <input min="1" max="10" matInput type="number" id="maximo_bloqueos_en_n_dias" name="maximo_bloqueos_en_n_dias"
+        [(ngModel)]="config.maximo_bloqueos_en_n_dias" required min="1" max="10" />
+      <mat-error *ngIf="configForm.submitted && !config.maximo_bloqueos_en_n_dias">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error
+        *ngIf="config.maximo_bloqueos_en_n_dias && (config.maximo_bloqueos_en_n_dias < 1 || config.maximo_bloqueos_en_n_dias > 10)">
+        El valor debe estar entre 1 y 10 bloqueos.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Máximo Intentos Fallidos Login</mat-label>
+      <input min="3" max="10" matInput type="number" id="maximo_intentos_fallidos_login"
+        name="maximo_intentos_fallidos_login" [(ngModel)]="config.maximo_intentos_fallidos_login" required min="1"
+        max="5" />
+      <mat-error *ngIf="configForm.submitted && !config.maximo_intentos_fallidos_login">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error
+        *ngIf="config.maximo_intentos_fallidos_login && (config.maximo_intentos_fallidos_login < 3 || config.maximo_intentos_fallidos_login > 10)">
+        El valor debe estar entre 3 y 10 intentos fallidos.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Expiration Threshold Lifetime (segundos)</mat-label>
+      <input min="60" max="1800" matInput type="number" id="expirationThreshold_lifetime"
+        name="expirationThreshold_lifetime" [(ngModel)]="config.expirationThreshold_lifetime" required min="1"
+        max="3600" />
+      <mat-error *ngIf="configForm.submitted && !config.expirationThreshold_lifetime">
+        Este campo es obligatorio.
+      </mat-error>
+      <mat-error
+        *ngIf="config.expirationThreshold_lifetime && (config.expirationThreshold_lifetime < 60 || config.expirationThreshold_lifetime > 1800)">
+        El valor debe estar entre 60 y 1800 segundos.
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <div class="config-form">
   <div class="header-container">
     <h2>Historial de intentos fallidos</h2>
-    <mat-button-toggle-group class="responsive-toggle-group" [(ngModel)]="selectedPeriodo" (change)="onPeriodoChange()" appearance="standard">
+    <mat-button-toggle-group class="responsive-toggle-group" [(ngModel)]="selectedPeriodo" (change)="onPeriodoChange()"
+      appearance="standard">
       <mat-button-toggle value="dia">Hoy</mat-button-toggle>
       <mat-button-toggle value="semana">Última semana</mat-button-toggle>
       <mat-button-toggle value="mes">Último mes</mat-button-toggle>
@@ -36,136 +159,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumnsFailedLogin"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumnsFailedLogin;"></tr>
   </table>
-
-  <div class="header-container">
-    <h2>Configuración Existente</h2>
-    
-  </div>
-  <form #configForm="ngForm" (ngSubmit)="onSubmit(configForm)" class="config-form">
-    <mat-card class="form-card">
-      <mat-card-header>
-        <mat-card-title>Configuraciones de Tiempo</mat-card-title>
-      </mat-card-header>
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>JWT Lifetime (segundos)</mat-label>
-        <input matInput id="jwt_lifetime" name="jwt_lifetime" type="number" min="300" max="2592000"
-          [(ngModel)]="config.jwt_lifetime" required />
-        <mat-error *ngIf="configForm.submitted && !config.jwt_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error *ngIf="config.jwt_lifetime && (config.jwt_lifetime < 300 || config.jwt_lifetime > 2592000)">
-          El valor debe estar entre 300 y 2592000 segundos.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Verificación Correo Lifetime (segundos)</mat-label>
-        <input id="verificacion_correo_lifetime" name="verificacion_correo_lifetime" matInput type="number" min="300"
-          max="2592000" [(ngModel)]="config.verificacion_correo_lifetime" required />
-        <mat-error *ngIf="configForm.submitted && !config.verificacion_correo_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error
-          *ngIf="config.verificacion_correo_lifetime && (config.verificacion_correo_lifetime < 300 || config.verificacion_correo_lifetime > 2592000)">
-          El valor debe estar entre 300 y 2592000 segundos.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>OTP Lifetime (segundos)</mat-label>
-        <input min="60" max="1800" matInput type="number" id="otp_lifetime" name="otp_lifetime"
-          [(ngModel)]="config.otp_lifetime" required />
-        <mat-error *ngIf="configForm.submitted && !config.otp_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error *ngIf="config.otp_lifetime && (config.otp_lifetime < 60 || config.otp_lifetime > 1800)">
-          El valor debe estar entre 60 y 1800 segundos.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Sesión Lifetime (segundos)</mat-label>
-        <input min="300" max="2592000" matInput type="number" id="sesion_lifetime" name="sesion_lifetime"
-          [(ngModel)]="config.sesion_lifetime" required />
-        <mat-error *ngIf="configForm.submitted && !config.sesion_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error *ngIf="config.sesion_lifetime && (config.sesion_lifetime < 300 || config.sesion_lifetime > 2592000)">
-          El valor debe estar entre 300 y 2592000 segundos.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Duración de la cookie (segundos)</mat-label>
-        <input min="300" max="2592000" matInput type="number" id="cookie_lifetime" name="cookie_lifetime"
-          [(ngModel)]="config.cookie_lifetime" required />
-        <mat-error *ngIf="configForm.submitted && !config.cookie_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error *ngIf="config.cookie_lifetime && (config.cookie_lifetime < 300 || config.cookie_lifetime > 2592000)">
-          El valor debe estar entre 300 y 2592000 segundos.
-        </mat-error>
-      </mat-form-field>
-    </mat-card>
-    <mat-card class="form-card">
-      <mat-card-header>
-        <mat-card-title>Seguridad y Bloqueo</mat-card-title>
-      </mat-card-header>
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Días de Periodo de Bloqueo</mat-label>
-        <input min="1" max="365" matInput type="number" id="dias_periodo_de_bloqueo" name="dias_periodo_de_bloqueo"
-          [(ngModel)]="config.dias_periodo_de_bloqueo" required min="1" max="365" />
-        <mat-error *ngIf="configForm.submitted && !config.dias_periodo_de_bloqueo">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error
-          *ngIf="config.dias_periodo_de_bloqueo && (config.dias_periodo_de_bloqueo < 1 || config.dias_periodo_de_bloqueo > 365)">
-          El valor debe estar entre 1 y 365 días.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Máximo Bloqueos en N Días</mat-label>
-        <input min="1" max="10" matInput type="number" id="maximo_bloqueos_en_n_dias" name="maximo_bloqueos_en_n_dias"
-          [(ngModel)]="config.maximo_bloqueos_en_n_dias" required min="1" max="10" />
-        <mat-error *ngIf="configForm.submitted && !config.maximo_bloqueos_en_n_dias">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error
-          *ngIf="config.maximo_bloqueos_en_n_dias && (config.maximo_bloqueos_en_n_dias < 1 || config.maximo_bloqueos_en_n_dias > 10)">
-          El valor debe estar entre 1 y 10 bloqueos.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Máximo Intentos Fallidos Login</mat-label>
-        <input min="3" max="10" matInput type="number" id="maximo_intentos_fallidos_login"
-          name="maximo_intentos_fallidos_login" [(ngModel)]="config.maximo_intentos_fallidos_login" required min="1"
-          max="5" />
-        <mat-error *ngIf="configForm.submitted && !config.maximo_intentos_fallidos_login">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error
-          *ngIf="config.maximo_intentos_fallidos_login && (config.maximo_intentos_fallidos_login < 3 || config.maximo_intentos_fallidos_login > 10)">
-          El valor debe estar entre 3 y 10 intentos fallidos.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="form-group">
-        <mat-label>Expiration Threshold Lifetime (segundos)</mat-label>
-        <input min="60" max="1800" matInput type="number" id="expirationThreshold_lifetime"
-          name="expirationThreshold_lifetime" [(ngModel)]="config.expirationThreshold_lifetime" required min="1"
-          max="3600" />
-        <mat-error *ngIf="configForm.submitted && !config.expirationThreshold_lifetime">
-          Este campo es obligatorio.
-        </mat-error>
-        <mat-error
-          *ngIf="config.expirationThreshold_lifetime && (config.expirationThreshold_lifetime < 60 || config.expirationThreshold_lifetime > 1800)">
-          El valor debe estar entre 60 y 1800 segundos.
-        </mat-error>
-      </mat-form-field>
-    </mat-card>
-    <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.valid || isLoading">
-        Actualizar Configuración
-      </button>
-    </div>
-  </form>
+</div>
 </div>

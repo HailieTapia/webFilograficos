@@ -40,7 +40,6 @@ export class IncidenciaComponent implements OnInit {
       next: (data) => {
         if (data && data.config) {
           this.config = data.config;
-          console.log(this.config);
         } else {
           console.error('La respuesta no contiene la propiedad config');
         }
@@ -77,12 +76,10 @@ export class IncidenciaComponent implements OnInit {
       next: (response) => {
         const successMessage = response?.message || 'Usuario desbloqueado correctamente';
         this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
-        console.log('Usuario desbloqueado:', response);
       },
       error: (error) => {
         const errorMessage = error?.error?.message || 'Error al desbloquear usuario';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-        console.error('Error al desbloquear usuario:', error);
       }
     });
   }

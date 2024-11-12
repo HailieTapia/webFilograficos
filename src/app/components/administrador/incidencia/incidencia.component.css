@@ -1,132 +1,87 @@
 .container {
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
   background-color: var(--background);
+}
+
+.config-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 20px;
 }
 
-.config-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+mat-form-field {
+  margin-bottom: 10px;
 }
+
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+}
+
 .form-card {
-  padding: 15px;
+  margin: 0px;
+  background-color: #fbfbfbdc;
   border-radius: 8px;
-  background-color: #0066cc2d;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.mat-card-header {
-  background-color: #3f51b5;
-  color: #fff;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  padding: 8px;
-}
-
-.mat-card-title {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 20px;
-
-}
-
-.form-group {
-  width: 100%;
-  margin-top: 10px;
-}
-
-.mat-form-field {
-  width: 100%;
-}
-
-.mat-label {
-  color: #000000;
-}
-
-input[type="number"] {
-  font-size: 1rem;
-}
-
-.mat-error {
-  font-size: 0.9rem;
-  color: #d32f2f;
 }
 
 .form-actions {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  margin-top: 30px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-button[type="submit"] {
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 4px;
+.mat-error {
+  font-size: 12px;
+  color: #d32f2f;
 }
 
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 .responsive-toggle-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px; 
+  gap: 8px;
 }
+
 @media (max-width: 768px) {
   .container {
-      padding: 15px;
+    padding: 15px;
   }
 
-  label,h3,h2 {
-      font-size: 1.2rem;
+  label,
+  h3,
+  h2 {
+    font-size: 1rem;
   }
 
-  .form-control {
-      font-size: 0.9rem;
-      padding: 10px;
-  }
-
-  .btn {
-      font-size: 0.9rem;
-      padding: 10px 0;
-  }
   .responsive-toggle-group {
     flex-direction: column;
-    align-items: stretch; 
+    align-items: stretch;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: none;
-  }
-  label,h3,h2 {
-      font-size: 1.2rem;
+    padding: 10px;
+    box-shadow: none;
   }
 
-  .form-control {
-      font-size: 0.85rem;
-      padding: 8px;
+  label,
+  h3,
+  h2 {
+    font-size: 1rem;
   }
 
-  .btn {
-      font-size: 0.85rem;
-      padding: 8px 0;
-  }
   .responsive-toggle-group {
     flex-direction: column;
-    align-items: stretch; 
+    align-items: stretch;
   }
 }
