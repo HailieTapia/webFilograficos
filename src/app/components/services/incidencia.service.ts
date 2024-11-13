@@ -29,19 +29,37 @@ export class IncidenciaService {
   
   // Método para actualizar los tiempos de vida de los tokens y códigos
   updateTokenLifetime(config: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`, config,{ withCredentials: true });
+    return this.csrfService.getCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
+        return this.http.put<any>(`${this.apiUrl}/update-token-lifetime`, config, 
+          { headers, withCredentials: true }
+        );
+      })
+    );
   }
+  
   // Desbloquear un usuario por su ID
   adminUnlockUser(userId: string): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/unlock-user/${userId}`, 
-      {}, 
-      { withCredentials: true }
-    ).pipe();
+    return this.csrfService.getCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
+        return this.http.put<any>(`${this.apiUrl}/unlock-user/${userId}`, {}, 
+          { headers, withCredentials: true }
+        );
+      })
+    );
   }
-
+  
   // Obtener configuración existente
   getConfig(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/token-lifetime`, { withCredentials: true })
-      .pipe();
-  }
+    return this.csrfService.getCsrfToken().pipe(
+      switchMap(csrfToken => {
+        const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
+        return this.http.get<any>(`${this.apiUrl}/token-lifetime`, 
+          { headers, withCredentials: true }
+        );
+      })
+    );
+  }  
 }
