@@ -1,50 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../models/user.model';
-import { MatInputModule } from '@angular/material/input';
+import { UserService } from '../../services/user.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatIconModule, MatInputModule, MatCardModule, MatFormFieldModule, MatButtonModule, CommonModule, FormsModule],
+  imports: [MatCardModule,MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatProgressSpinnerModule, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
-  animations: [
-    trigger('transitionMessages', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('500ms ease-in', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('500ms ease-out', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+  styleUrls: ['./profile.component.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
 export class ProfileComponent implements OnInit {
-  user: Usuario | null = null;
-  updateData: Usuario = {
+  userProfile: any = {
     nombre: '',
     email: '',
+    telefono: '',
     direccion: {
       calle: '',
       ciudad: '',
-      estado: '',
       codigo_postal: '',
-    },
-    telefono: '',
+      estado: ''
+    }
   };
-
+  isLoading: boolean = false;
   showModal: boolean = false;
   currentPassword: string = '';
   newPassword: string = '';
@@ -54,128 +39,127 @@ export class ProfileComponent implements OnInit {
   hideCurrent: boolean = true;
   hideNew: boolean = true;
   hideConfirm: boolean = true;
-  passwordForm: FormGroup;
+  constructor(private router: Router, private userService: UserService, private snackBar: MatSnackBar) { }
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private snackBar: MatSnackBar, private router: Router) {
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmNewPassword: ['', Validators.required],
-    }, { validator: this.passwordMatchValidator });
+  ngOnInit(): void {
+    this.loadUserProfile();
   }
-  passwordMatchValidator(form: FormGroup) {
-    return form.get('newPassword')?.value === form.get('confirmNewPassword')?.value
-      ? null : { mismatch: true };
-  }
-  showAlert(message: string | null) {
-    if (message) {
-      this.snackBar.open(message, 'Cerrar', {
-        duration: 3000,
-      });
-    }
-  }
-  ngOnInit() {
-    this.authService.currentUser.subscribe(user => {
-      if (!user) {
-        this.router.navigate(['/login']); 
-      } else {
-        this.loadUserProfile(); 
+  //obtener perfil
+  loadUserProfile(): void {
+    this.isLoading = true;
+    this.userService.getProfile().subscribe({
+      next: (data) => {
+        this.userProfile = {
+          nombre: data?.nombre || '',
+          email: data?.email || '',
+          telefono: data?.telefono || '',
+          direccion: {
+            calle: data?.direccion?.calle || '',
+            ciudad: data?.direccion?.ciudad || '',
+            codigo_postal: data?.direccion?.codigo_postal || '',
+            estado: data?.direccion?.estado || ''
+          }
+        };
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al obtener el perfil del usuario:', error);
+        this.isLoading = false;
       }
     });
   }
   
-
-  loadUserProfile() {
-    this.authService.getProfile().subscribe(
-      (response: Usuario) => {
-        this.user = response;
-        if (this.user) {
-          this.updateData = {
-            nombre: this.user.nombre,
-            email: this.user.email,
-            direccion: {
-              calle: this.user.direccion?.calle || '',
-              ciudad: this.user.direccion?.ciudad || '',
-              estado: this.user.direccion?.estado || '',
-              codigo_postal: this.user.direccion?.codigo_postal || '',
-            },
-            telefono: this.user.telefono,
-          };
-        }
-      },
-      (error) => {
-        this.errorMessage = 'Error al cargar perfil:';
-        this.showAlert(this.errorMessage);
-      }
-    );
-  }
-
-  updateProfile() {
-    this.authService.updateProfile(this.updateData).subscribe(
-      (response) => {
-        this.successMessage = 'Perfil actualizado exitosamente';
-        this.showAlert(this.successMessage);
-        localStorage.setItem('currentUser', JSON.stringify(response));
-        this.authService.currentUserSubject.next(response);
-        this.loadUserProfile();
-      },
-      (error) => {
-        this.errorMessage = 'Error al actualizar el perfil';
-      }
-    );
-  }
-
-  deleteAccount() {
-    if (confirm('¿Estás seguro de que deseas eliminar tu cuenta?')) {
-      this.authService.deleteAccount().subscribe(
-        (response) => {
-          this.successMessage = 'Cuenta eliminada exitosamente';
-          this.showAlert(this.successMessage);
-          this.router.navigate(['/login']);
-        },
-        (error) => {
-          this.errorMessage = 'Error al eliminar la cuenta';
-          this.showAlert(this.errorMessage);
-        }
-      );
-    }
-  }
-
-  onChangePassword(): void {
-    if (this.newPassword !== this.confirmNewPassword) {
-      this.errorMessage = 'Las contraseñas no coinciden.';
-      this.showAlert(this.errorMessage);
+  
+  //actualziar perfil(nombre, email, telefono)
+  updateProfile(form: NgForm): void {
+    this.isLoading = true;
+    if (form.invalid) {
+      this.snackBar.open('Por favor, completa todos los campos requeridos.', 'Cerrar', { duration: 3000 });
+      this.isLoading = false;
       return;
     }
-    this.authService.changePassword(this.currentPassword, this.newPassword).subscribe(
+
+    this.isLoading = true;
+    this.userService.updateProfile(this.userProfile).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        const successMessage = response?.message || 'Actualización correctamente';
+        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage = error?.error?.message || 'Error al actualizar';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+  //actualziar direccion(colonia, calle, cp)
+  updateAddress(form: NgForm): void {
+    if (form.invalid) {
+      this.snackBar.open('Por favor, completa todos los campos requeridos en la dirección.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.isLoading = true;
+    this.userService.updateUserProfile(this.userProfile.direccion).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        const successMessage = response?.message || 'Direccion actualizada correctamente';
+        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage = error?.error?.message || 'Error al actualizar';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+  // Método para eliminar la cuenta del cliente autenticado
+  deleteAccount(): void {
+    if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.')) {
+      this.userService.deleteMyAccount().subscribe({
+        next: (response) => {
+          alert('Cuenta eliminada correctamente');
+          // Redirigir a la página de inicio de sesión o página principal
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          const errorMessage = error?.error?.message || 'Error al eliminar la cuenta';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        }
+      });
+    }
+  }
+  onChangePassword(): void {
+    if (this.newPassword !== this.confirmNewPassword) {
+      this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', { duration: 3000 });
+      this.isLoading = false;
+      return;
+    }
+    this.userService.changePassword(this.currentPassword, this.newPassword).subscribe(
       () => {
-        this.successMessage = 'Contraseña cambiada exitosamente.';
-        this.showAlert(this.successMessage);
-        this.errorMessage = null;
+        this.snackBar.open('Contraseña cambiada exitosamente', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
         this.closeModal();
       },
       () => {
-        this.errorMessage = 'Error al cambiar la contraseña. Inténtalo de nuevo.';
-        this.successMessage = null;
-        this.showAlert(this.errorMessage);
+        this.snackBar.open('Error al cambiar la contraseña', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
+
       }
     );
   }
-
   openChangePasswordDialog(): void {
     this.showModal = true;
   }
-
   closeModal(): void {
     this.showModal = false;
     this.resetPasswordFields();
   }
-
   resetPasswordFields(): void {
     this.currentPassword = '';
     this.newPassword = '';
     this.confirmNewPassword = '';
-    this.errorMessage = null;
-    this.successMessage = null;
   }
 }

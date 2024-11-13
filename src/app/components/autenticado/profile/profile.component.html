@@ -1,72 +1,90 @@
-<div class="profile-container">
-  <mat-card class="profile-card">
-    <mat-card-title class="card-title">Mi Perfil</mat-card-title>
-    <mat-card-content>
-      <form (ngSubmit)="updateProfile()" #profileForm="ngForm" class="profile-form">
+<div class="container">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+    <p>Cargando...</p>
+  </div>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Nombre</mat-label>
-          <input matInput [(ngModel)]="updateData.nombre" name="nombre" required #nombre="ngModel" />
-          <mat-error *ngIf="nombre.invalid && nombre.touched">
-            El nombre es requerido.
-          </mat-error>
-        </mat-form-field>
+  <div class="form-actions">
+    <h2>Perfil de usuario </h2>
+  </div>
+  <div class="profile-container">
+    <form #profileForm="ngForm">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="userProfile.nombre" name="nombre" required minlength="2" maxlength="100" />
+        <mat-error *ngIf="profileForm.controls['nombre']?.invalid && profileForm.controls['nombre']?.touched">
+          El nombre es obligatorio y debe tener entre 2 y 100 caracteres.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="userProfile.email" name="email" required />
+        <mat-error *ngIf="profileForm.controls['email']?.invalid && profileForm.controls['email']?.touched">
+          Introduzca un correo electrónico válido.
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Email</mat-label>
-          <input matInput [(ngModel)]="updateData.email" name="email" required email #email="ngModel" />
-          <mat-error *ngIf="email.invalid && email.touched">
-            Proporcione un correo electrónico válido.
-          </mat-error>
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="userProfile.telefono" maxlength="10" type="tel" name="telefono" required pattern="^[0-9]{10}$" />
+        <mat-error *ngIf="profileForm.controls['telefono']?.invalid && profileForm.controls['telefono']?.touched">
+          El teléfono es obligatorio y debe contener 10 dígitos.
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-card class="password-card">
+        <mat-card-content>
+          <div class="password-display">
+            <span>Contraseña: *******</span>
+            <button mat-button color="warn" (click)="openChangePasswordDialog()" style="float: right;">Modificar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Teléfono</mat-label>
-          <input matInput [(ngModel)]="updateData.telefono" name="telefono" required pattern="[0-9]{10}"
-            #telefono="ngModel" />
-          <mat-error *ngIf="telefono.invalid && telefono.touched">
-            Proporcione un número de teléfono válido (10 dígitos).
-          </mat-error>
-        </mat-form-field>
+      <h2>Dirección</h2>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Calle</mat-label>
+        <input matInput [(ngModel)]="userProfile.direccion.calle" name="calle" required />
+        <mat-error *ngIf="profileForm.controls['calle']?.invalid && profileForm.controls['calle']?.touched">
+          La calle es obligatoria.
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Calle</mat-label>
-          <input matInput [(ngModel)]="updateData.direccion.calle" name="calle" />
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Ciudad</mat-label>
+        <input matInput [(ngModel)]="userProfile.direccion.ciudad" name="ciudad" required />
+        <mat-error *ngIf="profileForm.controls['ciudad']?.invalid && profileForm.controls['ciudad']?.touched">
+          La ciudad es obligatoria.
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Ciudad</mat-label>
-          <input matInput [(ngModel)]="updateData.direccion.ciudad" name="ciudad" />
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Código Postal</mat-label>
+        <input matInput [(ngModel)]="userProfile.direccion.codigo_postal" maxlength="5" name="codigo_postal" required
+          pattern="^[0-9]{5}$" />
+        <mat-error
+          *ngIf="profileForm.controls['codigo_postal']?.invalid && profileForm.controls['codigo_postal']?.touched">
+          El código postal debe contener 5 dígitos númericos.
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Estado</mat-label>
-          <input matInput [(ngModel)]="updateData.direccion.estado" name="estado" />
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Estado</mat-label>
+        <input matInput [(ngModel)]="userProfile.direccion.estado" name="estado" required />
+        <mat-error *ngIf="profileForm.controls['estado']?.invalid && profileForm.controls['estado']?.touched">
+          El estado es obligatorio.
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Código Postal</mat-label>
-          <input matInput [(ngModel)]="updateData.direccion.codigo_postal" name="codigo_postal" />
-        </mat-form-field>
-        <mat-card class="password-card">
-          <mat-card-content>
-            <div class="password-display">
-              <span>Contraseña: *******</span>
-              <button mat-button color="warn" (click)="openChangePasswordDialog()" style="float: right;">Modificar</button>
-            </div>
-          </mat-card-content>
-        </mat-card>
-
-        <div class="button-group">
-          <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid">
-            Actualizar Perfil
+      <div class="form-actions">
+        <button mat-raised-button color="primary" (click)="updateProfile(profileForm)" [disabled]="profileForm.invalid"
+          type="button">Actualizar Perfil</button>
+          <button (click)="deleteAccount()" mat-raised-button  color="warn">
+            Eliminar cuenta
           </button>
-          <button mat-button color="warn" type="button" (click)="deleteAccount()">Eliminar Cuenta</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-
+      </div>
+    </form>
+  </div>
   <div class="modal" *ngIf="showModal">
     <div class="modal-content">
       <h2>Cambiar Contraseña</h2>
@@ -77,9 +95,6 @@
         <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" aria-label="Toggle password visibility">
           <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error
-          *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">La
-          contraseña actual es obligatoria.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
@@ -88,8 +103,6 @@
         <button mat-icon-button matSuffix (click)="hideNew = !hideNew" aria-label="Toggle password visibility">
           <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">La nueva
-          contraseña es obligatoria y debe tener al menos 8 caracteres.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
@@ -98,11 +111,9 @@
         <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" aria-label="Toggle password visibility">
           <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmNewPassword')?.touched">Las
-          contraseñas no coinciden.</mat-error>
       </mat-form-field>
 
-      <div class="modal-actions">
+      <div class="form-actions">
         <button mat-button (click)="closeModal()">Cancelar</button>
         <button mat-raised-button color="primary" (click)="onChangePassword()">Cambiar Contraseña</button>
       </div>
