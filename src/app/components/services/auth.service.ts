@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { environment } from '../../environments/config';
 import { tap } from 'rxjs/operators';
+import { CsrfService } from '../services/csrf.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   public currentUser: Observable<any>;
   private apiUrl = `${environment.baseUrl}`;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private csrfService: CsrfService) {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(storedUser));
@@ -21,32 +22,58 @@ export class AuthService {
     }
     this.currentUser = this.currentUserSubject.asObservable();
   }
-  
+
+  // Login con CSRF
   login(credentials: { email: string; password: string; recaptchaToken: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
-      tap((response: any) => {
-        console.log('respuesta ', response); // Agrega esta línea para verificar la respuesta
-        this.currentUserSubject.next(response);
-        localStorage.setItem('currentUser', JSON.stringify(response));
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        // Después de obtener el token CSRF, hacer la solicitud de login
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/login`, credentials, csrfToken).pipe(
+          tap((response: any) => {
+            console.log('Respuesta del login:', response);
+            this.currentUserSubject.next(response);
+            localStorage.setItem('currentUser', JSON.stringify(response));
+          })
+        );
       })
     );
   }
-  // Método para registrar un nuevo usuario
+
+  // Método para registrar un nuevo usuario con CSRF
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register/`, userData);
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/register/`, userData, csrfToken);
+      })
+    );
   }
+
   //RECUPERACION DE CONTRASE
-  //iniciar el proceso de recuperación de contraseña
+  // Iniciar el proceso de recuperación de contraseña con CSRF
   recu(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/initiate-password-recovery`, credentials);
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/initiate-password-recovery`, credentials, csrfToken);
+      })
+    );
   }
-  //verificar el código OTP
+
+  // Verificar el código OTP con CSRF
   verOTP(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/verify-otp`, credentials);
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/verify-otp`, credentials, csrfToken);
+      })
+    );
   }
-  //reestablecer la contraseña
+
+  // Reestablecer la contraseña con CSRF
   resContra(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/reset-password`, credentials);
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/reset-password`, credentials, csrfToken);
+      })
+    );
   }
 
   // Método para obtener el tipo de usuario actual como un Observable
@@ -54,12 +81,14 @@ export class AuthService {
     const currentUser = this.currentUserSubject.getValue();
     return of(currentUser ? currentUser.tipo : null); // Convertir el tipo a un Observable
   }
+
   // Método para obtener el ID del usuario actual
   getId(): string | null {
     const currentUser = this.currentUserSubject.getValue();
     return currentUser ? currentUser.userId : null;
   }
-  //Metodo para cerrar sesion
+
+  // Metodo para cerrar sesión
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
@@ -73,9 +102,15 @@ export class AuthService {
   getProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/profile`, { withCredentials: true });
   }
-  // Método para actualizar el perfil del usuario
+
+  // Actualización del perfil del usuario (nombre, dirección, teléfono)
   updateProfile(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/users/profile`, data, { withCredentials: true });
+  }
+
+  // Actualizar solo la dirección del usuario
+  updateUserProfile(direccion: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/profile/change-address`, { direccion }, { withCredentials: true });
   }
 
   // Método para eliminar la cuenta del usuario
@@ -88,15 +123,27 @@ export class AuthService {
       );
   }
 
-  // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
-  private getToken(): string | null {
-    return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
+  // Desactivar la cuenta de usuario
+  deactivateAccount(userId: string, accion: 'bloquear' | 'suspender' | 'activar'): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/deactivate-account`, { userId, accion }, { withCredentials: true });
   }
+
+  // Obtener todos los usuarios con sus sesiones activas
+  getAllUsersWithSessions(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/users/sessions`, { withCredentials: true });
+  }
+
+  // Método para obtener el token JWT almacenado
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  // Cambio de contraseña con CSRF
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
-    // Corrected placement of 'withCredentials' for HTTP request options
-    return this.http.put(`${this.apiUrl}/auth/change-password`,
-      { currentPassword, newPassword },
-      { withCredentials: true } // Moved this parameter to the correct position
+    return this.csrfService.getCsrfToken().pipe(
+      tap(csrfToken => {
+        return this.csrfService.postWithCsrf(`${this.apiUrl}/auth/change-password`, { currentPassword, newPassword }, csrfToken);
+      })
     );
   }
 }
