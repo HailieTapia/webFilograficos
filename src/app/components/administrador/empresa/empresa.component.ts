@@ -63,7 +63,7 @@ export class EmpresaComponent implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        const errorMessage = error?.error?.message || 'Error al actualizar';
+        const errorMessage = error?.error?.message || 'Error al obteneción de datos';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         this.isLoading = false;
       }

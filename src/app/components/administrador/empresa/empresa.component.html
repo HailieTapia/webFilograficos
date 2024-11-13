@@ -13,7 +13,7 @@
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Nombre</mat-label>
       <input matInput name="nombre" [(ngModel)]="company.nombre" #nombre="ngModel" required minlength="2"
-        maxlength="100" />
+        maxlength="100"/>
       <mat-error *ngIf="nombre.invalid && nombre.touched">El nombre es requerido y debe tener entre 2 y 100
         caracteres.</mat-error>
     </mat-form-field>
