@@ -25,7 +25,7 @@ export class IncidenciaComponent implements OnInit {
   isLoading: boolean = false;
   failedLoginAttempts: any[] = [];
   failedLoginDataSource = new MatTableDataSource<any>();
-  displayedColumnsFailedLogin: string[] = ['nombre', 'email', 'numero_intentos', 'tipo_usuario'];
+  displayedColumnsFailedLogin: string[] = ['nombre', 'email', 'estado', 'numero_intentos', 'tipo_usuario', 'fecha', 'acciones'];
   selectedPeriodo: string = 'dia';
   constructor(private incidenciaService: IncidenciaService, private snackBar: MatSnackBar) { }
 
@@ -72,14 +72,41 @@ export class IncidenciaComponent implements OnInit {
   }
   // Método para desbloquear un usuario
   adminUnlockUser(userId: string): void {
-    this.incidenciaService.adminUnlockUser(userId).subscribe({
-      next: (response) => {
-        const successMessage = response?.message || 'Usuario desbloqueado correctamente';
-        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
-      },
-      error: (error) => {
-        const errorMessage = error?.error?.message || 'Error al desbloquear usuario';
-        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+    if (!userId) {
+      console.error('El ID de usuario no se ha proporcionado correctamente');
+      return;
+    }
+    const snackBarRef = this.snackBar.open('¿Estás seguro de que quieres desbloquear a este usuario?', 'Sí', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    let actionConfirmed = false;
+  
+    // Suscribirse a la acción "Sí" del snackBar
+    snackBarRef.onAction().subscribe(() => {
+      this.incidenciaService.adminUnlockUser(userId).subscribe({
+        next: (response) => {
+          this.snackBar.open('Usuario desbloqueado exitosamente', 'Cerrar', {
+            duration: 3000
+          });
+          // Aquí puedes actualizar la lista de usuarios o realizar cualquier otra acción
+        },
+        error: (error) => {
+          this.snackBar.open('Error al desbloquear al usuario', 'Cerrar', {
+            duration: 3000
+          });
+        }
+      });
+      actionConfirmed = true;
+    });
+  
+    // Si el usuario no confirma, se muestra un mensaje de cancelación
+    snackBarRef.afterDismissed().subscribe(() => {
+      if (!actionConfirmed) {
+        this.snackBar.open('Desbloqueo cancelado', 'Cerrar', {
+          duration: 3000
+        });
       }
     });
   }
