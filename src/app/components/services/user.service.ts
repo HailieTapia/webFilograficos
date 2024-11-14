@@ -29,7 +29,7 @@ export class UserService {
         return this.csrfService.getCsrfToken().pipe(
             switchMap(csrfToken => {
                 const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
-                return this.http.put(`${this.apiUrl}/users/profile/change-address`, { direccion }, { headers, withCredentials: true });
+                return this.http.put(`${this.apiUrl}/users/change-address`, { direccion }, { headers, withCredentials: true });
             })
         );
     }
