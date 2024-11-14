@@ -40,18 +40,106 @@ h2 {
   align-items: center;
   justify-content: space-between;
 }
+/* Estilos para el campo de carga de logo */
+.logo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
+.upload-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.upload-button-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-input {
+  display: none; /* Oculta el input de archivo */
+}
+
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3f51b5;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.upload-button:hover {
+  background-color: #303f9f;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.upload-button i.material-icons {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.upload-placeholder {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+/* Vista previa del logo */
+.logo-preview {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-preview p {
+  font-weight: bold;
+  color: #333;
+}
+
+.logo-preview img {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.logo-preview img:hover {
+  transform: scale(1.05);
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
   .container {
-    padding: 15px; 
+    padding: 15px;
   }
 
   .config-form {
-    max-width: 100%; 
+    max-width: 100%;
   }
 
   h2 {
-    font-size: 20px; 
+    font-size: 20px;
   }
 
   .form-section {
@@ -59,23 +147,21 @@ h2 {
   }
 
   .form-field {
-    width: 100%; 
+    width: 100%;
   }
 
-  .form-actions {
-    flex-direction: column; 
-    margin-top: 25px;
-    align-items: stretch; 
+  .upload-button-container {
+    max-width: 100%;
   }
 
-  .mat-form-field {
-    width: 100%; 
+  .upload-button {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding: 10px; 
+    padding: 10px;
   }
 
   h2 {
@@ -83,8 +169,8 @@ h2 {
   }
 
   .form-section {
-    flex-direction: column; 
-    gap: 10px; 
+    flex-direction: column;
+    gap: 10px;
   }
 
   .form-actions {
