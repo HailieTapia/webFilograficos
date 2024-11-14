@@ -3,13 +3,14 @@
     <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
-  <form #configForm="ngForm" (ngSubmit)="onSubmit(configForm)" class="config-form">
+  <form #configForm="ngForm" (ngSubmit)="onSubmit(configForm)" class="config-form"  enctype="multipart/form-data">
     <div class="form-actions">
       <h2>Perfil de la Empresa</h2>
       <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.valid || isLoading">
         Actualizar
       </button>
     </div>
+    
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Nombre</mat-label>
       <input matInput name="nombre" [(ngModel)]="company.nombre" #nombre="ngModel" required minlength="2"
@@ -17,6 +18,31 @@
       <mat-error *ngIf="nombre.invalid && nombre.touched">El nombre es requerido y debe tener entre 2 y 100
         caracteres.</mat-error>
     </mat-form-field>
+
+    <!-- Campo para cargar el logo de la empresa -->
+    <div class="form-field logo-upload">
+      <label class="upload-label">Logo de la Empresa</label>
+      <div class="upload-button-container">
+        <!-- Input de archivo oculto -->
+        <input type="file" #fileInput (change)="onLogoSelected($event)" accept="image/*" class="upload-input" />
+        
+        <!-- Botón de selección de archivo -->
+        <button type="button" class="upload-button" (click)="triggerFileInput(fileInput)">
+          <i class="material-icons">cloud_upload</i>
+          <span>Seleccionar Archivo</span>
+        </button>
+        
+        <!-- Placeholder -->
+        <p class="upload-placeholder">Sube tu imagen aquí (JPEG, PNG, GIF, máx. 2MB)</p>
+      </div>
+    </div>
+
+    <!-- Vista previa del logo -->
+    <div *ngIf="logoPreview" class="logo-preview">
+      <p>Vista Previa del Logo:</p>
+      <img [src]="logoPreview" alt="Logo de la Empresa" />
+    </div>
+
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Email</mat-label>
       <input matInput type="email" name="email" [(ngModel)]="company.email" #email="ngModel" required />
@@ -25,11 +51,13 @@
         <ng-container *ngIf="email.errors?.['email']">Debe ingresar un correo electrónico válido.</ng-container>
       </mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Slogan</mat-label>
       <input matInput name="slogan" [(ngModel)]="company.slogan" maxlength="100" #slogan="ngModel" />
       <mat-error *ngIf="slogan.invalid && slogan.touched">El slogan debe tener un máximo de 100 caracteres.</mat-error>
     </mat-form-field>
+
     <div class="address-container">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Calle</mat-label>
