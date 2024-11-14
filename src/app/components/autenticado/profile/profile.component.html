@@ -3,10 +3,10 @@
     <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
-
   <div class="form-actions">
     <h2>Perfil de usuario </h2>
   </div>
+  <!-- Formulario de datos personales -->
   <div class="profile-container">
     <form #profileForm="ngForm">
       <mat-form-field appearance="outline" class="form-field">
@@ -16,6 +16,7 @@
           El nombre es obligatorio y debe tener entre 2 y 100 caracteres.
         </mat-error>
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Email</mat-label>
         <input matInput type="email" [(ngModel)]="userProfile.email" name="email" required />
@@ -31,7 +32,7 @@
           El teléfono es obligatorio y debe contener 10 dígitos.
         </mat-error>
       </mat-form-field>
-      
+
       <mat-card class="password-card">
         <mat-card-content>
           <div class="password-display">
@@ -41,11 +42,21 @@
         </mat-card-content>
       </mat-card>
 
-      <h2>Dirección</h2>
+      <div class="form-actions">
+        <button mat-raised-button color="primary" (click)="updateProfile(profileForm)" [disabled]="profileForm.invalid" type="button">
+          Actualizar Datos Personales
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- Formulario de dirección -->
+  <h2>Dirección</h2>
+  <div class="profile-container">
+    <form #addressForm="ngForm">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Calle</mat-label>
         <input matInput [(ngModel)]="userProfile.direccion.calle" name="calle" required />
-        <mat-error *ngIf="profileForm.controls['calle']?.invalid && profileForm.controls['calle']?.touched">
+        <mat-error *ngIf="addressForm.controls['calle']?.invalid && addressForm.controls['calle']?.touched">
           La calle es obligatoria.
         </mat-error>
       </mat-form-field>
@@ -53,38 +64,41 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Ciudad</mat-label>
         <input matInput [(ngModel)]="userProfile.direccion.ciudad" name="ciudad" required />
-        <mat-error *ngIf="profileForm.controls['ciudad']?.invalid && profileForm.controls['ciudad']?.touched">
+        <mat-error *ngIf="addressForm.controls['ciudad']?.invalid && addressForm.controls['ciudad']?.touched">
           La ciudad es obligatoria.
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Código Postal</mat-label>
-        <input matInput [(ngModel)]="userProfile.direccion.codigo_postal" maxlength="5" name="codigo_postal" required
-          pattern="^[0-9]{5}$" />
-        <mat-error
-          *ngIf="profileForm.controls['codigo_postal']?.invalid && profileForm.controls['codigo_postal']?.touched">
-          El código postal debe contener 5 dígitos númericos.
+        <input matInput [(ngModel)]="userProfile.direccion.codigo_postal" maxlength="5" name="codigo_postal" required pattern="^[0-9]{5}$" />
+        <mat-error *ngIf="addressForm.controls['codigo_postal']?.invalid && addressForm.controls['codigo_postal']?.touched">
+          El código postal debe contener 5 dígitos numéricos.
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Estado</mat-label>
         <input matInput [(ngModel)]="userProfile.direccion.estado" name="estado" required />
-        <mat-error *ngIf="profileForm.controls['estado']?.invalid && profileForm.controls['estado']?.touched">
+        <mat-error *ngIf="addressForm.controls['estado']?.invalid && addressForm.controls['estado']?.touched">
           El estado es obligatorio.
         </mat-error>
       </mat-form-field>
 
       <div class="form-actions">
-        <button mat-raised-button color="primary" (click)="updateProfile(profileForm)" [disabled]="profileForm.invalid"
-          type="button">Actualizar Perfil</button>
-          <button (click)="deleteAccount()" mat-raised-button  color="warn">
-            Eliminar cuenta
-          </button>
+        <button mat-raised-button color="primary" (click)="updateAddress(addressForm)" [disabled]="addressForm.invalid" type="button">
+          Actualizar Dirección
+        </button>
       </div>
     </form>
   </div>
+  <!-- Botón para eliminar cuenta -->
+  <div class="form-actions">
+    <button (click)="deleteAccount()" mat-raised-button color="warn">
+      Eliminar cuenta
+    </button>
+  </div>
+  
   <div class="modal" *ngIf="showModal">
     <div class="modal-content">
       <h2>Cambiar Contraseña</h2>
