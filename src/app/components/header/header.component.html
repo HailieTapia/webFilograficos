@@ -1,24 +1,33 @@
 <mat-toolbar class="custom-toolbar" color="primary">
-  <span class="title">{{ companyInfo?.nombre }}</span>
+  <!-- Logo y Nombre de la Empresa -->
+  <div class="logo-container" *ngIf="logoPreview">
+    <img [src]="logoPreview" alt="Logo de la Empresa" class="logo">
+    <span class="title">{{ companyInfo?.nombre }}</span>
+  </div>
+
   <span class="spacer"></span>
 
-  <button mat-icon-button [matMenuTriggerFor]="appMenu" aria-label="Menu">
+  <!-- Menú de Usuario -->
+  <button mat-icon-button [matMenuTriggerFor]="appMenu" aria-label="Menú">
     <mat-icon>menu</mat-icon>
   </button>
 
   <mat-menu #appMenu="matMenu">
+    <!-- Opciones de Menú para Usuarios no Autenticados -->
     <ng-container *ngIf="!tipoUsuario">
       <button mat-menu-item routerLink="/home" routerLinkActive="active">Inicio</button>
       <button mat-menu-item routerLink="/login" routerLinkActive="active">Iniciar Sesión</button>
       <button mat-menu-item routerLink="/registro" routerLinkActive="active">Registro</button>
     </ng-container>
 
+    <!-- Opciones de Menú para Clientes -->
     <ng-container *ngIf="tipoUsuario === 'cliente'">
       <button mat-menu-item routerLink="/homecliente" routerLinkActive="active">Inicio</button>
       <button mat-menu-item routerLink="/perfil" routerLinkActive="active">Mi Perfil</button>
       <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
     </ng-container>
 
+    <!-- Opciones de Menú para Administradores -->
     <ng-container *ngIf="tipoUsuario === 'administrador'">
       <button mat-menu-item routerLink="/homeadmin" routerLinkActive="active">Inicio</button>
       <button mat-menu-item routerLink="/empresa" routerLinkActive="active">Panel de Empresa</button>
@@ -30,7 +39,8 @@
     </ng-container>
   </mat-menu>
 
-  <mat-slide-toggle (change)="toggleTheme()" [checked]="isDarkTheme" aria-label="Toggle theme" color="accent">
+  <!-- Toggle de Tema Claro/Oscuro -->
+  <mat-slide-toggle (change)="toggleTheme()" [checked]="isDarkTheme" color="accent" aria-label="Cambiar Tema">
     {{ isDarkTheme ? 'Noche' : 'Día' }}
   </mat-slide-toggle>
 </mat-toolbar>

@@ -1,20 +1,4 @@
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-mat-toolbar {
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  height: 70px;
-  font-size: 18px;
-  line-height: 70px;
-}
-
+/* Estilos para el Toolbar */
 .custom-toolbar {
   position: fixed;
   top: 0;
@@ -27,12 +11,47 @@ mat-toolbar {
   padding: 0 16px;
 }
 
-/* Para evitar que el contenido debajo del header se superponga */
+/* Estilos para el contenedor del logo y el nombre */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 8px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Espaciador para alinear el contenido */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Estilos para el Slide Toggle */
+mat-slide-toggle {
+  margin-left: 16px;
+}
+
+/* Color del Toolbar */
+mat-toolbar {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  height: 70px;
+  font-size: 18px;
+  line-height: 70px;
+}
+
+/* Espacio superior para evitar que el contenido se superponga al Header */
 body {
   padding-top: 70px;
 }
 
-/* Estilos responsivos para el menú */
+/* Estilos responsivos para el menú en pantallas pequeñas */
 @media (max-width: 600px) {
   .title {
     font-size: 1.2rem;
@@ -42,4 +61,3 @@ body {
     margin-left: 0;
   }
 }
-
