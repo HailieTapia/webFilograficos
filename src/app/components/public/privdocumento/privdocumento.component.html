@@ -1,0 +1,19 @@
+<div class="documentos-container">
+  <h2 class="document-title">{{ titulo }}</h2>
+
+  <div class="document-info">
+    <p><strong>Versión:</strong> {{ versionDocumento }}</p>
+    <p><strong>Fecha de Vigencia:</strong> {{ fechaVigencia | date: 'dd/MM/yyyy' }}</p>
+  </div>
+
+  <div *ngIf="avisoPrivacidad; else loading" class="document-section">
+    <div [innerHTML]="avisoPrivacidad | safeHtml"></div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-message">
+      <mat-icon>hourglass_empty</mat-icon>
+      <p>Cargando documento...</p>
+    </div>
+  </ng-template>
+</div>

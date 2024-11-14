@@ -4,6 +4,9 @@ import { RegisterComponent } from './components/public/register/register.compone
 import { HomeComponent } from './components/home/home.component';
 import { RecuperarComponent } from './components/public/recuperar/recuperar.component';
 import { RoleGuard } from './components/guards/auth.guard';
+import { DocumentosComponent } from './components/public/documentos/documentos.component';
+import { CondocumetoComponent } from './components/public/condocumento/condocumento.component';
+import { privdocumentosComponent } from './components/public/privdocumento/privdocumento.component';
 
 //cliente
 import { ProfileComponent } from './components/autenticado/profile/profile.component';
@@ -24,6 +27,9 @@ export const routes: Routes = [
   { path: 'registro', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
   { path: 'recuperar', component: RecuperarComponent },
+  { path: 'deslinde-legal', component: DocumentosComponent },
+  { path: 'aviso-privacidad', component: privdocumentosComponent },
+  { path: 'terminos-condiciones', component: CondocumetoComponent },
 
   //cliente
   { path: 'homecliente', component: HomeclienComponent, canActivate: [RoleGuard] },
