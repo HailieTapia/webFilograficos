@@ -103,9 +103,4 @@ export class AuthService {
       })
     );
   }
-  // Método para obtener el token JWT almacenado (puedes ajustar esto según tu implementación)
-  private getToken(): string | null {
-    return localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
-  }
- 
 }
