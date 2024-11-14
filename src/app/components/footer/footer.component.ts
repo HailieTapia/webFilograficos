@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { EmpresaService } from '../services/empresaService';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-
 @Component({
   selector: 'app-footer',
   standalone: true,
@@ -12,7 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class FooterComponent {
   companyInfo: any = null;
-
   constructor( private empresaService: EmpresaService) { }
   ngOnInit(): void {
     this.getCompanyInfo();

@@ -1,39 +1,48 @@
 <footer class="custom-footer">
   <div class="footer-content">
-
-    <!-- Información de Dirección -->
-    <div *ngIf="companyInfo?.direccion" class="footer-address">
-      <p>
-        {{ companyInfo.direccion.calle }}, {{ companyInfo.direccion.ciudad }}, {{ companyInfo.direccion.estado }},
-        {{ companyInfo.direccion.codigo_postal }}, {{ companyInfo.direccion.pais }}
-      </p>
+    
+    <!-- Sección Atención al Cliente -->
+    <div class="footer-section">
+      <h3>Atención al Cliente</h3>
+      <div class="footer-links">
+        <a href="/deslinde-legal" target="_blank">Deslinde Legal</a>
+        <a href="/aviso-privacidad" target="_blank">Aviso de Privacidad</a>
+        <a href="/terminos-condiciones" target="_blank">Términos y Condiciones</a>
+      </div>
     </div>
 
-    <!-- Información de Contacto -->
-    <div class="footer-contact">
-      <p *ngIf="companyInfo?.telefono?.numero">Teléfono: {{ companyInfo.telefono.numero }}</p>
-      <p *ngIf="companyInfo?.email">Correo: <a [href]="'mailto:' + companyInfo.email">{{ companyInfo.email }}</a></p>
+    <!-- Sección Información de Filográficos -->
+    <div class="footer-section">
+      <h3>Información de Filográficos</h3>
+      <div *ngIf="companyInfo?.direccion" class="footer-address">
+        <p>
+          {{ companyInfo.direccion.calle }}, {{ companyInfo.direccion.ciudad }}, {{ companyInfo.direccion.estado }},
+          {{ companyInfo.direccion.codigo_postal }}, {{ companyInfo.direccion.pais }}
+        </p>
+      </div>
     </div>
 
-    <!-- Redes Sociales -->
-    <div class="footer-social-links">
-      <a *ngIf="companyInfo?.redes_sociales?.facebook" [href]="companyInfo.redes_sociales.facebook" target="_blank" class="social-link">
-        <mat-icon>thumb_up</mat-icon> Facebook
-      </a>
-      <a *ngIf="companyInfo?.redes_sociales?.instagram" [href]="companyInfo.redes_sociales.instagram" target="_blank" class="social-link">
-        <mat-icon>camera_alt</mat-icon> Instagram
-      </a>
-      <a *ngIf="companyInfo?.redes_sociales?.linkedin" [href]="companyInfo.redes_sociales.linkedin" target="_blank" class="social-link">
-        <mat-icon>business_center</mat-icon> LinkedIn
-      </a>
-      <a *ngIf="companyInfo?.redes_sociales?.twitter" [href]="companyInfo.redes_sociales.twitter" target="_blank" class="social-link">
-        <mat-icon>chat_bubble</mat-icon> Twitter
-      </a>
+    <!-- Sección Redes Sociales -->
+    <div class="footer-section">
+      <h3>Redes Sociales</h3>
+      <div class="footer-social-links">
+        <a *ngIf="companyInfo?.redes_sociales?.facebook" [href]="companyInfo.redes_sociales.facebook" target="_blank" class="social-link">
+          <mat-icon>thumb_up</mat-icon> Facebook
+        </a>
+        <a *ngIf="companyInfo?.redes_sociales?.instagram" [href]="companyInfo.redes_sociales.instagram" target="_blank" class="social-link">
+        </a>
+        <a *ngIf="companyInfo?.redes_sociales?.linkedin" [href]="companyInfo.redes_sociales.linkedin" target="_blank" class="social-link">
+          <mat-icon>business_center</mat-icon> LinkedIn
+        </a>
+        <a *ngIf="companyInfo?.redes_sociales?.twitter" [href]="companyInfo.redes_sociales.twitter" target="_blank" class="social-link">
+          <mat-icon>chat_bubble</mat-icon> Twitter
+        </a>
+      </div>
     </div>
+  </div>
 
-    <!-- Derechos Reservados -->
-    <div class="footer-text">
-      <span>&copy; 2024 {{ companyInfo?.nombre || 'Filográficos' }}. Todos los derechos reservados.</span>
-    </div>
+  <!-- Derechos Reservados -->
+  <div class="footer-text">
+    <span>&copy; 2024 {{ companyInfo?.nombre || 'Filográficos' }}. Todos los derechos reservados.</span>
   </div>
 </footer>
