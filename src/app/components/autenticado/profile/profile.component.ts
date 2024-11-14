@@ -69,7 +69,6 @@ export class ProfileComponent implements OnInit {
     });
   }
   
-  
   //actualziar perfil(nombre, email, telefono)
   updateProfile(form: NgForm): void {
     this.isLoading = true;
@@ -116,21 +115,47 @@ export class ProfileComponent implements OnInit {
   }
   // Método para eliminar la cuenta del cliente autenticado
   deleteAccount(): void {
-    if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.')) {
+    const snackBarRef = this.snackBar.open('¿Estás seguro de que deseas eliminar tu cuenta?', 'Sí', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+  
+    let actionConfirmed = false;
+  
+    snackBarRef.onAction().subscribe(() => {
       this.userService.deleteMyAccount().subscribe({
         next: (response) => {
-          alert('Cuenta eliminada correctamente');
-          // Redirigir a la página de inicio de sesión o página principal
+          this.snackBar.open('Cuenta eliminada correctamente', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+          // Redirigir a la página de inicio de sesión
           this.router.navigate(['/login']);
         },
         error: (error) => {
-          this.isLoading = false;
-          const errorMessage = error?.error?.message || 'Error al eliminar la cuenta';
-          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error al eliminar la cuenta', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
         }
       });
-    }
+      actionConfirmed = true;
+    });
+  
+    snackBarRef.afterDismissed().subscribe(() => {
+      if (!actionConfirmed) {
+        this.snackBar.open('Eliminación cancelada', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+      }
+    });
   }
+  
   onChangePassword(): void {
     if (this.newPassword !== this.confirmNewPassword) {
       this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', { duration: 3000 });
