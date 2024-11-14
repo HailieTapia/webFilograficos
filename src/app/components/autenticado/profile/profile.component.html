@@ -105,20 +105,55 @@
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Contraseña Actual</mat-label>
-        <input matInput [(ngModel)]="currentPassword" [type]="hideCurrent ? 'password' : 'text'" required />
-        <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" aria-label="Toggle password visibility">
+        <input
+          matInput
+          [(ngModel)]="currentPassword"
+          [type]="hideCurrent ? 'password' : 'text'"
+          required
+          #currentPasswordCtrl="ngModel"
+          minlength="8"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hideCurrent = !hideCurrent"
+          aria-label="Toggle password visibility">
           <mat-icon>{{ hideCurrent ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
+        <mat-error *ngIf="currentPasswordCtrl.hasError('required')">
+          La contraseña es obligatoria
+        </mat-error>
+        <mat-error *ngIf="currentPasswordCtrl.hasError('minlength')">
+          La contraseña debe tener al menos 8 caracteres
+        </mat-error>
       </mat-form-field>
+      
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Nueva Contraseña</mat-label>
-        <input matInput [(ngModel)]="newPassword" [type]="hideNew ? 'password' : 'text'" required />
-        <button mat-icon-button matSuffix (click)="hideNew = !hideNew" aria-label="Toggle password visibility">
+        <input
+          matInput
+          [(ngModel)]="newPassword"
+          [type]="hideNew ? 'password' : 'text'"
+          required
+          minlength="8"
+          #newPasswordCtrl="ngModel"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hideNew = !hideNew"
+          aria-label="Toggle password visibility">
           <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
+        <mat-error *ngIf="newPasswordCtrl.hasError('required')">
+          La nueva contraseña es obligatoria
+        </mat-error>
+        <mat-error *ngIf="newPasswordCtrl.hasError('minlength')">
+          La contraseña debe tener al menos 8 caracteres
+        </mat-error>
       </mat-form-field>
-
+      
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Confirmar Nueva Contraseña</mat-label>
         <input matInput [(ngModel)]="confirmNewPassword" [type]="hideConfirm ? 'password' : 'text'" required />
