@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { EmpresaStateService } from '../../services/EmpresaStateService';
 @Component({
   selector: 'app-empresa',
   standalone: true,
@@ -46,11 +46,10 @@ export class EmpresaComponent implements OnInit {
   };
   isLoading: boolean = false;
 
-  // Nueva propiedad para almacenar el archivo seleccionado
   selectedLogoFile: File | null = null;
-  logoPreview: string | ArrayBuffer | null = null; // Para vista previa
+  logoPreview: string | ArrayBuffer | null = null; 
 
-  constructor(private fb: FormBuilder, private empresaService: EmpresaService, private snackBar: MatSnackBar) { }
+  constructor(  private empresaStateService: EmpresaStateService,private fb: FormBuilder, private empresaService: EmpresaService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getCompanyInfo();
@@ -63,16 +62,16 @@ export class EmpresaComponent implements OnInit {
       next: (data) => {
         if (data && data.company) {
           this.company = data.company;
+          this.empresaStateService.setCompanyInfo(data.company); 
           this.isLoading = false;
-          // Si ya hay un logo, establecer la vista previa
           if (this.company.logo) {
-            this.logoPreview = this.company.logo; // Asumiendo que 'logo' es una URL
+            this.logoPreview = this.company.logo;
           }
         }
       },
       error: (error) => {
         this.isLoading = false;
-        const errorMessage = error?.error?.message || 'Error al obteneción de datos';
+        const errorMessage = error?.error?.message || 'Error al obtener datos';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     });
@@ -103,7 +102,6 @@ export class EmpresaComponent implements OnInit {
 
       this.selectedLogoFile = file;
 
-      // Mostrar una vista previa del logo
       const reader = new FileReader();
       reader.onload = () => {
         this.logoPreview = reader.result;
@@ -141,7 +139,7 @@ export class EmpresaComponent implements OnInit {
       formData.append('redes_sociales[linkedin]', this.company.redes_sociales.linkedin || '');
       formData.append('redes_sociales[twitter]', this.company.redes_sociales.twitter || '');
 
-      // Añadir el logo si se ha seleccionado
+      //  logo 
       if (this.selectedLogoFile) {
         formData.append('logo', this.selectedLogoFile);
       }
@@ -151,9 +149,9 @@ export class EmpresaComponent implements OnInit {
           this.isLoading = false;
           const successMessage = response?.message || 'Actualización correctamente';
           this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
-          // Opcional: Actualizar la vista previa con el nuevo logo
           if (response.company && response.company.logo) {
             this.logoPreview = response.company.logo;
+            this.empresaStateService.setCompanyInfo(response.company); 
           }
         },
         error: (error) => {
@@ -167,7 +165,7 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  // Método para eliminar enlaces de redes sociales
+  //  eliminar enlaces de redes sociales
   deleteSocialMediaLink(redSocial: string): void {
     this.isLoading = true;
     const redesSocialesToDelete = {

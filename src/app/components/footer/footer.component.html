@@ -1,6 +1,6 @@
 <footer class="custom-footer">
   <div class="footer-content">
-    
+
     <!-- Sección Atención al Cliente -->
     <div class="footer-section">
       <h3>Atención al Cliente</h3>
@@ -26,19 +26,26 @@
     <div class="footer-section">
       <h3>Redes Sociales</h3>
       <div class="footer-social-links">
-        <a *ngIf="companyInfo?.redes_sociales?.facebook" [href]="companyInfo.redes_sociales.facebook" target="_blank" class="social-link">
-          <mat-icon>thumb_up</mat-icon> Facebook
+        <a *ngIf="companyInfo?.redes_sociales?.facebook" [href]="companyInfo.redes_sociales.facebook" target="_blank"
+          class="social-link">
+          <mat-icon>facebook</mat-icon> Facebook
         </a>
-        <a *ngIf="companyInfo?.redes_sociales?.instagram" [href]="companyInfo.redes_sociales.instagram" target="_blank" class="social-link">
+        <a *ngIf="companyInfo?.redes_sociales?.instagram" [href]="companyInfo.redes_sociales.instagram" target="_blank"
+          class="social-link">
+          <mat-icon>camera_alt</mat-icon> Instagram
         </a>
-        <a *ngIf="companyInfo?.redes_sociales?.linkedin" [href]="companyInfo.redes_sociales.linkedin" target="_blank" class="social-link">
+        <a *ngIf="companyInfo?.redes_sociales?.linkedin" [href]="companyInfo.redes_sociales.linkedin" target="_blank"
+          class="social-link">
           <mat-icon>business_center</mat-icon> LinkedIn
         </a>
-        <a *ngIf="companyInfo?.redes_sociales?.twitter" [href]="companyInfo.redes_sociales.twitter" target="_blank" class="social-link">
+        <a *ngIf="companyInfo?.redes_sociales?.twitter" [href]="companyInfo.redes_sociales.twitter" target="_blank"
+          class="social-link">
           <mat-icon>chat_bubble</mat-icon> Twitter
         </a>
       </div>
     </div>
+
+
   </div>
 
   <!-- Derechos Reservados -->

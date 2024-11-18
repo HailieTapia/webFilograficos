@@ -46,7 +46,6 @@
 
 .footer-links a:hover {
   color: var(--accent-color);
-  text-decoration: underline;
 }
 
 /* Enlaces de redes sociales */
@@ -64,6 +63,7 @@
   align-items: center;
   transition: color 0.3s ease;
   font-weight: 500;
+  text-decoration: none;
 }
 
 .footer-social-links a:hover {
