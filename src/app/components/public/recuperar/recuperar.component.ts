@@ -11,10 +11,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { MatIconModule } from '@angular/material/icon';
+import { Observable } from 'rxjs';
+import { AbstractControl } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PwnedService } from '../../services/pwned.service';
+
 @Component({
   selector: 'app-recuperar',
   standalone: true,
-  imports: [MatIconModule,MatCardModule,ReactiveFormsModule,CommonModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatSnackBarModule ],
+  imports: [MatProgressBarModule, MatIconModule, MatCardModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './recuperar.component.html',
   styleUrls: ['./recuperar.component.css'],
   animations: [
@@ -38,8 +43,13 @@ export class RecuperarComponent {
   errorMessage: string = '';
   hideNewPassword: boolean = true;
   hideConfirmPassword: boolean = true;
+
+  passwordStrength: string = '';
+  passwordStrengthValue: number = 0;
+  passwordStrengthColor: string = 'warn';
+
   otpArray = ['digit1', 'digit2', 'digit3', 'digit4', 'digit5', 'digit6', 'digit7', 'digit8'];
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
+  constructor(private pwnedService: PwnedService, private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -56,6 +66,89 @@ export class RecuperarComponent {
     this.passwordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordMatchValidator });
+  }
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    } else {
+      return null;
+    }
+  }
+  checkPasswordStrength(newPassword: string): string {
+    let strength = '';
+    const lengthCondition = newPassword.length >= 8;
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasLower = /[a-z]/.test(newPassword);
+    const hasUpper = /[A-Z]/.test(newPassword);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+    if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
+      strength = 'Fuerte';
+      this.passwordStrengthValue = 100;
+      this.passwordStrengthColor = 'primary';
+    } else if (lengthCondition && hasNumber && (hasLower || hasUpper)) {
+      strength = 'Moderada';
+      this.passwordStrengthValue = 70;
+      this.passwordStrengthColor = 'accent';
+    } else if (lengthCondition) {
+      strength = 'Débil';
+      this.passwordStrengthValue = 40;
+      this.passwordStrengthColor = 'warn';
+    } else {
+      strength = 'Muy débil';
+      this.passwordStrengthValue = 10;
+      this.passwordStrengthColor = 'warn';
+    }
+
+    return strength;
+  }
+  onPasswordChange(newPassword: string) {
+    this.passwordStrength = this.checkPasswordStrength(newPassword);
+  }
+  // Función para verificar si la contraseña está comprometida
+  validatePasswordStrength(newPassword: string): Observable<string> {
+    return new Observable((observer) => {
+      this.pwnedService.checkPassword(newPassword).subscribe({
+        next: (data) => {
+          const lines = data.split('\n');
+          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
+          const match = lines.find(line => line.startsWith(passwordHashSuffix));
+
+          if (match) {
+            observer.next('comprometida');
+          } else {
+            observer.next('segura');
+          }
+        },
+        error: () => {
+          observer.next('error');
+        }
+      });
+    });
+  }
+  passwordStrengthValidator(control: AbstractControl): Observable<{ [key: string]: boolean } | null> {
+    return new Observable((observer) => {
+      const newPassword = control.value;
+      this.pwnedService.checkPassword(newPassword).subscribe({
+        next: (data) => {
+          const lines = data.split('\n');
+          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
+          const match = lines.find(line => line.startsWith(passwordHashSuffix));
+
+          if (match) {
+            observer.next({ comprometida: true });
+          } else {
+            observer.next(null);
+          }
+        },
+        error: () => {
+          observer.next(null);
+        }
+      });
     });
   }
   showAlert(message: string | null) {
