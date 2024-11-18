@@ -53,15 +53,22 @@ export class RegisterComponent {
     return this.registerForm.controls;
   }
   passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    if (password && confirmPassword && password !== confirmPassword) {
+    const password = form.get('password')?.value || '';
+    const confirmPassword = form.get('confirmPassword')?.value || '';
+    
+    if (!confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ required: true });
+      return { required: true };
+    }
+    
+    if (password !== confirmPassword) {
       form.get('confirmPassword')?.setErrors({ mismatch: true });
       return { mismatch: true };
-    } else {
-      return null;
     }
+    
+    return null;
   }
+  
   
   checkPasswordStrength(password: string): string {
     let strength = '';
