@@ -33,6 +33,7 @@ mat-card-header {
 
 .full-width {
   width: 100%; /* Campos de entrada de ancho completo */
+  margin-bottom: 9x;
 }
 
 .actions {

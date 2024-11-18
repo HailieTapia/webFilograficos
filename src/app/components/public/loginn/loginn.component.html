@@ -11,16 +11,23 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Correo Electrónico</mat-label>
           <input matInput type="email" formControlName="email" required placeholder="Ingresa tu correo electrónico" />
+          <mat-error *ngIf="loginForm.controls['email'].hasError('required')">El correo electrónico es requerido</mat-error>
+          <mat-error *ngIf="loginForm.controls['email'].hasError('email')">Ingresa un correo electrónico válido</mat-error>
         </mat-form-field>
 
         <!-- Contraseña -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required minlength="8" placeholder="Ingresa tu contraseña" />
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required minlength="8"
+            placeholder="Ingresa tu contraseña" />
           <button mat-icon-button matSuffix (click)="hide = !hide" aria-label="Toggle password visibility">
             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
+          <mat-error *ngIf="loginForm.controls['password'].hasError('required')">La contraseña es requerida</mat-error>
+          <mat-error *ngIf="loginForm.controls['password'].hasError('minlength')">La contraseña debe tener al menos 8
+            caracteres</mat-error>
         </mat-form-field>
+
 
         <!-- reCAPTCHA -->
         <re-captcha siteKey="6Lck9V8qAAAAAEnjZRJxMKa27R1P_GWppjLuxmbG"
