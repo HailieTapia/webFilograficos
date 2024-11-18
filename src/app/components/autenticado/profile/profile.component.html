@@ -11,9 +11,9 @@
     <form #profileForm="ngForm">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="userProfile.nombre" name="nombre" required minlength="2" maxlength="100" />
+        <input matInput [(ngModel)]="userProfile.nombre" name="nombre" required minlength="2" maxlength="50" />
         <mat-error *ngIf="profileForm.controls['nombre']?.invalid && profileForm.controls['nombre']?.touched">
-          El nombre es obligatorio y debe tener entre 2 y 100 caracteres.
+          El nombre es obligatorio y debe tener entre 2 y 50 caracteres.
         </mat-error>
       </mat-form-field>
 

@@ -35,7 +35,7 @@
                     <input matInput formControlName="telefono" type="tel" placeholder="Ingresa tu número de teléfono"
                         maxlength="10" />
                     <mat-error *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched">
-                        Ingresa un teléfono válido de 10 dígitos.
+                        Ingresa un teléfono válido de 10 dígitos númericos.
                     </mat-error>
                 </mat-form-field>
 
@@ -72,7 +72,7 @@
 
                 <!-- Submit Button -->
                 <div class="actions">
-                    <button mat-button class="full-width" type="submit" [disabled]="registerForm.invalid || passwordStrengthValue !== 100 || registerForm.hasError('mismatch') || isLoading">
+                    <button mat-button class="full-width" type="submit" [disabled]="registerForm.invalid || passwordStrengthValue !== 100 || registerForm.hasError('mismatch') ">
                         Registrarse
                       </button>                     
                 </div>
