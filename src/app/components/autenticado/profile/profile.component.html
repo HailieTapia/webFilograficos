@@ -128,7 +128,6 @@
         </mat-error>
       </mat-form-field>
       
-
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Nueva Contraseña</mat-label>
         <input
@@ -138,6 +137,7 @@
           required
           minlength="8"
           #newPasswordCtrl="ngModel"
+          (ngModelChange)="onPasswordChange(newPassword)"
         />
         <button
           mat-icon-button
@@ -147,12 +147,16 @@
           <mat-icon>{{ hideNew ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         <mat-error *ngIf="newPasswordCtrl.hasError('required')">
-          La nueva contraseña es obligatoria
+          La contraseña es obligatoria y debe ser 100% de fortaleza
         </mat-error>
         <mat-error *ngIf="newPasswordCtrl.hasError('minlength')">
           La contraseña debe tener al menos 8 caracteres
         </mat-error>
       </mat-form-field>
+      
+      <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
+      [color]="passwordStrengthColor">
+    </mat-progress-bar>
       
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Confirmar Nueva Contraseña</mat-label>
@@ -164,7 +168,7 @@
 
       <div class="form-actions">
         <button mat-button (click)="closeModal()">Cancelar</button>
-        <button mat-raised-button color="primary" (click)="onChangePassword()">Cambiar Contraseña</button>
+        <button mat-raised-button color="primary" (click)="onChangePassword()"    [disabled]="passwordStrength !== 'Fuerte'">Cambiar Contraseña</button>
       </div>
     </div>
   </div>

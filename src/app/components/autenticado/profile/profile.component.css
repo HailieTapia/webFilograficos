@@ -61,6 +61,25 @@ h2 {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 400px;
 }
+/* Estilo para la barra de progreso */
+mat-progress-bar {
+  height: 20px; /* Cambia la altura de la barra */
+  border-radius: 5px; /* Bordes redondeados para un aspecto más suave */
+  background-color: #f0f0f0aa; /* Color de fondo de la barra */
+  margin-bottom: 10px;
+}
+
+/* Para el texto dentro de la barra de progreso */
+mat-progress-bar::after {
+  content: attr(aria-valuenow) "%"; /* Muestra el valor actual de la barra en porcentaje */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #000000; /* Color del texto */
+  font-weight: bold; /* Texto en negritas */
+  font-size: 14px; /* Tamaño del texto */
+}
 
 @media (max-width: 768px) {
   .container {

@@ -10,10 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { Observable } from 'rxjs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PwnedService } from '../../services/pwned.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatCardModule,MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatProgressSpinnerModule, CommonModule, FormsModule],
+  imports: [MatProgressBarModule, MatCardModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatProgressSpinnerModule, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
@@ -39,7 +42,11 @@ export class ProfileComponent implements OnInit {
   hideCurrent: boolean = true;
   hideNew: boolean = true;
   hideConfirm: boolean = true;
-  constructor(private router: Router, private userService: UserService, private snackBar: MatSnackBar) { }
+
+  passwordStrength: string = '';
+  passwordStrengthValue: number = 0;
+  passwordStrengthColor: string = 'warn';
+  constructor(private pwnedService: PwnedService, private router: Router, private userService: UserService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadUserProfile();
@@ -68,7 +75,7 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-  
+
   //actualziar perfil(nombre, email, telefono)
   updateProfile(form: NgForm): void {
     this.isLoading = true;
@@ -120,9 +127,9 @@ export class ProfileComponent implements OnInit {
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     });
-  
+
     let actionConfirmed = false;
-  
+
     snackBarRef.onAction().subscribe(() => {
       this.userService.deleteMyAccount().subscribe({
         next: (response) => {
@@ -144,7 +151,7 @@ export class ProfileComponent implements OnInit {
       });
       actionConfirmed = true;
     });
-  
+
     snackBarRef.afterDismissed().subscribe(() => {
       if (!actionConfirmed) {
         this.snackBar.open('Eliminación cancelada', 'Cerrar', {
@@ -155,7 +162,7 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-  
+  //cambio contra
   onChangePassword(): void {
     if (this.newPassword !== this.confirmNewPassword) {
       this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', { duration: 3000 });
@@ -186,5 +193,58 @@ export class ProfileComponent implements OnInit {
     this.currentPassword = '';
     this.newPassword = '';
     this.confirmNewPassword = '';
+  }
+  onPasswordChange(newPassword: string) {
+    this.passwordStrength = this.checkPasswordStrength(newPassword);
+  }
+  //medidor fortaleza evalua a newPass
+  checkPasswordStrength(newPassword: string): string {
+    let strength = '';
+    const lengthCondition = newPassword.length >= 8;
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasLower = /[a-z]/.test(newPassword);
+    const hasUpper = /[A-Z]/.test(newPassword);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+    if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
+      strength = 'Fuerte';
+      this.passwordStrengthValue = 100;
+      this.passwordStrengthColor = 'primary';
+    } else if (lengthCondition && hasNumber && (hasLower || hasUpper)) {
+      strength = 'Moderada';
+      this.passwordStrengthValue = 70;
+      this.passwordStrengthColor = 'accent';
+    } else if (lengthCondition) {
+      strength = 'Débil';
+      this.passwordStrengthValue = 40;
+      this.passwordStrengthColor = 'warn';
+    } else {
+      strength = 'Muy débil';
+      this.passwordStrengthValue = 10;
+      this.passwordStrengthColor = 'warn';
+    }
+    return strength;
+  }
+
+  // Función para verificar si la contraseña está comprometida
+  validatePasswordStrength(newPassword: string): Observable<string> {
+    return new Observable((observer) => {
+      this.pwnedService.checkPassword(newPassword).subscribe({
+        next: (data) => {
+          const lines = data.split('\n');
+          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
+          const match = lines.find(line => line.startsWith(passwordHashSuffix));
+
+          if (match) {
+            observer.next('comprometida');
+          } else {
+            observer.next('segura');
+          }
+        },
+        error: () => {
+          observer.next('error');
+        }
+      });
+    });
   }
 }
