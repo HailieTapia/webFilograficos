@@ -175,10 +175,10 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
         this.closeModal();
       },
-      () => {
-        this.snackBar.open('Error al cambiar la contraseña', 'Cerrar', { duration: 3000 });
+      (error) => {
         this.isLoading = false;
-
+        const errorMessage = error?.error?.message || 'Error al cambiar la contraseña';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     );
   }
