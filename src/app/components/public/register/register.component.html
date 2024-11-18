@@ -72,9 +72,9 @@
 
                 <!-- Submit Button -->
                 <div class="actions">
-                    <button mat-button class="full-width" type="submit" [disabled]="isLoading">
+                    <button mat-button class="full-width" type="submit" [disabled]="registerForm.invalid || passwordStrengthValue !== 100 || registerForm.hasError('mismatch') || isLoading">
                         Registrarse
-                    </button>
+                      </button>                     
                 </div>
             </form>
 

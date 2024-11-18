@@ -55,9 +55,13 @@ export class RegisterComponent {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    return password && confirmPassword && password !== confirmPassword ? { mismatch: true } : null;
+    if (password && confirmPassword && password !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    } else {
+      return null;
+    }
   }
-
   
   checkPasswordStrength(password: string): string {
     let strength = '';
@@ -138,21 +142,9 @@ export class RegisterComponent {
   onRegister() {
     this.isLoading = true;
   
-    if (this.registerForm.invalid) {
-      // Detener el registro si el formulario no es válido (es decir, si las contraseñas no coinciden)
-      this.snackBar.open('Por favor, completa el formulario correctamente.', 'Cerrar', {
-        duration: 3000
-      });
+    if (this.registerForm.invalid || this.passwordStrengthValue !== 100 || this.registerForm.hasError('mismatch')) {
       this.isLoading = false;
-      return; 
-    }
-  
-    if (this.passwordStrengthValue !== 100) {
-      this.snackBar.open('Tu contraseña debe ser 100% de fortaleza.', 'Cerrar', {
-        duration: 3000
-      });
-      this.isLoading = false;
-      return; 
+      return;
     }
   
     const { nombre, email, telefono, password, tipo_usuario, mfa_activado } = this.registerForm.value;
@@ -191,4 +183,5 @@ export class RegisterComponent {
       }
     });
   }
+  
 }  
