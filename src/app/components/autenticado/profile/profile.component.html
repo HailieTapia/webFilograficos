@@ -164,11 +164,16 @@
         <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" aria-label="Toggle password visibility">
           <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
+        <mat-error *ngIf="confirmNewPassword !== newPassword">
+          Las contraseñas no coinciden
+        </mat-error>
       </mat-form-field>
 
       <div class="form-actions">
         <button mat-button (click)="closeModal()">Cancelar</button>
-        <button mat-raised-button color="primary" (click)="onChangePassword()"    [disabled]="passwordStrength !== 'Fuerte'">Cambiar Contraseña</button>
+        <button mat-raised-button color="primary" (click)="onChangePassword()"         [disabled]="
+        passwordStrength !== 'Fuerte' || confirmNewPassword !== newPassword
+      ">Cambiar Contraseña</button>
       </div>
     </div>
   </div>
