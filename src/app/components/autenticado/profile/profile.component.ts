@@ -10,9 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { Observable } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PwnedService } from '../../services/pwned.service';
+import { Observable } from 'rxjs';
+import { AbstractControl } from '@angular/forms';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -21,27 +22,17 @@ import { PwnedService } from '../../services/pwned.service';
   styleUrls: ['./profile.component.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
 export class ProfileComponent implements OnInit {
-  userProfile: any = {
-    nombre: '',
-    email: '',
-    telefono: '',
-    direccion: {
-      calle: '',
-      ciudad: '',
-      codigo_postal: '',
-      estado: ''
-    }
-  };
-  isLoading: boolean = false;
-  showModal: boolean = false;
-  currentPassword: string = '';
-  newPassword: string = '';
-  confirmNewPassword: string = '';
+  profile: any;
+  isLoading = true;
   errorMessage: string | null = null;
-  successMessage: string | null = null;
-  hideCurrent: boolean = true;
-  hideNew: boolean = true;
-  hideConfirm: boolean = true;
+
+  currentPassword: string = '';  
+  newPassword: string = '';      
+  confirmPassword: string = '';
+  showModal: boolean = false;
+  hideCurrentPassword: boolean = true;
+  hideNewPassword: boolean = true;
+  hideConfirmPassword: boolean = true;
 
   passwordStrength: string = '';
   passwordStrengthValue: number = 0;
@@ -49,80 +40,83 @@ export class ProfileComponent implements OnInit {
   constructor(private pwnedService: PwnedService, private router: Router, private userService: UserService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.loadUserProfile();
+    this.getProfile();
   }
-  //obtener perfil
-  loadUserProfile(): void {
+
+  // Llama al servicio para obtener el perfil
+  getProfile(): void {
     this.isLoading = true;
     this.userService.getProfile().subscribe({
       next: (data) => {
-        this.userProfile = {
+        this.profile = {
           nombre: data?.nombre || '',
           email: data?.email || '',
           telefono: data?.telefono || '',
           direccion: {
             calle: data?.direccion?.calle || '',
             ciudad: data?.direccion?.ciudad || '',
+            estado: data?.direccion?.estado || '',
             codigo_postal: data?.direccion?.codigo_postal || '',
-            estado: data?.direccion?.estado || ''
-          }
+          },
         };
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al obtener el perfil del usuario:', error);
+        this.errorMessage = 'Error al obtener el perfil';
         this.isLoading = false;
-      }
+        console.error(error);
+      },
     });
   }
-
-  //actualziar perfil(nombre, email, telefono)
-  updateProfile(form: NgForm): void {
+  // Método para actualizar el perfil
+  updateUserProfile(): void {
     this.isLoading = true;
-    if (form.invalid) {
-      this.snackBar.open('Por favor, completa todos los campos requeridos.', 'Cerrar', { duration: 3000 });
-      this.isLoading = false;
-      return;
-    }
+    const updatedData = {
+      nombre: this.profile.nombre,
+      email: this.profile.email,
+      telefono: this.profile.telefono,
+    };
 
-    this.isLoading = true;
-    this.userService.updateProfile(this.userProfile).subscribe({
-      next: (response) => {
+    this.userService.updateProfile(updatedData).subscribe({
+      next: () => {
         this.isLoading = false;
-        const successMessage = response?.message || 'Actualización correctamente';
-        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Perfil actualizado con éxito', 'Cerrar', { duration: 3000 });
+        this.getProfile();
       },
       error: (error) => {
         this.isLoading = false;
-        const errorMessage = error?.error?.message || 'Error al actualizar';
+        const errorMessage = error?.error?.message || 'Error al actualizar el perfil';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     });
   }
-  //actualziar direccion(colonia, calle, cp)
-  updateAddress(form: NgForm): void {
-    if (form.invalid) {
-      this.snackBar.open('Por favor, completa todos los campos requeridos en la dirección.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
+  // Método para actualizar la dirección del usuario
+  updateUserDireccion(): void {
     this.isLoading = true;
-    this.userService.updateUserProfile(this.userProfile.direccion).subscribe({
-      next: (response) => {
+    const updatedDireccion = {
+      calle: this.profile.direccion.calle,
+      ciudad: this.profile.direccion.ciudad,
+      estado: this.profile.direccion.estado,
+      codigo_postal: this.profile.direccion.codigo_postal,
+    };
+
+    this.userService.updateUserProfile(updatedDireccion).subscribe({
+      next: (updatedDireccion) => {
         this.isLoading = false;
-        const successMessage = response?.message || 'Direccion actualizada correctamente';
-        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
+        this.profile.direccion = updatedDireccion;
+        this.snackBar.open('Dirección actualizada con éxito', 'Cerrar', { duration: 3000 });
+        this.getProfile();
       },
       error: (error) => {
         this.isLoading = false;
-        const errorMessage = error?.error?.message || 'Error al actualizar';
+        const errorMessage = error?.error?.message || 'Error al actualizar la dirección';
         this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     });
   }
-  // Método para eliminar la cuenta del cliente autenticado
+  // Método para eliminar la cuenta del usuario
   deleteAccount(): void {
-    const snackBarRef = this.snackBar.open('¿Estás seguro de que deseas eliminar tu cuenta?', 'Sí', {
+    const snackBarRef = this.snackBar.open('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.', 'Sí', {
       duration: 4000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -132,56 +126,24 @@ export class ProfileComponent implements OnInit {
 
     snackBarRef.onAction().subscribe(() => {
       this.userService.deleteMyAccount().subscribe({
-        next: (response) => {
-          this.snackBar.open('Cuenta eliminada correctamente', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-          });
-          // Redirigir a la página de inicio de sesión
+        next: () => {
+          this.snackBar.open('Cuenta eliminada con éxito', 'Cerrar', { duration: 3000 });
           this.router.navigate(['/login']);
         },
         error: (error) => {
-          this.snackBar.open('Error al eliminar la cuenta', 'Cerrar', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-          });
+          const errorMessage = error?.error?.message || 'Error al eliminar la cuenta';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         }
       });
       actionConfirmed = true;
     });
-
     snackBarRef.afterDismissed().subscribe(() => {
       if (!actionConfirmed) {
-        this.snackBar.open('Eliminación cancelada', 'Cerrar', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-        });
+        this.snackBar.open('Eliminación cancelada', 'Cerrar', { duration: 3000 });
       }
     });
   }
-  //cambio contra
-  onChangePassword(): void {
-    if (this.newPassword !== this.confirmNewPassword) {
-      this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', { duration: 3000 });
-      this.isLoading = false;
-      return;
-    }
-    this.userService.changePassword(this.currentPassword, this.newPassword).subscribe(
-      () => {
-        this.snackBar.open('Contraseña cambiada exitosamente', 'Cerrar', { duration: 3000 });
-        this.isLoading = false;
-        this.closeModal();
-      },
-      (error) => {
-        this.isLoading = false;
-        const errorMessage = error?.error?.message || 'Error al cambiar la contraseña';
-        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-      }
-    );
-  }
+  //modal
   openChangePasswordDialog(): void {
     this.showModal = true;
   }
@@ -192,19 +154,30 @@ export class ProfileComponent implements OnInit {
   resetPasswordFields(): void {
     this.currentPassword = '';
     this.newPassword = '';
-    this.confirmNewPassword = '';
+    this.confirmPassword = '';
   }
-  onPasswordChange(newPassword: string) {
-    this.passwordStrength = this.checkPasswordStrength(newPassword);
+
+  // Método para cambiar la contraseña
+  changePassword(): void {
+    this.userService.changePassword(this.currentPassword, this.newPassword).subscribe({
+      next: (response) => {
+        this.snackBar.open('Contraseña cambiada con éxito', 'Cerrar', { duration: 3000 });
+        this.closeModal();
+      },
+      error: (error) => {
+        const errorMessage = error?.error?.message || 'Error al cambiar la contraseña';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+      }
+    });
   }
-  //medidor fortaleza evalua a newPass
-  checkPasswordStrength(newPassword: string): string {
+  //Barra progreso
+  checkPasswordStrength(password: string): string {
     let strength = '';
-    const lengthCondition = newPassword.length >= 8;
-    const hasNumber = /[0-9]/.test(newPassword);
-    const hasLower = /[a-z]/.test(newPassword);
-    const hasUpper = /[A-Z]/.test(newPassword);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+    const lengthCondition = password.length >= 8;
+    const hasNumber = /[0-9]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasUpper = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
       strength = 'Fuerte';
@@ -223,16 +196,16 @@ export class ProfileComponent implements OnInit {
       this.passwordStrengthValue = 10;
       this.passwordStrengthColor = 'warn';
     }
+
     return strength;
   }
-
   // Función para verificar si la contraseña está comprometida
-  validatePasswordStrength(newPassword: string): Observable<string> {
+  validatePasswordStrength(password: string): Observable<string> {
     return new Observable((observer) => {
-      this.pwnedService.checkPassword(newPassword).subscribe({
+      this.pwnedService.checkPassword(password).subscribe({
         next: (data) => {
           const lines = data.split('\n');
-          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
+          const passwordHashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
           const match = lines.find(line => line.startsWith(passwordHashSuffix));
 
           if (match) {
@@ -243,6 +216,27 @@ export class ProfileComponent implements OnInit {
         },
         error: () => {
           observer.next('error');
+        }
+      });
+    });
+  }
+  passwordStrengthValidator(control: AbstractControl): Observable<{ [key: string]: boolean } | null> {
+    return new Observable((observer) => {
+      const password = control.value;
+      this.pwnedService.checkPassword(password).subscribe({
+        next: (data) => {
+          const lines = data.split('\n');
+          const passwordHashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
+          const match = lines.find(line => line.startsWith(passwordHashSuffix));
+
+          if (match) {
+            observer.next({ comprometida: true });
+          } else {
+            observer.next(null);
+          }
+        },
+        error: () => {
+          observer.next(null);
         }
       });
     });

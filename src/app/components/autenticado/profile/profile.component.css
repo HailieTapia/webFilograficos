@@ -9,7 +9,12 @@
   display: flex;
   flex-direction: column;
 }
-
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+}
 .form-section {
   display: flex;
   flex-wrap: wrap;
