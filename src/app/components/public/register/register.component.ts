@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl,ValidationErrors,FormControl,ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,21 +12,23 @@ import { PwnedService } from '../../services/pwned.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
-import { Observable } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
-import { MatProgressBarModule } from '@angular/material/progress-bar'; 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Observable, of,catchError } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatProgressBarModule,MatChipsModule,MatProgressSpinnerModule,CommonModule,ReactiveFormsModule,MatCardModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatIconModule],
+  imports: [MatProgressBarModule, MatChipsModule, MatProgressSpinnerModule, CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css', '../../estilos/spinner.css', '../../estilos/snackbar.css'],
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  hide: boolean = true;
-  hideConfirm: boolean = true;
   isLoading: boolean = false;
+
+  hideNewPassword: boolean = true;
+  hideConfirmPassword: boolean = true;
+
   passwordStrength: string = '';
   passwordStrengthValue: number = 0;
   passwordStrengthColor: string = 'warn';
@@ -39,45 +41,83 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ\s]+$/), Validators.minLength(3), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ])[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ\s]*$/), Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      password: ['', [Validators.required, Validators.minLength(8)], [this.passwordStrengthValidator.bind(this)]],
+      password: ['', [Validators.required, Validators.minLength(8), this.passwordStrengthValidator.bind(this)], [this.checkPasswordCompromised.bind(this)]],
       confirmPassword: ['', [Validators.required]],
       tipo_usuario: ['cliente'],
       mfa_activado: [false],
-    }, { validators: this.passwordMatchValidator });
+    }, { validators: this.passwordMatchValidator });    
+  }
+  // Validador asincrónico para verificar si la contraseña está comprometida
+checkPasswordCompromised(control: AbstractControl): Observable<ValidationErrors | null> {
+  const password = control.value;
+  if (!password) {
+    return of(null); // No hay error si el campo está vacío
   }
 
-  get f() {
-    return this.registerForm.controls;
+  return this.validatePasswordStrength(password).pipe(
+    map((status: string) => {
+      if (status === 'comprometida') {
+        control.setErrors({ compromised: true });
+        return { compromised: true };
+      }
+      return null;
+    }),
+    catchError(() => {
+      control.setErrors({ compromisedError: true }); // Manejo de errores
+      return of(null);
+    })
+  );
+}
+  // Función para verificar si la contraseña está comprometida
+  validatePasswordStrength(password: string): Observable<string> {
+    return new Observable((observer) => {
+      this.pwnedService.checkPassword(password).subscribe({
+        next: (data) => {
+          const lines = data.split('\n');
+          const passwordHashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
+          const match = lines.find(line => line.startsWith(passwordHashSuffix));
+          if (match) {
+            observer.next('comprometida');
+          } else {
+            observer.next('segura');
+          }
+        },
+        error: () => {
+          observer.next('error');
+        }
+      });
+    });
   }
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value || '';
-    const confirmPassword = form.get('confirmPassword')?.value || '';
-    
-    if (!confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ required: true });
-      return { required: true };
+
+  // Validador personalizado para la fortaleza de la contraseña
+  passwordStrengthValidator(control: FormControl): { [key: string]: any } | null {
+    const password = control.value || '';
+    this.checkPasswordStrength(password); 
+
+    if (this.passwordStrengthValue < 100) {
+      return { weakPassword: true }; 
     }
-    
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ mismatch: true });
-      return { mismatch: true };
-    }
-    
     return null;
   }
+  //Barra progreso
+  checkPasswordStrength(password: string): void {
+    if (!password) {
+      this.passwordStrength = 'Muy débil';
+      this.passwordStrengthValue = 0;
+      this.passwordStrengthColor = 'warn';
+      return;
+    }
   
-  
-  checkPasswordStrength(password: string): string {
     let strength = '';
     const lengthCondition = password.length >= 8;
     const hasNumber = /[0-9]/.test(password);
     const hasLower = /[a-z]/.test(password);
     const hasUpper = /[A-Z]/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
+  
     if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
       strength = 'Fuerte';
       this.passwordStrengthValue = 100;
@@ -95,100 +135,54 @@ export class RegisterComponent {
       this.passwordStrengthValue = 10;
       this.passwordStrengthColor = 'warn';
     }
-
-    return strength;
-  }
-
-  onPasswordChange(password: string) {
-    this.passwordStrength = this.checkPasswordStrength(password); 
-  }
-
-  // Función para verificar si la contraseña está comprometida
-  validatePasswordStrength(password: string): Observable<string> {
-    return new Observable((observer) => {
-      this.pwnedService.checkPassword(password).subscribe({
-        next: (data) => {
-          const lines = data.split('\n');
-          const passwordHashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
-          const match = lines.find(line => line.startsWith(passwordHashSuffix));
-
-          if (match) {
-            observer.next('comprometida');
-          } else {
-            observer.next('segura');
-          }
-        },
-        error: () => {
-          observer.next('error');
-        }
-      });
-    });
-  }
-
-  passwordStrengthValidator(control: AbstractControl): Observable<{ [key: string]: boolean } | null> {
-    return new Observable((observer) => {
-      const password = control.value;
-      this.pwnedService.checkPassword(password).subscribe({
-        next: (data) => {
-          const lines = data.split('\n');
-          const passwordHashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
-          const match = lines.find(line => line.startsWith(passwordHashSuffix));
   
-          if (match) {
-            observer.next({ comprometida: true });
-          } else {
-            observer.next(null);
-          }
-        },
-        error: () => {
-          observer.next(null);
-        }
-      });
-    });
+    this.passwordStrength = strength;
   }
-  onRegister() {
-    this.isLoading = true;
   
-    if (this.registerForm.invalid || this.passwordStrengthValue !== 100 || this.registerForm.hasError('mismatch')) {
-      this.isLoading = false;
-      return;
+  // Validador personalizado para verificar que las contraseñas coincidan
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value || '';
+    const confirmPassword = form.get('confirmPassword')?.value || '';
+
+    if (!confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ required: true });
+      return { required: true };
     }
-  
-    const { nombre, email, telefono, password, tipo_usuario, mfa_activado } = this.registerForm.value;
-  
-    this.validatePasswordStrength(password).subscribe((status) => {
-      if (status === 'comprometida') {
-        this.registerForm.get('password')?.setErrors({ comprometida: true });
-  
-        this.snackBar.open('Tu contraseña ha sido comprometida, usa una contraseña más segura.', 'Cerrar', {
-          duration: 3000
-        });
-        this.isLoading = false;
-      } else if (status === 'segura') {
-        this.registerForm.get('password')?.setErrors(null);
-  
-        this.authService.register({ nombre, email, telefono, password, tipo_usuario, mfa_activado }).subscribe({
-          next: () => {
-            this.isLoading = false;
-            this.snackBar.open('Registro exitoso', 'Cerrar', {
-              duration: 3000
-            }).afterDismissed().subscribe(() => {
-              this.router.navigate(['/login']);
-            });
-          },
-          error: (error) => {
-            const errorMessage = error?.error?.message || 'Error en el registro';
-            this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-            this.isLoading = false;
-          }
-        });
-      } else {
-        this.snackBar.open('Error al verificar la seguridad de la contraseña.', 'Cerrar', {
-          duration: 3000
-        });
-        this.isLoading = false;
-      }
-    });
+
+    if (password !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    }
+    return null;
   }
-  
-}  
+
+  // Método para manejar el registro
+  onRegister() {
+    if (this.registerForm.valid) {
+      this.isLoading = true;
+      const userData = this.registerForm.value;
+
+      this.authService.register(userData).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.snackBar.open('Registro exitoso', 'Cerrar', {
+            duration: 3000
+          }).afterDismissed().subscribe(() => {
+            this.router.navigate(['/login']);
+          });
+        },
+        error: (error) => {
+          const errorMessage = error?.error?.message || 'Error en el registro';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.snackBar.open('Por favor completa todos los campos correctamente.', 'Cerrar', {
+        duration: 3000
+      });
+      this.isLoading = false;
+    }
+  }
+}
+
