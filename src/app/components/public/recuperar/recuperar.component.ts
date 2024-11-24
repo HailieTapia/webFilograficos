@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,38 +9,24 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { trigger, transition, style, animate } from '@angular/animations';
 import { MatIconModule } from '@angular/material/icon';
-import { Observable } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
+import { Observable, of, catchError } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PwnedService } from '../../services/pwned.service';
-
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-recuperar',
   standalone: true,
   imports: [MatProgressBarModule, MatIconModule, MatCardModule, ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './recuperar.component.html',
   styleUrls: ['./recuperar.component.css'],
-  animations: [
-    trigger('transitionMessages', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('500ms ease-in', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('500ms ease-out', style({ opacity: 0 }))
-      ])
-    ])
-  ]
 })
 export class RecuperarComponent {
   recoveryStep = 0;
   emailForm: FormGroup;
   tokenForm: FormGroup;
   passwordForm: FormGroup;
-  successMessage: string = '';
-  errorMessage: string = '';
+
   hideNewPassword: boolean = true;
   hideConfirmPassword: boolean = true;
 
@@ -64,100 +50,93 @@ export class RecuperarComponent {
       digit8: ['', Validators.required],
     });
     this.passwordForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
+      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
+      confirmPassword: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });
   }
-  passwordMatchValidator(form: FormGroup) {
-    const newPassword = form.get('newPassword')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ mismatch: true });
-      return { mismatch: true };
-    } else {
+  // Validador personalizado para la fortaleza de la contraseña
+  passwordStrengthValidator(control: FormControl): { [key: string]: any } | null {
+    const password = control.value || '';
+
+    if (control.hasError('minlength')) {
       return null;
     }
+
+    this.checkPasswordStrength(password);
+    if (this.passwordStrengthValue < 100) {
+      return { weakPassword: true };
+    }
+    return null;
   }
-  checkPasswordStrength(newPassword: string): string {
-    let strength = '';
-    const lengthCondition = newPassword.length >= 8;
-    const hasNumber = /[0-9]/.test(newPassword);
-    const hasLower = /[a-z]/.test(newPassword);
-    const hasUpper = /[A-Z]/.test(newPassword);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+  // Validador asincrónico para verificar si la contraseña está comprometida
+  checkPasswordCompromised(control: AbstractControl): Observable<ValidationErrors | null> {
+    const password = control.value;
+    if (!password) return of(null);
+
+    return this.pwnedService.checkPassword(password).pipe(
+      map((data) => {
+        const lines = data.split('\n');
+        const hashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
+        const isCompromised = lines.some((line) => line.startsWith(hashSuffix));
+
+        if (isCompromised) {
+          this.setPasswordStrength('Comprometida', 80, 'warn');
+          return { compromised: true };
+        }
+        return null;
+      }),
+      catchError(() => of(null))
+    );
+  }
+
+  // Método para calcular la fortaleza de la contraseña
+  checkPasswordStrength(password: string): void {
+    if (!password) {
+      this.setPasswordStrength('Muy débil', 0, 'warn');
+      return;
+    }
+
+    const lengthCondition = password.length >= 8;
+    const hasNumber = /[0-9]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasUpper = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
-      strength = 'Fuerte';
-      this.passwordStrengthValue = 100;
-      this.passwordStrengthColor = 'primary';
+      this.setPasswordStrength('Fuerte', 100, 'primary');
     } else if (lengthCondition && hasNumber && (hasLower || hasUpper)) {
-      strength = 'Moderada';
-      this.passwordStrengthValue = 70;
-      this.passwordStrengthColor = 'accent';
+      this.setPasswordStrength('Moderada', 60, 'accent');
     } else if (lengthCondition) {
-      strength = 'Débil';
-      this.passwordStrengthValue = 40;
-      this.passwordStrengthColor = 'warn';
+      this.setPasswordStrength('Débil', 40, 'warn');
     } else {
-      strength = 'Muy débil';
-      this.passwordStrengthValue = 10;
-      this.passwordStrengthColor = 'warn';
-    }
-
-    return strength;
-  }
-  onPasswordChange(newPassword: string) {
-    this.passwordStrength = this.checkPasswordStrength(newPassword);
-  }
-  // Función para verificar si la contraseña está comprometida
-  validatePasswordStrength(newPassword: string): Observable<string> {
-    return new Observable((observer) => {
-      this.pwnedService.checkPassword(newPassword).subscribe({
-        next: (data) => {
-          const lines = data.split('\n');
-          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
-          const match = lines.find(line => line.startsWith(passwordHashSuffix));
-
-          if (match) {
-            observer.next('comprometida');
-          } else {
-            observer.next('segura');
-          }
-        },
-        error: () => {
-          observer.next('error');
-        }
-      });
-    });
-  }
-  passwordStrengthValidator(control: AbstractControl): Observable<{ [key: string]: boolean } | null> {
-    return new Observable((observer) => {
-      const newPassword = control.value;
-      this.pwnedService.checkPassword(newPassword).subscribe({
-        next: (data) => {
-          const lines = data.split('\n');
-          const passwordHashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
-          const match = lines.find(line => line.startsWith(passwordHashSuffix));
-
-          if (match) {
-            observer.next({ comprometida: true });
-          } else {
-            observer.next(null);
-          }
-        },
-        error: () => {
-          observer.next(null);
-        }
-      });
-    });
-  }
-  showAlert(message: string | null) {
-    if (message) {
-      this.snackBar.open(message, 'Cerrar', {
-        duration: 3000,
-      });
+      this.setPasswordStrength('Muy débil', 10, 'warn');
     }
   }
+
+  setPasswordStrength(strength: string, value: number, color: string): void {
+    this.passwordStrength = strength;
+    this.passwordStrengthValue = value;
+    this.passwordStrengthColor = color;
+  }
+
+  // Validador personalizado para verificar que las contraseñas coincidan
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value || '';
+    const confirmPassword = form.get('confirmPassword')?.value || '';
+
+    if (!confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ required: true });
+      return { required: true };
+    }
+
+    if (password !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ mismatch: true });
+      return { mismatch: true };
+    }
+    return null;
+  }
+
   moveToNext(index: number, event: any) {
     const inputValue = event.target.value;
     if (inputValue && index < this.otpArray.length - 1) {
@@ -167,95 +146,74 @@ export class RecuperarComponent {
       }
     }
   }
-  // Enviando el token al correo electrónico
+  // token al correo electrónico
   sendToken() {
-    this.successMessage = '';
-    this.errorMessage = '';
     if (this.emailForm.valid) {
-      const email = this.emailForm.value.email;
-      this.authService.recu({ email }).subscribe({
-        next: (response) => {
-          console.log(`Enviando token a ${email}`);
-          this.successMessage = 'Se ha enviado un token de recuperación a tu correo, valido por 5 minutos .';
-          this.showAlert(this.successMessage);
-          this.errorMessage = '';
+      this.authService.recu(this.emailForm.value).subscribe({
+        next: () => {
+          this.snackBar.open('Se ha enviado un token de recuperación a tu correo, valido por 5 minutos', 'Cerrar', { duration: 3000 });
           this.recoveryStep = 1;
         },
         error: (error) => {
-          this.errorMessage = 'Error al enviar el token. Verifica tu correo e inténtalo de nuevo.';
-          this.showAlert(this.errorMessage);
-          this.successMessage = '';
-          console.error(error);
-        }
+          const errorMessage = error?.error?.message || 'Error al iniciar recuperación';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        },
       });
-    } else {
-      this.errorMessage = 'Por favor, ingresa un correo válido.';
-      this.showAlert(this.errorMessage);
     }
   }
+
   // Verificación del token
   verifyToken() {
-    this.successMessage = '';
-    this.errorMessage = '';
-
     if (this.tokenForm.valid) {
       // Combina los dígitos del OTP en una sola cadena
       const otp = this.otpArray.map(control => this.tokenForm.get(control)?.value).join('');
       const email = this.emailForm.value.email;
 
-      this.authService.verOTP({ email, otp }).subscribe({
-        next: (response) => {
-          this.successMessage = 'Verificación con éxito.';
-          this.showAlert(this.successMessage);
-          this.errorMessage = response.message; // O ajusta según la respuesta real
+      const credentials = { email, otp }; // Combina el email y el OTP en un objeto
+
+      this.authService.verOTP(credentials).subscribe({
+        next: () => {
+          this.snackBar.open('Verificación con éxito', 'Cerrar', { duration: 3000 });
           this.recoveryStep = 2;
         },
         error: (error) => {
-          this.errorMessage = 'Error al verificar el OTP. Por favor, inténtalo nuevamente.';
-          this.showAlert(this.errorMessage);
-          this.successMessage = '';
-          console.error(error);
-        }
+          const errorMessage = error?.error?.message || 'El OTP ingresado es incorrecto o ha expirado.';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        },
       });
-    } else {
-      this.errorMessage = 'Por favor, ingresa el OTP recibido en tu correo.';
-      this.showAlert(this.errorMessage);
+    }
+    else {
+      this.snackBar.open(
+        'Por favor, ingresa el OTP recibido en tu correo.',
+        'Cerrar',
+        { duration: 3000 }
+      );
     }
   }
-
+  //Cambio contra
   updatePassword() {
-    this.successMessage = '';
-    this.errorMessage = '';
-
     if (this.passwordForm.valid) {
-      const newPassword = this.passwordForm.value.newPassword;
-      const confirmPassword = this.passwordForm.value.confirmPassword;
+      const password = this.passwordForm.value.password;
       const email = this.emailForm.value.email;
-      if (newPassword !== confirmPassword) {
-        this.errorMessage = 'Las contraseñas no coinciden.';
-        this.showAlert(this.errorMessage);
-        return;
-      }
 
-      this.authService.resContra({ email, newPassword }).subscribe({
-        next: (response) => {
-          this.successMessage = 'Contraseña actualizada con éxito.';
-          this.showAlert(this.successMessage);
-          this.errorMessage = '';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
+      const credentials = { email, password };
+
+      this.authService.resContra(credentials).subscribe({
+        next: () => {
+          this.snackBar.open('Tu contraseña ha sido actualizada', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/login']);
         },
         error: (error) => {
-          this.errorMessage = 'Error al actualizar la contraseña. Por favor, inténtalo de nuevo.';
-          this.showAlert(this.errorMessage);
-          this.successMessage = '';
-          console.error(error);
-        }
+          const errorMessage = error?.error?.message || 'Error al restablecer la contraseña';
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        },
       });
     } else {
-      this.errorMessage = 'Por favor, completa los campos de manera válida.';
-      this.showAlert(this.errorMessage);
+      this.snackBar.open(
+        'Por favor completa todos los campos correctamente.',
+        'Cerrar',
+        { duration: 3000 }
+      );
     }
   }
 }

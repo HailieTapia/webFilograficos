@@ -16,21 +16,17 @@
     background-color: var(--background);
 }
 
-.recu-title {
+h1 {
     font-weight: bold;
     font-size: 24px;
     color: var(--text-color);
-    margin: 0;
+    margin-bottom: 15px;
 }
 
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-}
-
-.input-wrapper {
-    position: relative;
 }
 
 .otp-container {
@@ -79,33 +75,35 @@ form {
 .input-wrapper input:focus {
     border-color: var(--accent-color);
 }
+
 /* Estilo para la barra de progreso */
 mat-progress-bar {
-    height: 20px; /* Cambia la altura de la barra */
-    border-radius: 5px; /* Bordes redondeados para un aspecto más suave */
-    background-color: #f0f0f0aa; /* Color de fondo de la barra */
-    margin-bottom: 10px;
-  }
-  
-  /* Para el texto dentro de la barra de progreso */
-  mat-progress-bar::after {
-    content: attr(aria-valuenow) "%"; /* Muestra el valor actual de la barra en porcentaje */
+    height: 20px;
+    border-radius: 5px;
+    background-color: #f0f0f0aa;
+    margin-bottom: 5px;
+}
+
+/* Para el texto dentro de la barra de progreso */
+mat-progress-bar::after {
+    content: attr(aria-valuenow) "%";
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: #000000; /* Color del texto */
-    font-weight: bold; /* Texto en negritas */
-    font-size: 14px; /* Tamaño del texto */
-  }
-  
-mat-error {
-    color: red;
-    font-size: 12px;
-    position: absolute;
-    bottom: -18px;
+    color: #000000;
+    font-weight: bold;
+    font-size: 14px;
+}
+.full-width {
+    width: 100%;
 }
 
+.password-strength-info {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    text-align: right;
+}
 /* Responsividad */
 @media (max-width: 600px) {
     .recu-card {
@@ -114,25 +112,25 @@ mat-error {
     }
 
     .recu-title {
-        font-size: 20px; /* Ajustar tamaño de fuente */
+        font-size: 20px;
     }
 
     .otp-inputs input {
-        width: 30px; /* Ajustar tamaño de los inputs de OTP */
-        height: 35px; /* Ajustar altura de los inputs de OTP */
+        width: 30px;
+        height: 35px;
     }
 
     .input-wrapper input {
-        font-size: 14px; /* Reducir tamaño de fuente en móviles */
+        font-size: 14px;
     }
 }
 
 @media (max-width: 400px) {
     .recu-title {
-        font-size: 18px; /* Aún más pequeño en pantallas muy pequeñas */
+        font-size: 18px;
     }
 
     .input-wrapper input {
-        font-size: 12px; /* Ajustar el tamaño de entrada */
+        font-size: 12px;
     }
 }

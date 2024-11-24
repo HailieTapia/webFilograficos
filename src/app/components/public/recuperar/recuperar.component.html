@@ -1,21 +1,25 @@
 <div class="recu-container">
     <mat-card class="recu-card">
-        <mat-card-header class="text-center">
-            <mat-card-title class="recu-title">Recuperar Contraseña</mat-card-title>
-        </mat-card-header>
+        <h1>Recuperar Contraseña</h1>
         <div>
             <!-- Paso 1: Ingreso del Correo Electrónico -->
             <div *ngIf="recoveryStep === 0">
                 <form [formGroup]="emailForm" (ngSubmit)="sendToken()">
-                    <div class="input-wrapper">
-                        <label for="email">Ingresa tu correo electrónico:</label>
-                        <input id="email" type="email" formControlName="email" required />
-                        <mat-error *ngIf="emailForm.get('email')?.errors?.['required']">El correo es
-                            requerido.</mat-error>
-                        <mat-error *ngIf="emailForm.get('email')?.errors?.['email']">El formato del correo es
-                            inválido.</mat-error>
-                    </div>
-                    <button mat-button type="submit" class="full-width">Enviar Token</button>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email" placeholder="Ingresa tu correo electrónico"  id="email"/>
+                        <mat-error *ngIf="emailForm.get('email')?.hasError('required')">
+                            Por favor, ingresa tu correo electrónico.
+                        </mat-error>
+                        <mat-error
+                            *ngIf="emailForm.get('email')?.hasError('email') && !emailForm.get('email')?.hasError('required')">
+                            Asegúrate de usar un correo electrónico válido.
+                        </mat-error>
+                    </mat-form-field>
+                    <button mat-button type="submit" [disabled]="emailForm.invalid" class="full-width">Enviar
+                        Token</button>
+
                 </form>
             </div>
 
@@ -29,7 +33,8 @@
                                 [formControlName]="control" (input)="moveToNext(i, $event)" />
                         </div>
                     </div>
-                    <button mat-raised-button color="primary" type="submit">Verificar Token</button>
+                    <button mat-raised-button color="primary" [disabled]="tokenForm.invalid" type="submit">Verificar
+                        Token</button>
                 </form>
             </div>
 
@@ -37,37 +42,55 @@
             <div *ngIf="recoveryStep === 2">
                 <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Nueva contraseña:</mat-label>
-                        <input id="new-password" [type]="hideNewPassword ? 'password' : 'text'"
-                            formControlName="newPassword" required matInput />
-                        <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword"
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput type="password" formControlName="password"
+                            [type]="hideNewPassword ? 'password' : 'text'" placeholder="Ingresa tu nueva contraseña"/>
+                        <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword"
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
-                        <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['required']">La contraseña es
-                            requerida.</mat-error>
-                        <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">La contraseña debe
-                            tener al menos 8 caracteres.</mat-error>
+                        <mat-error *ngIf="passwordForm.get('password')?.hasError('required')">
+                            La contraseña es obligatoria.
+                        </mat-error>
+                        <mat-error
+                            *ngIf="passwordForm.get('password')?.hasError('weakPassword') && !passwordForm.get('password')?.hasError('required')">
+                            Por favor, utiliza una contraseña más segura.
+                        </mat-error>
+                        <mat-error *ngIf="passwordForm.get('password')?.hasError('compromised')">
+                            La contraseña ha sido comprometida, elige otra.
+                        </mat-error>
                     </mat-form-field>
-                    <!-- Barra de fortaleza de la contraseña -->
-                <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
-                    [color]="passwordStrengthColor"></mat-progress-bar>
 
+                    <!-- Barra de progreso de la fortaleza de la contraseña -->
+                    <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
+                        [color]="passwordStrengthColor">
+                    </mat-progress-bar>
+
+                    <div class="password-strength-info" *ngIf="passwordStrength">
+                        Fortaleza: {{ passwordStrength }}
+                    </div>
+
+                    <!-- Confirmar Contraseña -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Confirma tu contraseña:</mat-label>
-                        <input id="confirm-password" [type]="hideConfirmPassword ? 'password' : 'text'"
-                            formControlName="confirmPassword" required matInput />
-                        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
+                        <mat-label>Confirmar Contraseña</mat-label>
+                        <input matInput type="password" formControlName="confirmPassword"
+                            [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="Confirma tu nueva contraseña"/>
+                        <button mat-icon-button matSuffix type="button"
+                            (click)="hideConfirmPassword = !hideConfirmPassword"
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
-                        <mat-error
-                        *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched">
-                        Las contraseñas no coinciden.
-                    </mat-error>
+                        <mat-error *ngIf="passwordForm.hasError('mismatch')">
+                            Las contraseñas no coinciden.
+                        </mat-error>
+                        <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">
+                            La confirmación de la contraseña es obligatoria.
+                        </mat-error>
                     </mat-form-field>
 
-                    <button mat-raised-button color="primary" type="submit">Actualizar Contraseña</button>
+                    <button mat-raised-button color="primary" [disabled]="passwordForm.invalid" type="submit">Actualizar
+                        Contraseña</button>
+
                 </form>
             </div>
         </div>

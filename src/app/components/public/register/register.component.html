@@ -57,13 +57,12 @@
                         aria-label="Toggle password visibility">
                         <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
-
                     <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
                         La contraseña es obligatoria.
                     </mat-error>
-                    <mat-error *ngIf="registerForm.get('password')?.hasError('weakPassword')">
+                    <mat-error *ngIf="registerForm.get('password')?.hasError('weakPassword') && !registerForm.get('password')?.hasError('required')">
                         Por favor, utiliza una contraseña más segura.
-                    </mat-error>
+                    </mat-error>                    
                     <mat-error *ngIf="registerForm.get('password')?.hasError('compromised')">
                         La contraseña ha sido comprometida, elige otra.
                     </mat-error>
