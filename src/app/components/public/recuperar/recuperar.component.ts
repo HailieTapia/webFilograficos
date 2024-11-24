@@ -50,19 +50,19 @@ export class RecuperarComponent {
       digit8: ['', Validators.required],
     });
     this.passwordForm = this.fb.group({
-      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
       confirmPassword: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });
   }
   // Validador personalizado para la fortaleza de la contraseña
   passwordStrengthValidator(control: FormControl): { [key: string]: any } | null {
-    const password = control.value || '';
+    const newPassword = control.value || '';
 
     if (control.hasError('minlength')) {
       return null;
     }
 
-    this.checkPasswordStrength(password);
+    this.checkPasswordStrength(newPassword);
     if (this.passwordStrengthValue < 100) {
       return { weakPassword: true };
     }
@@ -71,13 +71,13 @@ export class RecuperarComponent {
 
   // Validador asincrónico para verificar si la contraseña está comprometida
   checkPasswordCompromised(control: AbstractControl): Observable<ValidationErrors | null> {
-    const password = control.value;
-    if (!password) return of(null);
+    const newPassword = control.value;
+    if (!newPassword) return of(null);
 
-    return this.pwnedService.checkPassword(password).pipe(
+    return this.pwnedService.checkPassword(newPassword).pipe(
       map((data) => {
         const lines = data.split('\n');
-        const hashSuffix = this.pwnedService.sha1(password).substring(5).toUpperCase();
+        const hashSuffix = this.pwnedService.sha1(newPassword).substring(5).toUpperCase();
         const isCompromised = lines.some((line) => line.startsWith(hashSuffix));
 
         if (isCompromised) {
@@ -91,17 +91,17 @@ export class RecuperarComponent {
   }
 
   // Método para calcular la fortaleza de la contraseña
-  checkPasswordStrength(password: string): void {
-    if (!password) {
+  checkPasswordStrength(newPassword: string): void {
+    if (!newPassword) {
       this.setPasswordStrength('Muy débil', 0, 'warn');
       return;
     }
 
-    const lengthCondition = password.length >= 8;
-    const hasNumber = /[0-9]/.test(password);
-    const hasLower = /[a-z]/.test(password);
-    const hasUpper = /[A-Z]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const lengthCondition = newPassword.length >= 8;
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasLower = /[a-z]/.test(newPassword);
+    const hasUpper = /[A-Z]/.test(newPassword);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
 
     if (lengthCondition && hasNumber && hasLower && hasUpper && hasSpecialChar) {
       this.setPasswordStrength('Fuerte', 100, 'primary');
@@ -119,22 +119,26 @@ export class RecuperarComponent {
     this.passwordStrengthValue = value;
     this.passwordStrengthColor = color;
   }
+  //COINCIDEN
+  passwordMatchValidator(form: FormGroup): ValidationErrors | null {
+    const newPasswordControl = form.get('newPassword');
+    const confirmPasswordControl = form.get('confirmPassword');
 
-  // Validador personalizado para verificar que las contraseñas coincidan
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value || '';
-    const confirmPassword = form.get('confirmPassword')?.value || '';
-
-    if (!confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ required: true });
-      return { required: true };
+    if (!newPasswordControl || !confirmPasswordControl) {
+      return null; 
     }
+    const newPassword = newPasswordControl.value;
+    const confirmPassword = confirmPasswordControl.value;
 
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ mismatch: true });
-      return { mismatch: true };
+    if (newPassword !== confirmPassword) {
+      confirmPasswordControl.setErrors({ mismatch: true });
+      return { mismatch: true }; 
+    } else {
+      if (confirmPasswordControl.hasError('mismatch')) {
+        confirmPasswordControl.setErrors(null); 
+      }
+      return null;
     }
-    return null;
   }
 
   moveToNext(index: number, event: any) {
@@ -146,7 +150,7 @@ export class RecuperarComponent {
       }
     }
   }
-  // token al correo electrónico
+  // Enviando el token al correo electrónico
   sendToken() {
     if (this.emailForm.valid) {
       this.authService.recu(this.emailForm.value).subscribe({
@@ -167,9 +171,7 @@ export class RecuperarComponent {
     if (this.tokenForm.valid) {
       const otp = this.otpArray.map(control => this.tokenForm.get(control)?.value).join('');
       const email = this.emailForm.value.email;
-
-      const credentials = { email, otp }; 
-
+      const credentials = { email, otp };
       this.authService.verOTP(credentials).subscribe({
         next: () => {
           this.snackBar.open('Verificación con éxito', 'Cerrar', { duration: 3000 });
@@ -192,11 +194,9 @@ export class RecuperarComponent {
   //Cambio contra
   updatePassword() {
     if (this.passwordForm.valid) {
-      const newPassword = this.passwordForm.value; 
-      const email = this.emailForm.value.email; 
-
-      const credentials = { email, newPassword }; 
-
+      const newPassword = this.passwordForm.value.newPassword;
+      const email = this.emailForm.value.email;
+      const credentials = { email, newPassword };
       this.authService.resContra(credentials).subscribe({
         next: () => {
           this.snackBar.open('Tu contraseña ha sido actualizada', 'Cerrar', { duration: 3000 });
@@ -215,4 +215,4 @@ export class RecuperarComponent {
       );
     }
   }
-}  
+}

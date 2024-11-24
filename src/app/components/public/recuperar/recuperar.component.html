@@ -5,10 +5,10 @@
             <!-- Paso 1: Ingreso del Correo Electrónico -->
             <div *ngIf="recoveryStep === 0">
                 <form [formGroup]="emailForm" (ngSubmit)="sendToken()">
-
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Email</mat-label>
-                        <input matInput type="email" formControlName="email" placeholder="Ingresa tu correo electrónico"  id="email"/>
+                        <input matInput type="email" formControlName="email" placeholder="Ingresa tu correo electrónico"
+                            id="email" />
                         <mat-error *ngIf="emailForm.get('email')?.hasError('required')">
                             Por favor, ingresa tu correo electrónico.
                         </mat-error>
@@ -19,7 +19,6 @@
                     </mat-form-field>
                     <button mat-button type="submit" [disabled]="emailForm.invalid" class="full-width">Enviar
                         Token</button>
-
                 </form>
             </div>
 
@@ -42,41 +41,36 @@
             <div *ngIf="recoveryStep === 2">
                 <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Contraseña</mat-label>
-                        <input matInput type="password" formControlName="password"
-                            [type]="hideNewPassword ? 'password' : 'text'" placeholder="Ingresa tu nueva contraseña"/>
-                        <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword"
+                        <mat-label>Nueva contraseña:</mat-label>
+                        <input id="new-password" [type]="hideNewPassword ? 'password' : 'text'"
+                            formControlName="newPassword" required matInput />
+                        <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword"
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
-                        <mat-error *ngIf="passwordForm.get('password')?.hasError('required')">
+                        <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
                             La contraseña es obligatoria.
                         </mat-error>
                         <mat-error
-                            *ngIf="passwordForm.get('password')?.hasError('weakPassword') && !passwordForm.get('password')?.hasError('required')">
+                            *ngIf="passwordForm.get('newPassword')?.hasError('weakPassword') && !passwordForm.get('newPassword')?.hasError('required')">
                             Por favor, utiliza una contraseña más segura.
                         </mat-error>
-                        <mat-error *ngIf="passwordForm.get('password')?.hasError('compromised')">
+                        <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('compromised')">
                             La contraseña ha sido comprometida, elige otra.
                         </mat-error>
                     </mat-form-field>
-
-                    <!-- Barra de progreso de la fortaleza de la contraseña -->
+                    <!-- Barra de fortaleza de la contraseña -->
                     <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
-                        [color]="passwordStrengthColor">
-                    </mat-progress-bar>
-
+                        [color]="passwordStrengthColor"></mat-progress-bar>
                     <div class="password-strength-info" *ngIf="passwordStrength">
                         Fortaleza: {{ passwordStrength }}
                     </div>
 
-                    <!-- Confirmar Contraseña -->
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Confirmar Contraseña</mat-label>
-                        <input matInput type="password" formControlName="confirmPassword"
-                            [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="Confirma tu nueva contraseña"/>
-                        <button mat-icon-button matSuffix type="button"
-                            (click)="hideConfirmPassword = !hideConfirmPassword"
+                        <mat-label>Confirma tu contraseña:</mat-label>
+                        <input id="confirm-password" [type]="hideConfirmPassword ? 'password' : 'text'"
+                            formControlName="confirmPassword" required matInput />
+                        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
@@ -90,7 +84,6 @@
 
                     <button mat-raised-button color="primary" [disabled]="passwordForm.invalid" type="submit">Actualizar
                         Contraseña</button>
-
                 </form>
             </div>
         </div>
