@@ -193,10 +193,10 @@ export class RecuperarComponent {
   //Cambio contra
   updatePassword() {
     if (this.passwordForm.valid) {
-      const password = this.passwordForm.value.password;
-      const email = this.emailForm.value.email;
-
-      const credentials = { email, password };
+      const newPassword = this.passwordForm.value; 
+      const email = this.emailForm.value.email; 
+      
+      const credentials = { email, newPassword }; 
 
       this.authService.resContra(credentials).subscribe({
         next: () => {
@@ -216,4 +216,4 @@ export class RecuperarComponent {
       );
     }
   }
-}
+}  
