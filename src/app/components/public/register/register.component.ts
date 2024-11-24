@@ -120,20 +120,26 @@ export class RegisterComponent {
   }
 
   // Validador personalizado para verificar que las contraseñas coincidan
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value || '';
-    const confirmPassword = form.get('confirmPassword')?.value || '';
-
-    if (!confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ required: true });
-      return { required: true };
+  passwordMatchValidator(form: FormGroup): ValidationErrors | null {
+    const newPasswordControl = form.get('password');
+    const confirmPasswordControl = form.get('confirmPassword');
+  
+    if (!newPasswordControl || !confirmPasswordControl) {
+      return null; // Si los controles no existen, no hay nada que validar
     }
-
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ mismatch: true });
-      return { mismatch: true };
+  
+    const newPassword = newPasswordControl.value;
+    const confirmPassword = confirmPasswordControl.value;
+  
+    if (newPassword !== confirmPassword) {
+      confirmPasswordControl.setErrors({ mismatch: true }); // Añade el error al campo de confirmación
+      return { mismatch: true }; // Devuelve un error general para el formulario
+    } else {
+      if (confirmPasswordControl.hasError('mismatch')) {
+        confirmPasswordControl.setErrors(null); // Limpia el error si las contraseñas coinciden
+      }
+      return null;
     }
-    return null;
   }
 
   // Método para manejar el registro
