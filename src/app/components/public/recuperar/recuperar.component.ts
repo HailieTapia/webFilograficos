@@ -165,11 +165,10 @@ export class RecuperarComponent {
   // Verificación del token
   verifyToken() {
     if (this.tokenForm.valid) {
-      // Combina los dígitos del OTP en una sola cadena
       const otp = this.otpArray.map(control => this.tokenForm.get(control)?.value).join('');
       const email = this.emailForm.value.email;
 
-      const credentials = { email, otp }; // Combina el email y el OTP en un objeto
+      const credentials = { email, otp }; 
 
       this.authService.verOTP(credentials).subscribe({
         next: () => {
@@ -195,7 +194,7 @@ export class RecuperarComponent {
     if (this.passwordForm.valid) {
       const newPassword = this.passwordForm.value; 
       const email = this.emailForm.value.email; 
-      
+
       const credentials = { email, newPassword }; 
 
       this.authService.resContra(credentials).subscribe({
