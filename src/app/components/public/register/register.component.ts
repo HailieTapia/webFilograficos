@@ -57,7 +57,6 @@ export class RegisterComponent {
   passwordStrengthValidator(control: FormControl): { [key: string]: any } | null {
     const password = control.value || '';
 
-    // Si ya hay un error de 'minlength', no agregar más errores
     if (control.hasError('minlength')) {
       return null;
     }
