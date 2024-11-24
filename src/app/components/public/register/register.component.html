@@ -52,32 +52,31 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Contraseña</mat-label>
                     <input matInput type="password" formControlName="password"
-                        [type]="hideNewPassword ? 'password' : 'text'"
-                        (input)="checkPasswordStrength(registerForm.get('password')?.value)" />
+                        [type]="hideNewPassword ? 'password' : 'text'" />
                     <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword"
                         aria-label="Toggle password visibility">
                         <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
 
-                    <!-- Errores -->
                     <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
                         La contraseña es obligatoria.
                     </mat-error>
-                    <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-                        La contraseña debe tener al menos 8 caracteres.
-                    </mat-error>
                     <mat-error *ngIf="registerForm.get('password')?.hasError('weakPassword')">
-                        La contraseña no es lo suficientemente fuerte. Asegúrate de tener al menos un número, una letra
-                        mayúscula, una minúscula y un carácter especial.
+                        Por favor, utiliza una contraseña más segura.
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('password')?.hasError('compromised')">
-                        Esta contraseña ha sido comprometida en filtraciones de datos. Por favor, elige otra.
+                        La contraseña ha sido comprometida, elige otra.
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Barra de fortaleza de la contraseña -->
+                <!-- Barra de progreso de la fortaleza de la contraseña -->
                 <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
-                    [color]="passwordStrengthColor"></mat-progress-bar>
+                    [color]="passwordStrengthColor">
+                </mat-progress-bar>
+
+                <div class="password-strength-info" *ngIf="passwordStrength">
+                    Fortaleza: {{ passwordStrength }}
+                </div>
 
 
                 <!-- Confirmar Contraseña -->

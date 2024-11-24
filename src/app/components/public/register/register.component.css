@@ -108,3 +108,14 @@ mat-progress-bar::after {
   font-weight: bold; /* Texto en negritas */
   font-size: 14px; /* Tamaño del texto */
 }
+
+.full-width {
+  width: 100%;
+}
+
+.password-strength-info {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6); 
+  text-align: right;
+}
