@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
   ) {
     this.PerfilForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: [''],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     });
     this.addressForm = this.fb.group({

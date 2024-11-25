@@ -32,15 +32,9 @@
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Email</mat-label>
-          <input [(ngModel)]="profile.email" matInput type="email" formControlName="email" />
-          <mat-error *ngIf="PerfilForm.get('email')?.hasError('required')">
-            El correo electrónico es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="PerfilForm.get('email')?.hasError('email')">
-            Introduce un correo electrónico válido.
-          </mat-error>
+          <input [(ngModel)]="profile.email" matInput type="email" formControlName="email" readonly />
         </mat-form-field>
-
+        
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Teléfono</mat-label>
           <input [(ngModel)]="profile.telefono" matInput type="text" formControlName="telefono" maxlength="10" />
