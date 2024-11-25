@@ -125,18 +125,18 @@ export class RegisterComponent {
     const confirmPasswordControl = form.get('confirmPassword');
   
     if (!newPasswordControl || !confirmPasswordControl) {
-      return null; // Si los controles no existen, no hay nada que validar
+      return null; 
     }
   
     const newPassword = newPasswordControl.value;
     const confirmPassword = confirmPasswordControl.value;
   
     if (newPassword !== confirmPassword) {
-      confirmPasswordControl.setErrors({ mismatch: true }); // Añade el error al campo de confirmación
-      return { mismatch: true }; // Devuelve un error general para el formulario
+      confirmPasswordControl.setErrors({ mismatch: true }); 
+      return { mismatch: true }; 
     } else {
       if (confirmPasswordControl.hasError('mismatch')) {
-        confirmPasswordControl.setErrors(null); // Limpia el error si las contraseñas coinciden
+        confirmPasswordControl.setErrors(null); 
       }
       return null;
     }
