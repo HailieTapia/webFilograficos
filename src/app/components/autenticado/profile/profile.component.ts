@@ -51,15 +51,15 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) {
     this.PerfilForm = this.fb.group({
-      nombre: ['', [ Validators.required,  Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50)]],   
+      nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     });
     this.addressForm = this.fb.group({
-      calle: ['', Validators.required],
-      ciudad: ['', Validators.required],
-      codigo_postal: ['', Validators.required],
-      estado: ['', Validators.required],
+      calle: ['', [Validators.required,Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/),Validators.minLength(3),Validators.maxLength(100),]],
+      ciudad: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),]],
+      codigo_postal: ['', [Validators.required, Validators.pattern(/^\d{5}$/),]],
+      estado: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
     });
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -143,23 +143,21 @@ export class ProfileComponent implements OnInit {
     const confirmPasswordControl = form.get('confirmPassword');
 
     if (!newPasswordControl || !confirmPasswordControl) {
-      return null; 
+      return null;
     }
     const newPassword = newPasswordControl.value;
     const confirmPassword = confirmPasswordControl.value;
 
     if (newPassword !== confirmPassword) {
       confirmPasswordControl.setErrors({ mismatch: true });
-      return { mismatch: true }; 
+      return { mismatch: true };
     } else {
       if (confirmPasswordControl.hasError('mismatch')) {
-        confirmPasswordControl.setErrors(null); 
+        confirmPasswordControl.setErrors(null);
       }
       return null;
     }
   }
-
-
 
   // Método para cambiar la contraseña
   changePassword(): void {
@@ -175,6 +173,7 @@ export class ProfileComponent implements OnInit {
           console.log(response);
         },
         error: (error) => {
+          this.resetPasswordFields();
           const errorMessage = error?.error?.message || 'Error al cambiar la contraseña';
           this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         }
@@ -264,7 +263,6 @@ export class ProfileComponent implements OnInit {
     });
 
     let actionConfirmed = false;
-
     snackBarRef.onAction().subscribe(() => {
       this.userService.deleteMyAccount().subscribe({
         next: () => {
@@ -293,8 +291,9 @@ export class ProfileComponent implements OnInit {
     this.resetPasswordFields();
   }
   resetPasswordFields(): void {
-    this.currentPassword = '';
-    this.newPassword = '';
-    this.confirmPassword = '';
+    this.passwordForm.reset();
+    this.passwordStrength = '';
+    this.passwordStrengthValue = 0;
+    this.passwordStrengthColor = 'warn';
   }
 }

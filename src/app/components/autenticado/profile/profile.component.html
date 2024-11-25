@@ -29,7 +29,7 @@
             No debe exceder los 50 caracteres.
           </mat-error>
         </mat-form-field>
-        <!-- Email -->
+
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Email</mat-label>
           <input [(ngModel)]="profile.email" matInput type="email" formControlName="email" />
@@ -40,7 +40,7 @@
             Introduce un correo electrónico válido.
           </mat-error>
         </mat-form-field>
-        <!-- Teléfono -->
+
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Teléfono</mat-label>
           <input [(ngModel)]="profile.telefono" matInput type="text" formControlName="telefono" maxlength="10" />
@@ -66,7 +66,6 @@
 
     <div class="profile-container">
       <form [formGroup]="addressForm" (ngSubmit)="updateUserDireccion()">
-
         <div class="header-container">
           <h2>Dirección</h2>
           <button mat-raised-button color="primary" [disabled]="addressForm.invalid" type="submit">Actualizar
@@ -76,32 +75,40 @@
         <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
           <mat-label>Calle</mat-label>
           <input [(ngModel)]="profile.direccion.calle" matInput type="text" formControlName="calle" />
-          <mat-error *ngIf="addressForm.get('calle')?.hasError('required')">
-            El nombre es obligatorio.
+          <mat-error *ngIf="addressForm.get('calle')?.errors as errors">
+            <span *ngIf="errors['required']">La calle es obligatoria.</span>
+            <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 100 caracteres.</span>
+            <span *ngIf="errors['pattern']">La calle solo puede contener letras, números y los caracteres: , . :</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
           <mat-label>Ciudad</mat-label>
           <input [(ngModel)]="profile.direccion.ciudad" matInput type="text" formControlName="ciudad" />
-          <mat-error *ngIf="addressForm.get('ciudad')?.hasError('required')">
-            El nombre es obligatorio.
+          <mat-error *ngIf="addressForm.get('ciudad')?.errors as errors">
+            <span *ngIf="errors['required']">La ciudad es obligatoria.</span>
+            <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
           <mat-label>Código Postal</mat-label>
-          <input [(ngModel)]="profile.direccion.codigo_postal" matInput type="text" formControlName="codigo_postal" />
-          <mat-error *ngIf="addressForm.get('codigo_postal')?.hasError('required')">
-            El nombre es obligatorio.
+          <input maxlength="5" [(ngModel)]="profile.direccion.codigo_postal" matInput type="text" formControlName="codigo_postal" />
+          <mat-error *ngIf="addressForm.get('codigo_postal')?.errors as errors">
+            <span *ngIf="errors['required']">El código postal es obligatorio.</span>
+            <span *ngIf="errors['pattern']">Debe contener 5 dígitos númericos.</span>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field" *ngIf="profile?.direccion">
           <mat-label>Estado</mat-label>
           <input [(ngModel)]="profile.direccion.estado" matInput type="text" formControlName="estado" />
-          <mat-error *ngIf="addressForm.get('estado')?.hasError('required')">
-            El nombre es obligatorio.
+          <mat-error *ngIf="addressForm.get('estado')?.errors as errors">
+            <span *ngIf="errors['required']">El estado es obligatorio.</span>
+            <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+            <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
           </mat-error>
         </mat-form-field>
       </form>
@@ -117,36 +124,28 @@
       <h2>Cambiar Contraseña</h2>
 
       <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Contraseña Actual</mat-label>
-
           <input id="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'"
             formControlName="currentPassword" required matInput />
-
           <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword"
             aria-label="Toggle password visibility">
             <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-
           <mat-error *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">La contraseña es
             requerida.</mat-error>
           <mat-error *ngIf="passwordForm.get('currentPassword')?.errors?.['minlength']">La contraseña debe
             tener al menos 8 caracteres.</mat-error>
         </mat-form-field>
 
-
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nueva contraseña:</mat-label>
-
           <input id="new-password" [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" required
             matInput />
-
           <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword"
             aria-label="Toggle password visibility">
             <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-
           <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
             La contraseña es obligatoria.
           </mat-error>
@@ -159,7 +158,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Barra de fortaleza de la contraseña -->
         <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
           [color]="passwordStrengthColor"></mat-progress-bar>
         <div class="password-strength-info" *ngIf="passwordStrength">
