@@ -10,7 +10,7 @@
         <!-- Correo Electrónico -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Correo Electrónico</mat-label>
-          <input matInput type="email" formControlName="email" required placeholder="Ingresa tu correo electrónico" />
+          <input matInput type="email" formControlName="email" required placeholder="Ingresa tu correo electrónico" id="email"/>
           <mat-error *ngIf="loginForm.controls['email'].hasError('required')">El correo electrónico es requerido</mat-error>
           <mat-error *ngIf="loginForm.controls['email'].hasError('email')">Ingresa un correo electrónico válido</mat-error>
         </mat-form-field>
