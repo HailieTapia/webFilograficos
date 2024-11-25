@@ -240,9 +240,8 @@ export class ProfileComponent implements OnInit {
 
       const credentials = { calle, ciudad, codigo_postal, estado };
       this.userService.updateUserProfile(credentials).subscribe({
-        next: (updatedDireccion) => {
+        next: () => {
           this.isLoading = false;
-          this.profile.direccion = updatedDireccion;
           this.snackBar.open('Dirección actualizada con éxito', 'Cerrar', { duration: 3000 });
           this.getProfile();
         },
