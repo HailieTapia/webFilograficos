@@ -54,12 +54,11 @@ export class UserService {
         );
     }
     //Cambio contra
-    changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    changePassword(data: any): Observable<any> {
         return this.csrfService.getCsrfToken().pipe(
             switchMap(csrfToken => {
                 const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
-                return this.http.put(`${this.apiUrl}/auth/change-password`,
-                    { currentPassword, newPassword },
+                return this.http.put(`${this.apiUrl}/auth/change-password`, data,
                     { headers, withCredentials: true }
                 );
             })

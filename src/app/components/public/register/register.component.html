@@ -14,7 +14,7 @@
                         El nombre es obligatorio.
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('nombre')?.hasError('pattern')">
-                        Solo se permiten letras y espacios.
+                        Solo letras y un espacio entre palabras.
                     </mat-error>
                     <mat-error *ngIf="registerForm.get('nombre')?.hasError('minlength')">
                         Debe tener al menos 3 caracteres.
