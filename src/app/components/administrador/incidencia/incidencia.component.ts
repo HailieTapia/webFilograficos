@@ -9,50 +9,67 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgForm } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-incidencia',
   standalone: true,
-  imports: [CommonModule,MatCardModule,MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule, MatTableModule, MatInputModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatButtonToggleModule, MatTableModule, MatInputModule, FormsModule],
   templateUrl: './incidencia.component.html',
   styleUrls: ['./incidencia.component.css', '../../estilos/spinner.css', '../../estilos/tablas.css', '../../estilos/snackbar.css']
 })
 export class IncidenciaComponent implements OnInit {
-  config: any = {}; 
-  errorMessage: string = '';
+  config: any = {};
   isLoading: boolean = false;
+
+  errorMessage: string = '';
   failedLoginAttempts: any[] = [];
   failedLoginDataSource = new MatTableDataSource<any>();
   displayedColumnsFailedLogin: string[] = ['nombre', 'email', 'estado', 'numero_intentos', 'tipo_usuario', 'fecha', 'acciones'];
   selectedPeriodo: string = 'dia';
-  constructor(private incidenciaService: IncidenciaService, private snackBar: MatSnackBar) { }
+  configForm: FormGroup;
+
+  constructor(private fb: FormBuilder, private incidenciaService: IncidenciaService, private snackBar: MatSnackBar
+  ) {
+    this.configForm = this.fb.group({
+      jwt_lifetime: ['', [Validators.required, Validators.min(300), Validators.max(2592000)]],
+      verificacion_correo_lifetime: ['', [Validators.required, Validators.min(300), Validators.max(2592000)]],
+      otp_lifetime: ['', [Validators.required, Validators.min(60), Validators.max(1800)]],
+      sesion_lifetime: ['', [Validators.required, Validators.min(300), Validators.max(2592000)]],
+      cookie_lifetime: ['', [Validators.required, Validators.min(300), Validators.max(2592000)]],
+      dias_periodo_de_bloqueo: ['', [Validators.required, Validators.min(1), Validators.max(365)]],
+      maximo_bloqueos_en_n_dias: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
+      maximo_intentos_fallidos_login: ['', [Validators.required, Validators.min(3), Validators.max(10)]],
+      expirationThreshold_lifetime: ['', [Validators.required, Validators.min(60), Validators.max(1800)]],
+    });
+  }
 
   ngOnInit(): void {
     this.getConfigData();
     this.getFailedLoginAttempts(this.selectedPeriodo);
   }
-
-  // Obtener la configuración
+//obtener los datos 
   getConfigData(): void {
     this.incidenciaService.getConfig().subscribe({
       next: (data) => {
         if (data && data.config) {
           this.config = data.config;
         } else {
-          console.error('La respuesta no contiene la propiedad config');
+          this.snackBar.open('Error al obtener la configuración');
         }
       },
       error: (error) => {
-        console.error('Error al obtener la configuración', error);
+        const errorMessage = error?.error?.message || 'Error al obtener la configuración';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     });
   }
+
   // Método para actualizar 
-  onSubmit(form: NgForm): void {
-    if (form.valid) {
-      this.isLoading = true; 
+  updateConfig(): void {
+    if (this.configForm.valid) {
+      this.isLoading = true;
       this.incidenciaService.updateTokenLifetime(this.config).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -63,7 +80,6 @@ export class IncidenciaComponent implements OnInit {
           this.isLoading = false;
           const errorMessage = error?.error?.message || 'Error al actualizar la configuración';
           this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
-          console.error('Error al actualizar la configuración', error);
         }
       });
     } else {
@@ -82,7 +98,7 @@ export class IncidenciaComponent implements OnInit {
       verticalPosition: 'bottom',
     });
     let actionConfirmed = false;
-  
+
     // Suscribirse a la acción "Sí" del snackBar
     snackBarRef.onAction().subscribe(() => {
       this.incidenciaService.adminUnlockUser(userId).subscribe({
@@ -90,7 +106,7 @@ export class IncidenciaComponent implements OnInit {
           this.snackBar.open('Usuario desbloqueado exitosamente', 'Cerrar', {
             duration: 3000
           });
-          // Aquí puedes actualizar la lista de usuarios o realizar cualquier otra acción
+          this.getFailedLoginAttempts(this.selectedPeriodo);
         },
         error: (error) => {
           this.snackBar.open('Error al desbloquear al usuario', 'Cerrar', {
@@ -100,8 +116,7 @@ export class IncidenciaComponent implements OnInit {
       });
       actionConfirmed = true;
     });
-  
-    // Si el usuario no confirma, se muestra un mensaje de cancelación
+
     snackBarRef.afterDismissed().subscribe(() => {
       if (!actionConfirmed) {
         this.snackBar.open('Desbloqueo cancelado', 'Cerrar', {
