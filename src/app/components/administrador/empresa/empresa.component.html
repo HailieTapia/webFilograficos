@@ -3,41 +3,36 @@
     <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
     <p>Cargando...</p>
   </div>
-  <form #configForm="ngForm" (ngSubmit)="onSubmit(configForm)" class="config-form"  enctype="multipart/form-data">
+
+  <form [formGroup]="companyForm" (ngSubmit)="actualizar()" class="config-form">
     <div class="form-actions">
       <h2>Perfil de la Empresa</h2>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.valid || isLoading">
+      <button mat-raised-button color="primary" type="submit" [disabled]="companyForm.invalid">
         Actualizar
       </button>
     </div>
-    
     <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Nombre</mat-label>
-      <input matInput name="nombre" [(ngModel)]="company.nombre" #nombre="ngModel" required minlength="2"
-        maxlength="100"/>
-      <mat-error *ngIf="nombre.invalid && nombre.touched">El nombre es requerido y debe tener entre 2 y 100
-        caracteres.</mat-error>
+      <mat-label>Nombre de la Empresa</mat-label>
+      <input matInput formControlName="nombre" />
+      <mat-error *ngIf="companyForm.get('nombre')?.errors as errors">
+        <span *ngIf="errors['required']">El nombre es obligatorio..</span>
+        <span *ngIf="errors['min']">El nombre debe tener al menos 2 caracteres.</span>
+        <span *ngIf="errors['max']">El nombre no puede tener más de 100 caracteres.</span>
+      </mat-error>
     </mat-form-field>
 
-    <!-- Campo para cargar el logo de la empresa -->
     <div class="form-field logo-upload">
       <label class="upload-label">Logo de la Empresa</label>
       <div class="upload-button-container">
-        <!-- Input de archivo oculto -->
         <input type="file" #fileInput (change)="onLogoSelected($event)" accept="image/*" class="upload-input" />
-        
-        <!-- Botón de selección de archivo -->
         <button type="button" class="upload-button" (click)="triggerFileInput(fileInput)">
           <i class="material-icons">cloud_upload</i>
           <span>Seleccionar Archivo</span>
         </button>
-        
-        <!-- Placeholder -->
         <p class="upload-placeholder">Sube tu imagen aquí (JPEG, PNG, GIF, máx. 2MB)</p>
       </div>
     </div>
 
-    <!-- Vista previa del logo -->
     <div *ngIf="logoPreview" class="logo-preview">
       <p>Vista Previa del Logo:</p>
       <img [src]="logoPreview" alt="Logo de la Empresa" />
@@ -45,123 +40,135 @@
 
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Email</mat-label>
-      <input matInput type="email" name="email" [(ngModel)]="company.email" #email="ngModel" required />
-      <mat-error *ngIf="email.invalid && email.touched">
-        <ng-container *ngIf="email.errors?.['required']">El correo electrónico es requerido.</ng-container>
-        <ng-container *ngIf="email.errors?.['email']">Debe ingresar un correo electrónico válido.</ng-container>
+      <input matInput formControlName="email" />
+      <mat-error *ngIf="companyForm.get('email')?.errors as errors">
+        <span *ngIf="errors['email']">Ingresa un email válido.</span>
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Slogan</mat-label>
-      <input matInput name="slogan" [(ngModel)]="company.slogan" maxlength="100" #slogan="ngModel" />
-      <mat-error *ngIf="slogan.invalid && slogan.touched">El slogan debe tener un máximo de 100 caracteres.</mat-error>
+      <input matInput formControlName="slogan" />
+      <mat-error *ngIf="companyForm.get('slogan')?.errors as errors">
+        <span *ngIf="errors['maxlength']"> El slogan no puede tener más de 100 caracteres.</span>
+      </mat-error>
     </mat-form-field>
 
-    <div class="address-container">
+    <div formGroupName="direccion">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Calle</mat-label>
-        <input matInput name="calle" [(ngModel)]="company.direccion.calle" #calle="ngModel" required maxlength="50" />
-        <mat-error *ngIf="calle.invalid && calle.touched">La calle es requerida y debe tener un máximo de 50
-          caracteres.</mat-error>
+        <input matInput formControlName="calle" />
+        <mat-error *ngIf="companyForm.get('direccion.calle')?.errors as errors">
+          <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="errors['maxlength']">No puede exceder los 100 caracteres.</span>
+          <span *ngIf="errors['pattern']">La calle solo puede contener letras, números y los caracteres: , . :</span>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Ciudad</mat-label>
-        <input matInput name="ciudad" [(ngModel)]="company.direccion.ciudad" #ciudad="ngModel" required
-          maxlength="50" />
-        <mat-error *ngIf="ciudad.invalid && ciudad.touched">La ciudad es requerida y debe tener un máximo de 50
-          caracteres.</mat-error>
+        <input matInput formControlName="ciudad" />
+        <mat-error *ngIf="companyForm.get('direccion.ciudad')?.errors as errors">
+          <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
+          <span *ngIf="errors['pattern']">Introduce una ciudad válida con espacios correctos</span>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Estado</mat-label>
-        <input matInput name="estado" [(ngModel)]="company.direccion.estado" #estado="ngModel" required
-          maxlength="50" />
-        <mat-error *ngIf="estado.invalid && estado.touched">El estado es requerido y debe tener un máximo de 50
-          caracteres.</mat-error>
+        <input matInput formControlName="estado" />
+        <mat-error *ngIf="companyForm.get('direccion.estado')?.errors as errors">
+          <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
+          <span *ngIf="errors['pattern']">Introduce un estado válido con espacios correctos</span>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Código Postal</mat-label>
-        <input matInput maxlength="5" name="codigo_postal" [(ngModel)]="company.direccion.codigo_postal"
-          #codigo_postal="ngModel" required pattern="^\d{5}$" />
-        <mat-error *ngIf="codigo_postal.invalid && codigo_postal.touched">
-          <ng-container *ngIf="codigo_postal.errors?.['required']">El código postal es requerido.</ng-container>
-          <ng-container *ngIf="codigo_postal.errors?.['pattern']">El código postal debe contener exactamente 5 dígitos
-            numéricos.</ng-container>
+        <input matInput formControlName="codigo_postal" maxlength="5" />
+        <mat-error *ngIf="companyForm.get('direccion.codigo_postal')?.errors as errors">
+          <span *ngIf="errors['pattern']">Introduce un código postal válido</span>
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>País</mat-label>
-        <input matInput name="pais" [(ngModel)]="company.direccion.pais" #pais="ngModel" required maxlength="50" />
-        <mat-error *ngIf="pais.invalid && pais.touched">El país es requerido y debe tener un máximo de 50
-          caracteres.</mat-error>
+        <input matInput formControlName="pais" />
+        <mat-error *ngIf="companyForm.get('direccion.pais')?.errors as errors">
+          <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="errors['maxlength']">No puede exceder los 50 caracteres.</span>
+          <span *ngIf="errors['pattern']">Introduce un pais válido</span>
+        </mat-error>
       </mat-form-field>
     </div>
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Teléfono</mat-label>
-      <input matInput maxlength="10" name="telefono" [(ngModel)]="company.telefono.numero" #telefono="ngModel"
-        type="tel" pattern="^\d{10}$" required />
-      <mat-error *ngIf="telefono.invalid && telefono.touched">
-        <ng-container *ngIf="telefono.errors?.['required']">El teléfono es requerido.</ng-container>
-        <ng-container *ngIf="telefono.errors?.['pattern']">El teléfono debe contener exactamente 10 dígitos
-          numéricos.</ng-container>
-      </mat-error>
-    </mat-form-field>
-    <div class="social-media-container">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Facebook</mat-label>
-        <input matInput name="facebook" [(ngModel)]="company.redes_sociales.facebook" #facebook="ngModel"
-          [pattern]="'https?://.*'" />
-        <mat-error *ngIf="facebook.invalid && facebook.touched">La URL de Facebook debe ser válida.</mat-error>
-      </mat-form-field>
 
+    <div formGroupName="telefono">
       <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Instagram</mat-label>
-        <input matInput name="instagram" [(ngModel)]="company.redes_sociales.instagram" #instagram="ngModel"
-          [pattern]="'https?://.*'" />
-        <mat-error *ngIf="instagram.invalid && instagram.touched">La URL de Instagram debe ser válida.</mat-error>
+        <mat-label>Número de Teléfono</mat-label>
+        <input matInput type="tel" formControlName="numero" />
+        <mat-error *ngIf="companyForm.get('telefono.numero')?.errors as errors">
+          <span *ngIf="errors['pattern']">Introduce un número de teléfono válido de 10 dígitos.</span>
+        </mat-error>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>LinkedIn</mat-label>
-        <input matInput name="linkedin" [(ngModel)]="company.redes_sociales.linkedin" #linkedin="ngModel"
-          [pattern]="'https?://.*'" />
-        <mat-error *ngIf="linkedin.invalid && linkedin.touched">La URL de LinkedIn debe ser válida.</mat-error>
-      </mat-form-field>
+    <div formGroupName="redes_sociales">
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Facebook</mat-label>
+          <input matInput formControlName="facebook" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.facebook')?.errors as errors">
+            <span *ngIf="errors['pattern']">Introduce un Facebook válido.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('facebook')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
 
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Twitter</mat-label>
-        <input matInput name="twitter" [(ngModel)]="company.redes_sociales.twitter" #twitter="ngModel"
-          [pattern]="'https?://.*'" />
-        <mat-error *ngIf="twitter.invalid && twitter.touched">La URL de Twitter debe ser válida.</mat-error>
-      </mat-form-field>
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Instagram</mat-label>
+          <input matInput formControlName="instagram" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.instagram')?.errors as errors">
+            <span *ngIf="errors['pattern']">Introduce un Instagram válido.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('instagram')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>LinkedIn</mat-label>
+          <input matInput formControlName="linkedin" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.linkedin')?.errors as errors">
+            <span *ngIf="errors['pattern']">Introduce un LinkedIn válido.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('linkedin')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <mat-form-field appearance="outline" class="input-container">
+          <mat-label>Twitter</mat-label>
+          <input matInput formControlName="twitter" />
+          <mat-error *ngIf="companyForm.get('redes_sociales.twitter')?.errors as errors">
+            <span *ngIf="errors['pattern']">Introduce un Twitter válido.</span>
+          </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="onDeleteSocialMediaLink('twitter')" matTooltip="Eliminar"
+          aria-label="Eliminar documento" class="delete-button">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
   </form>
-  <div class="config-form">
-    <h2>Redes Sociales</h2>
-    <table mat-table class="mat-elevation-z8 mat-table-responsive">
-      <thead>
-        <tr>
-          <th>Red Social</th>
-          <th>Enlace</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let redSocial of ['facebook', 'twitter', 'linkedin', 'instagram']">
-          <td>{{ redSocial | titlecase }}</td>
-          <td>{{ company.redes_sociales[redSocial] || 'No disponible' }}</td>
-          <td>
-            <button mat-icon-button color="warn" (click)="deleteSocialMediaLink(redSocial)" matTooltip="Eliminar"
-              aria-label="Eliminar documento">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>

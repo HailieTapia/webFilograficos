@@ -20,6 +20,19 @@
   margin-top: 10px;
   width: 100%;
 }
+.field-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px; 
+}
+
+.input-container {
+  flex: 1; 
+}
+
+.delete-button {
+  margin-left: 8px;
+}
 
 .mat-form-field {
   margin-bottom: 15px;
@@ -65,7 +78,7 @@ h2 {
 }
 
 .upload-input {
-  display: none; /* Oculta el input de archivo */
+  display: none;
 }
 
 .upload-button {

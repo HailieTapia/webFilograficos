@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,56 +15,60 @@ import { EmpresaStateService } from '../../services/EmpresaStateService';
   standalone: true,
   imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatInputModule, MatFormFieldModule, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './empresa.component.html',
-  styleUrls: ['./empresa.component.css', '../../estilos/tablas.css', '../../estilos/botonesIcon.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
+  styleUrls: ['./empresa.component.css', '../../estilos/botonesIcon.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
 export class EmpresaComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
-  company: any = {
-    direccion: {
-      calle: '',
-      ciudad: '',
-      estado: '',
-      codigo_postal: '',
-      pais: ''
-    },
-    telefono: {
-      numero: '',
-      extension: ''
-    },
-    redes_sociales: {
-      facebook: '',
-      instagram: '',
-      linkedin: '',
-      twitter: ''
-    },
-    nombre: '',
-    email: '',
-    slogan: '',
-    logo: ''
-  };
+  companyForm: FormGroup;
   isLoading: boolean = false;
-
   selectedLogoFile: File | null = null;
-  logoPreview: string | ArrayBuffer | null = null; 
-
-  constructor(  private empresaStateService: EmpresaStateService,private fb: FormBuilder, private empresaService: EmpresaService, private snackBar: MatSnackBar) { }
+  logoPreview: string | ArrayBuffer | null = null;
+  company: any = {};
+  constructor(
+    private empresaStateService: EmpresaStateService,
+    private fb: FormBuilder,
+    private empresaService: EmpresaService,
+    private snackBar: MatSnackBar
+  ) {
+    this.companyForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      email: ['', [Validators.email]],
+      slogan: ['', [Validators.maxLength(100)]],
+      direccion: this.fb.group({
+        calle: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/), Validators.minLength(3), Validators.maxLength(100),]],
+        ciudad: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),]],
+        codigo_postal: ['', [Validators.pattern(/^\d{5}$/),]],
+        estado: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
+        pais: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
+      }),
+      telefono: this.fb.group({
+        numero: ['', [Validators.pattern(/^\d{10}$/)]],
+      }),
+      redes_sociales: this.fb.group({
+        facebook: ['', [Validators.pattern('https?://.*')]],
+        instagram: ['', [Validators.pattern('https?://.*')]],
+        linkedin: ['', [Validators.pattern('https?://.*')]],
+        twitter: ['', [Validators.pattern('https?://.*')]]
+      }),
+      logo: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.getCompanyInfo();
   }
-
   // Obtener la información de la empresa
   getCompanyInfo(): void {
     this.isLoading = true;
     this.empresaService.getCompanyInfo().subscribe({
       next: (data) => {
         if (data && data.company) {
-          this.company = data.company;
-          this.empresaStateService.setCompanyInfo(data.company); 
+          this.companyForm.patchValue(data.company);
+          this.empresaStateService.setCompanyInfo(data.company);
           this.isLoading = false;
-          if (this.company.logo) {
-            this.logoPreview = this.company.logo;
+          if (data.company.logo) {
+            this.logoPreview = data.company.logo;
           }
         }
       },
@@ -78,10 +81,10 @@ export class EmpresaComponent implements OnInit {
   }
 
   // Método para simular el clic en el input de archivo
-  triggerFileInput(fileInput: HTMLInputElement) {
+  triggerFileInput(fileInput: HTMLInputElement): void {
     fileInput.click();
   }
-  
+
   // Método para manejar la selección del archivo
   onLogoSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -101,7 +104,6 @@ export class EmpresaComponent implements OnInit {
       }
 
       this.selectedLogoFile = file;
-
       const reader = new FileReader();
       reader.onload = () => {
         this.logoPreview = reader.result;
@@ -111,35 +113,28 @@ export class EmpresaComponent implements OnInit {
   }
 
   // Método para actualizar la información de la empresa
-  onSubmit(form: NgForm): void {
-    if (form.valid) {
+  actualizar(): void {
+    if (this.companyForm.valid) {
       this.isLoading = true;
-
       const formData = new FormData();
 
       // Añadir todos los campos de la empresa al FormData
-      formData.append('nombre', this.company.nombre);
-      formData.append('email', this.company.email);
-      formData.append('slogan', this.company.slogan);
-      
-      // Dirección
-      formData.append('direccion[calle]', this.company.direccion.calle);
-      formData.append('direccion[ciudad]', this.company.direccion.ciudad);
-      formData.append('direccion[estado]', this.company.direccion.estado);
-      formData.append('direccion[codigo_postal]', this.company.direccion.codigo_postal);
-      formData.append('direccion[pais]', this.company.direccion.pais);
-      
-      // Teléfono
-      formData.append('telefono[numero]', this.company.telefono.numero);
-      formData.append('telefono[extension]', this.company.telefono.extension || '');
-
-      // Redes Sociales
-      formData.append('redes_sociales[facebook]', this.company.redes_sociales.facebook || '');
-      formData.append('redes_sociales[instagram]', this.company.redes_sociales.instagram || '');
-      formData.append('redes_sociales[linkedin]', this.company.redes_sociales.linkedin || '');
-      formData.append('redes_sociales[twitter]', this.company.redes_sociales.twitter || '');
-
-      //  logo 
+      Object.keys(this.companyForm.controls).forEach((key) => {
+        const control = this.companyForm.get(key);
+        if (control instanceof FormGroup) {
+          Object.keys(control.controls).forEach((subKey) => {
+            const value = control.get(subKey)?.value;
+            if (value) {
+              formData.append(`${key}[${subKey}]`, value);
+            }
+          });
+        } else {
+          const value = control?.value;
+          if (value) {
+            formData.append(key, value);
+          }
+        }
+      });
       if (this.selectedLogoFile) {
         formData.append('logo', this.selectedLogoFile);
       }
@@ -151,7 +146,7 @@ export class EmpresaComponent implements OnInit {
           this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
           if (response.company && response.company.logo) {
             this.logoPreview = response.company.logo;
-            this.empresaStateService.setCompanyInfo(response.company); 
+            this.empresaStateService.setCompanyInfo(response.company);
           }
         },
         error: (error) => {
@@ -164,24 +159,27 @@ export class EmpresaComponent implements OnInit {
       this.snackBar.open('Formulario inválido', 'Cerrar', { duration: 3000 });
     }
   }
-
-  //  eliminar enlaces de redes sociales
-  deleteSocialMediaLink(redSocial: string): void {
-    this.isLoading = true;
-    const redesSocialesToDelete = {
-      [redSocial]: true
+  //eliminar enlaces
+  onDeleteSocialMediaLink(socialMedia: string): void {
+    const redesSociales: any = {
+      [socialMedia]: true
     };
-    this.empresaService.deleteSocialMediaLinks(redesSocialesToDelete).subscribe({
+    this.isLoading = true;
+
+    this.empresaService.deleteSocialMediaLinks(redesSociales).subscribe({
       next: (response) => {
-        this.snackBar.open('Enlace de red social eliminado correctamente', 'Cerrar', { duration: 3000 });
-        this.company.redes_sociales[redSocial] = '';
         this.isLoading = false;
+        const successMessage = response?.message || 'Red social eliminada correctamente';
+        this.snackBar.open(successMessage, 'Cerrar', { duration: 3000 });
+
+        this.companyForm.get(`redes_sociales.${socialMedia}`)?.reset();
       },
       error: (error) => {
-        const errorMessage = error?.error?.message || 'Error al eliminar el enlace';
-        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
         this.isLoading = false;
+        const errorMessage = error?.error?.message || 'Error al eliminar la red social';
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
       }
     });
   }
 }
+
