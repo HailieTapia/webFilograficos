@@ -54,6 +54,9 @@
           <mat-error *ngIf="emailTemplateForm.get('nombre')?.hasError('required')">
             El nombre es obligatorio.
           </mat-error>
+          <mat-error *ngIf="emailTemplateForm.get('nombre')?.hasError('xssDetected')">
+            El campo contiene caracteres no permitidos.
+          </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
@@ -71,6 +74,9 @@
           <mat-error *ngIf="emailTemplateForm.get('asunto')?.hasError('required')">
             El asunto es obligatorio.
           </mat-error>
+          <mat-error *ngIf="emailTemplateForm.get('asunto')?.hasError('xssDetected')">
+            El campo contiene caracteres no permitidos.
+          </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
@@ -78,6 +84,9 @@
           <textarea matInput formControlName="contenido_html" required></textarea>
           <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.hasError('required')">
             El contenido HTML es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.hasError('xssDetected')">
+            El campo contiene caracteres no permitidos.
           </mat-error>
         </mat-form-field>
       
@@ -87,12 +96,18 @@
           <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.hasError('required')">
             El contenido de texto es obligatorio.
           </mat-error>
+          <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.hasError('xssDetected')">
+            El campo contiene caracteres no permitidos.
+          </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
           <mat-label>Variables Requeridas (separadas por comas)</mat-label>
           <input matInput formControlName="variables" required>
           <mat-error *ngIf="emailTemplateForm.get('variables')?.hasError('required')">Este campo es obligatorio.</mat-error>
+          <mat-error *ngIf="emailTemplateForm.get('variables')?.hasError('xssDetected')">
+            El campo contiene caracteres no permitidos.
+          </mat-error>
         </mat-form-field>
         <div class="form-actions">
         <button mat-button color="primary" type="submit">

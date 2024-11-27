@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { noXSSValidator } from '../../shared/validators';
+
 @Component({
   selector: 'app-email-template',
   standalone: true,
@@ -38,12 +40,12 @@ export class EmailTemplateComponent implements OnInit {
     private snackBar: MatSnackBar, private dialog: MatDialog
   ) {
     this.emailTemplateForm = this.fb.group({
-      nombre: ['', [Validators.required]],
-      tipo: ['', [Validators.required]],
-      asunto: ['', [Validators.required]],
-      contenido_html: ['', [Validators.required]],
-      contenido_texto: ['', [Validators.required]],
-      variables: [[], [Validators.required]],
+      nombre: ['', [Validators.required,noXSSValidator()]],
+      tipo: ['', [Validators.required, noXSSValidator()]],
+      asunto: ['', [Validators.required, noXSSValidator()]],
+      contenido_html: ['', [Validators.required, noXSSValidator()]],
+      contenido_texto: ['', [Validators.required, noXSSValidator()]],
+      variables: [[], [Validators.required, noXSSValidator()]],
     });
   }
   ngOnInit(): void {

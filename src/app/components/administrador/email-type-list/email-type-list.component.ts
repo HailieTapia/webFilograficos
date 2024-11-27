@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { noXSSValidator } from '../../shared/validators';
+
 @Component({
   selector: 'app-email-type-list',
   standalone: true,
@@ -36,10 +38,10 @@ export class EmailTypeListComponent implements OnInit {
     private dialog: MatDialog, private snackBar: MatSnackBar
   ) {
     this.emailTypeForm = this.fb.group({
-      codigo: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      descripcion: [''],
-      variables_requeridas: ['', [Validators.required]],
+      codigo: ['', [Validators.required, noXSSValidator()]],
+      nombre: ['', [Validators.required, noXSSValidator()]],
+      descripcion: ['', [noXSSValidator()]],
+      variables_requeridas: ['', [Validators.required, noXSSValidator()]],
     });
   }
 
