@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/config';
 import { tap, switchMap } from 'rxjs/operators';
 import { CsrfService } from './csrf.service';
-
+import { AuthService } from './auth.service';
 @Injectable({
     providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class UserService {
 
     private apiUrl = `${environment.baseUrl}`;
 
-    constructor(private http: HttpClient, private csrfService: CsrfService,) { }
+    constructor(private authService: AuthService,private http: HttpClient, private csrfService: CsrfService,) { }
 
     //  Actualización del perfil del usuario
     updateProfile(data: any): Observable<any> {
@@ -49,7 +49,13 @@ export class UserService {
         return this.csrfService.getCsrfToken().pipe(
             switchMap(csrfToken => {
                 const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
-                return this.http.delete(`${this.apiUrl}/users/delete-account`, { headers, withCredentials: true });
+                return this.http.delete(`${this.apiUrl}/users/delete-account`, { headers, withCredentials: true }).pipe(
+                    tap(() => {
+                        // Actualizar estado del usuario en AuthService
+                        this.authService.currentUserSubject.next(null);
+                        localStorage.removeItem('currentUser'); // Limpiar almacenamiento local
+                    })
+                );
             })
         );
     }
