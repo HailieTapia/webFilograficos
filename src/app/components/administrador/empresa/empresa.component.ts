@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EmpresaStateService } from '../../services/EmpresaStateService';
+import { noXSSValidator } from '../../shared/validators';
+
 @Component({
   selector: 'app-empresa',
   standalone: true,
@@ -32,26 +34,26 @@ export class EmpresaComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.companyForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      email: ['', [Validators.email]],
-      slogan: ['', [Validators.maxLength(100)]],
+      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100),noXSSValidator()]],
+      email: ['', [Validators.email,noXSSValidator()]],
+      slogan: ['', [Validators.maxLength(100),noXSSValidator()]],
       direccion: this.fb.group({
-        calle: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/), Validators.minLength(3), Validators.maxLength(100),]],
-        ciudad: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),]],
-        codigo_postal: ['', [Validators.pattern(/^\d{5}$/),]],
-        estado: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
-        pais: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
+        calle: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/), Validators.minLength(3), Validators.maxLength(100),noXSSValidator()]],
+        ciudad: ['', [Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
+        codigo_postal: ['', [Validators.pattern(/^\d{5}$/),noXSSValidator()]],
+        estado: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
+        pais: ['', [Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
       }),
       telefono: this.fb.group({
-        numero: ['', [Validators.pattern(/^\d{10}$/)]],
+        numero: ['', [Validators.pattern(/^\d{10}$/),noXSSValidator()]],
       }),
       redes_sociales: this.fb.group({
-        facebook: ['', [Validators.pattern('https?://.*')]],
-        instagram: ['', [Validators.pattern('https?://.*')]],
-        linkedin: ['', [Validators.pattern('https?://.*')]],
-        twitter: ['', [Validators.pattern('https?://.*')]]
+        facebook: ['', [Validators.pattern('https?://.*'),noXSSValidator()]],
+        instagram: ['', [Validators.pattern('https?://.*'),noXSSValidator()]],
+        linkedin: ['', [Validators.pattern('https?://.*'),noXSSValidator()]],
+        twitter: ['', [Validators.pattern('https?://.*'),noXSSValidator()]],
       }),
-      logo: ['']
+      logo: ['',noXSSValidator()],
     });
   }
 
