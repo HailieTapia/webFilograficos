@@ -80,6 +80,8 @@ export class RegulatorioService {
       switchMap(csrfToken => {
         const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
         return this.http.get<any>(`${this.apiUrl}/regulatory/version-history/${titulo}`, {
+          headers,
+          withCredentials: true
         });
       })
     );
