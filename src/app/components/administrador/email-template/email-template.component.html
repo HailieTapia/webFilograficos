@@ -51,11 +51,9 @@
         <mat-form-field appearance="outline">
           <mat-label>Nombre</mat-label>
           <input matInput formControlName="nombre" required />
-          <mat-error *ngIf="emailTemplateForm.get('nombre')?.hasError('required')">
-            El nombre es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="emailTemplateForm.get('nombre')?.hasError('xssDetected')">
-            El campo contiene caracteres no permitidos.
+          <mat-error *ngIf="emailTemplateForm.get('nombre')?.errors as errors">
+            <span *ngIf="errors['required']">El nombre es obligatorio.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
           </mat-error>
         </mat-form-field>
       
@@ -71,42 +69,36 @@
         <mat-form-field appearance="outline">
           <mat-label>Asunto</mat-label>
           <input matInput formControlName="asunto" required />
-          <mat-error *ngIf="emailTemplateForm.get('asunto')?.hasError('required')">
-            El asunto es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="emailTemplateForm.get('asunto')?.hasError('xssDetected')">
-            El campo contiene caracteres no permitidos.
+          <mat-error *ngIf="emailTemplateForm.get('asunto')?.errors as errors">
+            <span *ngIf="errors['required']">El asunto es obligatorio.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
           </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
           <mat-label>Contenido HTML</mat-label>
           <textarea matInput formControlName="contenido_html" required></textarea>
-          <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.hasError('required')">
-            El contenido HTML es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.hasError('xssDetected')">
-            El campo contiene caracteres no permitidos.
+          <mat-error *ngIf="emailTemplateForm.get('contenido_html')?.errors as errors">
+            <span *ngIf="errors['required']">El contenido es obligatorio.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
           </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
           <mat-label>Contenido Texto</mat-label>
           <textarea matInput formControlName="contenido_texto" required></textarea>
-          <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.hasError('required')">
-            El contenido de texto es obligatorio.
-          </mat-error>
-          <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.hasError('xssDetected')">
-            El campo contiene caracteres no permitidos.
+          <mat-error *ngIf="emailTemplateForm.get('contenido_texto')?.errors as errors">
+            <span *ngIf="errors['required']">El contenido es obligatorio.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
           </mat-error>
         </mat-form-field>
       
         <mat-form-field appearance="outline">
           <mat-label>Variables Requeridas (separadas por comas)</mat-label>
           <input matInput formControlName="variables" required>
-          <mat-error *ngIf="emailTemplateForm.get('variables')?.hasError('required')">Este campo es obligatorio.</mat-error>
-          <mat-error *ngIf="emailTemplateForm.get('variables')?.hasError('xssDetected')">
-            El campo contiene caracteres no permitidos.
+          <mat-error *ngIf="emailTemplateForm.get('variables')?.errors as errors">
+            <span *ngIf="errors['required']">El variables requeridas es obligatorio.</span>
+            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
           </mat-error>
         </mat-form-field>
         <div class="form-actions">

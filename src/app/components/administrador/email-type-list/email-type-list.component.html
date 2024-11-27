@@ -85,7 +85,6 @@
           <mat-form-field appearance="outline">
             <mat-label>Variables Requeridas (separadas por comas)</mat-label>
             <input matInput formControlName="variables_requeridas" required>
-
             <mat-error *ngIf="emailTypeForm.get('variables_requeridas')?.errors as errors">
               <span *ngIf="errors['required']">El variables requeridas es obligatorio.</span>
               <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
