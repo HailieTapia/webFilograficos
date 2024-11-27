@@ -182,7 +182,7 @@ export class RegulatoryDocumentComponent implements OnInit {
 
   // Eliminar un documento
   deleteDocument(documentId: string): void {
-    const snackBarRef = this.snackBar.open('¿Estás seguro de que quieres eliminar este documento?', 'Sí', {
+    const snackBarRef = this.snackBar.open('¿Estás seguro de que quieres eliminar este documento (Incluye todas las versiones)?', 'Sí', {
       duration: 4000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
@@ -209,6 +209,45 @@ export class RegulatoryDocumentComponent implements OnInit {
       if (!actionConfirmed) {
         this.snackBar.open('Eliminación cancelada', 'Cerrar', {
           duration: 3000
+        });
+      }
+    });
+  }
+  // Eliminar una versión de un documento
+  deleteDocumentVersion(documentId: string, version: string): void {
+    const snackBarRef = this.snackBar.open(
+      `¿Estás seguro de que quieres eliminar la versión ${version} de este documento?`, 
+      'Sí', 
+      {
+        duration: 4000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      }
+    );
+
+    let actionConfirmed = false;
+
+    snackBarRef.onAction().subscribe(() => {
+      this.documentService.deleteDocumentVersion(documentId, version).subscribe({
+        next: (response) => {
+          this.snackBar.open('Versión eliminada exitosamente', 'Cerrar', {
+            duration: 3000,
+          });
+          this.fetchAllDocuments(); // Actualiza la lista de documentos
+        },
+        error: (error) => {
+          this.snackBar.open('Error al eliminar la versión', 'Cerrar', {
+            duration: 3000,
+          });
+        },
+      });
+      actionConfirmed = true;
+    });
+
+    snackBarRef.afterDismissed().subscribe(() => {
+      if (!actionConfirmed) {
+        this.snackBar.open('Eliminación cancelada', 'Cerrar', {
+          duration: 3000,
         });
       }
     });
