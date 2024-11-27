@@ -63,9 +63,10 @@
         <mat-label>Calle</mat-label>
         <input matInput formControlName="calle" />
         <mat-error *ngIf="companyForm.get('direccion.calle')?.errors as errors">
-          <span *ngIf="errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
           <span *ngIf="errors['maxlength']">No puede exceder los 100 caracteres.</span>
-          <span *ngIf="errors['pattern']">La calle solo puede contener letras, números y los caracteres: , . :</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una calle válida.</span>
+          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
         </mat-error>
       </mat-form-field>
 
@@ -73,9 +74,9 @@
         <mat-label>Ciudad</mat-label>
         <input matInput formControlName="ciudad" />
         <mat-error *ngIf="companyForm.get('direccion.ciudad')?.errors as errors">
-          <span *ngIf="!errors['xssDetected'] && errors['minlength']">La ciudad debe tener al menos 2 caracteres.</span>
+          <span *ngIf="!errors['pattern'] && errors['minlength']">La ciudad debe tener al menos 2 caracteres.</span>
           <span *ngIf="!errors['xssDetected'] && errors['maxlength']">La ciudad no puede exceder los 50 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una ciudad válida con solo letras y espacios.</span>
+          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una ciudad válida.</span>
           <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
         </mat-error>
       </mat-form-field>
@@ -84,7 +85,7 @@
         <mat-label>Estado</mat-label>
         <input matInput formControlName="estado" />
         <mat-error *ngIf="companyForm.get('direccion.estado')?.errors as errors">
-          <span *ngIf="!errors['xssDetected'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
           <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
           <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un estado válido</span>
           <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
@@ -104,7 +105,7 @@
         <mat-label>País</mat-label>
         <input matInput formControlName="pais" />
         <mat-error *ngIf="companyForm.get('direccion.pais')?.errors as errors">
-          <span *ngIf="!errors['xssDetected'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
+          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
           <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
           <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un pais válido</span>
           <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
