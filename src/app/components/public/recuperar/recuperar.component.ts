@@ -52,7 +52,7 @@ export class RecuperarComponent {
       digit8: ['', Validators.required],
     });
     this.passwordForm = this.fb.group({
-      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this), noXSSValidator()]],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),noXSSValidator()], [this.checkPasswordCompromised.bind(this)]],
       confirmPassword: ['', [Validators.required, noXSSValidator()]],
     }, { validators: this.passwordMatchValidator });
   }

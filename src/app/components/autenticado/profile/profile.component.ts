@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
     });
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(8),noXSSValidator()]],
-      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this),noXSSValidator()]],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),noXSSValidator()], [this.checkPasswordCompromised.bind(this)]],
       confirmPassword: ['', [Validators.required,noXSSValidator()]],
     }, { validators: this.passwordMatchValidator });
   }
