@@ -15,6 +15,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Observable, of, catchError } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { noXSSValidator } from '../../shared/validators';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -41,11 +43,11 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      nombre: ['', [ Validators.required,  Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50)]],      
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
-      confirmPassword: ['', [Validators.required]],
+      nombre: ['', [ Validators.required,  Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50), noXSSValidator()]],     
+      email: ['', [Validators.required, Validators.email, noXSSValidator()]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/), noXSSValidator()]],
+      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this), noXSSValidator()]],
+      confirmPassword: ['', [Validators.required, noXSSValidator()]],
       tipo_usuario: ['cliente'],
       mfa_activado: [false],
     },
