@@ -93,7 +93,7 @@
           </mat-form-field>
 
           <div class="form-actions">
-            <button mat-raised-button color="primary" type="submit" class="submit-button">
+            <button mat-raised-button color="primary"  [disabled]="emailTypeForm.invalid" type="submit" class="submit-button">
               {{ editingEmailTypeId ? 'Actualizar' : 'Crear' }}
             </button>
             <button mat-button (click)="closeModal()" mat-dialog-close>Cancelar</button>
