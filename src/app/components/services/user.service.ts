@@ -65,11 +65,16 @@ export class UserService {
             switchMap(csrfToken => {
                 const headers = new HttpHeaders().set('x-csrf-token', csrfToken);
                 return this.http.put(`${this.apiUrl}/auth/change-password`, data,
-                    { headers, withCredentials: true }
-                );
-            })
-        );
-    }
+                    { headers, withCredentials: true }).pipe(
+                        tap(() => {
+                            // Actualizar estado del usuario en AuthService
+                            this.authService.currentUserSubject.next(null);
+                            localStorage.removeItem('currentUser'); // Limpiar almacenamiento local
+                        })
+                    );
+                })
+            );
+        }
     //NO USAREMOS
     // Eliminación de cuenta de cliente por administrador
     deleteCustomerAccount(id: string): Observable<any> {
