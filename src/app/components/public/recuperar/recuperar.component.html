@@ -9,12 +9,10 @@
                         <mat-label>Email</mat-label>
                         <input matInput type="email" formControlName="email" placeholder="Ingresa tu correo electrónico"
                             id="email" />
-                        <mat-error *ngIf="emailForm.get('email')?.hasError('required')">
-                            Por favor, ingresa tu correo electrónico.
-                        </mat-error>
-                        <mat-error
-                            *ngIf="emailForm.get('email')?.hasError('email') && !emailForm.get('email')?.hasError('required')">
-                            Asegúrate de usar un correo electrónico válido.
+                        <mat-error *ngIf="emailForm.get('email')?.errors as errors">
+                            <span *ngIf="errors['required']">El correo electrónico es obligatorio.</span>
+                            <span *ngIf="!errors['xssDetected'] && errors['email']">Ingresa un correo electrónico válido.</span>
+                            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
                         </mat-error>
                     </mat-form-field>
                     <button mat-button type="submit" [disabled]="emailForm.invalid" class="full-width">Enviar
@@ -48,17 +46,16 @@
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
-                        <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
-                            La contraseña es obligatoria.
-                        </mat-error>
-                        <mat-error
-                            *ngIf="passwordForm.get('newPassword')?.hasError('weakPassword') && !passwordForm.get('newPassword')?.hasError('required')">
-                            Por favor, utiliza una contraseña más segura.
-                        </mat-error>
-                        <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('compromised')">
-                            La contraseña ha sido comprometida, elige otra.
+                        <mat-error *ngIf="passwordForm.get('newPassword')?.errors as errors">
+                            <span *ngIf="errors['required']">El contraseña es obligatorio.</span>
+                            <span
+                                *ngIf="!errors['xssDetected'] && errors['weakPassword'] && !passwordForm.get('newPassword')?.hasError('required')">Por
+                                favor, utiliza una contraseña más segura.</span>
+                            <span *ngIf="errors['compromised']">La contraseña ha sido comprometida, elige otra.</span>
+                            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
                         </mat-error>
                     </mat-form-field>
+
                     <!-- Barra de fortaleza de la contraseña -->
                     <mat-progress-bar *ngIf="passwordStrength" mode="determinate" [value]="passwordStrengthValue"
                         [color]="passwordStrengthColor"></mat-progress-bar>
@@ -74,11 +71,10 @@
                             aria-label="Toggle password visibility">
                             <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                         </button>
-                        <mat-error *ngIf="passwordForm.hasError('mismatch')">
-                            Las contraseñas no coinciden.
-                        </mat-error>
-                        <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">
-                            La confirmación de la contraseña es obligatoria.
+                        <mat-error *ngIf="passwordForm.get('confirmPassword')?.errors as errors">
+                            <span *ngIf="errors['required']">La confirmación de contraseña es obligatoria.</span>
+                            <span *ngIf="errors['mismatch']"> Las contraseñas no coinciden.</span>
+                            <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
                         </mat-error>
                     </mat-form-field>
 

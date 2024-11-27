@@ -14,6 +14,8 @@ import { Observable, of, catchError } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PwnedService } from '../../services/pwned.service';
 import { map } from 'rxjs/operators';
+import { noXSSValidator } from '../../shared/validators';
+
 @Component({
   selector: 'app-recuperar',
   standalone: true,
@@ -37,7 +39,7 @@ export class RecuperarComponent {
   otpArray = ['digit1', 'digit2', 'digit3', 'digit4', 'digit5', 'digit6', 'digit7', 'digit8'];
   constructor(private pwnedService: PwnedService, private fb: FormBuilder, private snackBar: MatSnackBar, private authService: AuthService, private router: Router) {
     this.emailForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email, noXSSValidator()]],
     });
     this.tokenForm = this.fb.group({
       digit1: ['', Validators.required],
@@ -50,8 +52,8 @@ export class RecuperarComponent {
       digit8: ['', Validators.required],
     });
     this.passwordForm = this.fb.group({
-      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
-      confirmPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this), noXSSValidator()]],
+      confirmPassword: ['', [Validators.required, noXSSValidator()]],
     }, { validators: this.passwordMatchValidator });
   }
   // Validador personalizado para la fortaleza de la contraseña
@@ -125,17 +127,17 @@ export class RecuperarComponent {
     const confirmPasswordControl = form.get('confirmPassword');
 
     if (!newPasswordControl || !confirmPasswordControl) {
-      return null; 
+      return null;
     }
     const newPassword = newPasswordControl.value;
     const confirmPassword = confirmPasswordControl.value;
 
     if (newPassword !== confirmPassword) {
       confirmPasswordControl.setErrors({ mismatch: true });
-      return { mismatch: true }; 
+      return { mismatch: true };
     } else {
       if (confirmPasswordControl.hasError('mismatch')) {
-        confirmPasswordControl.setErrors(null); 
+        confirmPasswordControl.setErrors(null);
       }
       return null;
     }
