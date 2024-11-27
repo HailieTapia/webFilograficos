@@ -14,6 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PwnedService } from '../../services/pwned.service';
 import { Observable, of, catchError } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { noXSSValidator } from '../../shared/validators';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-profile',
@@ -51,20 +52,20 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) {
     this.PerfilForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50),noXSSValidator()]],
       email: [''],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/),noXSSValidator()]],
     });
     this.addressForm = this.fb.group({
-      calle: ['', [Validators.required,Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/),Validators.minLength(3),Validators.maxLength(100),]],
-      ciudad: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),]],
-      codigo_postal: ['', [Validators.required, Validators.pattern(/^\d{5}$/),]],
-      estado: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),]],
+      calle: ['', [Validators.required,Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/),Validators.minLength(3),Validators.maxLength(100),noXSSValidator()]],
+      ciudad: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
+      codigo_postal: ['', [Validators.required, Validators.pattern(/^\d{5}$/),noXSSValidator()]],
+      estado: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
     });
     this.passwordForm = this.fb.group({
-      currentPassword: ['', [Validators.required, Validators.minLength(8)]],
-      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this)],],
-      confirmPassword: ['', [Validators.required]],
+      currentPassword: ['', [Validators.required, Validators.minLength(8),noXSSValidator()]],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this),noXSSValidator()]],
+      confirmPassword: ['', [Validators.required,noXSSValidator()]],
     }, { validators: this.passwordMatchValidator });
   }
 
