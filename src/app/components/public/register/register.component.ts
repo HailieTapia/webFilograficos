@@ -46,7 +46,7 @@ export class RegisterComponent {
       nombre: ['', [ Validators.required,  Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50), noXSSValidator()]],     
       email: ['', [Validators.required, Validators.email, noXSSValidator()]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/), noXSSValidator()]],
-      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),], [this.checkPasswordCompromised.bind(this), noXSSValidator()]],
+      password: ['', [Validators.required, this.passwordStrengthValidator.bind(this),noXSSValidator()], [this.checkPasswordCompromised.bind(this)]],
       confirmPassword: ['', [Validators.required, noXSSValidator()]],
       tipo_usuario: ['cliente'],
       mfa_activado: [false],
