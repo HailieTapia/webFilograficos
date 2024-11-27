@@ -171,7 +171,7 @@ export class ProfileComponent implements OnInit {
         next: (response) => {
           this.snackBar.open('Contraseña cambiada con éxito', 'Cerrar', { duration: 3000 });
           this.closeModal();
-          console.log(response);
+          this.router.navigate(['/login']);
         },
         error: (error) => {
           this.resetPasswordFields();
