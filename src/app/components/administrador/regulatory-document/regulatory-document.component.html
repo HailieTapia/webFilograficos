@@ -90,12 +90,6 @@
             name="contenido" required #contenido="ngModel"></textarea>
           <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha de Vigencia</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="newDocument.fecha_vigencia" name="fecha_vigencia">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
 
         <div class="form-actions">
           <button mat-raised-button color="primary" type="submit" [disabled]="!documentForm.form.valid">Crear</button>
@@ -125,13 +119,6 @@
           <textarea matInput placeholder="Contenido del documento en Markdown" [(ngModel)]="newDocument.contenido"
             name="contenido" required #contenido="ngModel"></textarea>
           <mat-error *ngIf="contenido.invalid && contenido.touched">El contenido es obligatorio.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha de Vigencia</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="newDocument.fecha_vigencia" name="fecha_vigencia">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
         <div class="form-actions">
