@@ -15,11 +15,15 @@ import { PwnedService } from '../../services/pwned.service';
 import { Observable, of, catchError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { noXSSValidator } from '../../shared/validators';
+import { CopomexService } from '../../services/compomex.service';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MatProgressBarModule, MatCardModule, MatButtonModule, MatIconModule, MatInputModule, ReactiveFormsModule, MatFormFieldModule, MatProgressSpinnerModule, CommonModule, FormsModule],
+  imports: [MatOptionModule, MatSelectModule, MatProgressBarModule, MatCardModule, MatButtonModule, MatIconModule, MatInputModule, ReactiveFormsModule, MatFormFieldModule, MatProgressSpinnerModule, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css', '../../estilos/spinner.css', '../../estilos/snackbar.css']
 })
@@ -44,7 +48,12 @@ export class ProfileComponent implements OnInit {
   addressForm: FormGroup;
   passwordForm: FormGroup;
 
-  constructor(
+  estados: any[] = [];
+  cp: string[] = [];
+  selectedEstado: string = '';
+  selectedCp: string = '';
+
+  constructor(private copomexService: CopomexService,
     private fb: FormBuilder,
     private userService: UserService,
     private pwnedService: PwnedService,
@@ -52,25 +61,53 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) {
     this.PerfilForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50),noXSSValidator()]],
+      nombre: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(3), Validators.maxLength(50), noXSSValidator()]],
       email: [''],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/),noXSSValidator()]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/), noXSSValidator()]],
     });
     this.addressForm = this.fb.group({
-      calle: ['', [Validators.required,Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/),Validators.minLength(3),Validators.maxLength(100),noXSSValidator()]],
-      ciudad: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ ]+$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
-      codigo_postal: ['', [Validators.required, Validators.pattern(/^\d{5}$/),noXSSValidator()]],
-      estado: ['', [Validators.required, Validators.pattern(/^(?! )[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+(?: [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ]+)*$/), Validators.minLength(2), Validators.maxLength(50),noXSSValidator()]],
+      calle: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+( [a-zA-ZáéíóúÁÉÍÓÚñÑäöüÄÖÜ0-9,.:]+)*$/), Validators.minLength(3), Validators.maxLength(100), noXSSValidator()]],
+      codigo_postal: ['',[Validators.required]],
+      estado: ['',[Validators.required]],
     });
     this.passwordForm = this.fb.group({
-      currentPassword: ['', [Validators.required, Validators.minLength(8),noXSSValidator()]],
-      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this),noXSSValidator()], [this.checkPasswordCompromised.bind(this)]],
-      confirmPassword: ['', [Validators.required,noXSSValidator()]],
+      currentPassword: ['', [Validators.required, Validators.minLength(8), noXSSValidator()]],
+      newPassword: ['', [Validators.required, this.passwordStrengthValidator.bind(this), noXSSValidator()], [this.checkPasswordCompromised.bind(this)]],
+      confirmPassword: ['', [Validators.required, noXSSValidator()]],
     }, { validators: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
     this.getProfile();
+    this.loadEstados();
+    this.loadCpPorEstado(this.selectedEstado);
+  }
+  // Cargar los códigos postales según el estado seleccionado
+  loadCpPorEstado(estado: string): void {
+    if (!estado) {
+      this.cp = [];
+      return;
+    }
+
+    this.copomexService.getCpPorEstado(estado).subscribe({
+      next: (response) => {
+        this.cp = response.response.cp;
+      },
+      error: (err) => {
+        console.error('Error al cargar códigos postales:', err);
+      },
+    });
+  }
+  // Cargar la lista de estados desde el servicio
+  loadEstados(): void {
+    this.copomexService.getEstados().subscribe({
+      next: (response) => {
+        this.estados = response.response.estado;
+      },
+      error: (err) => {
+        console.error('Error al cargar estados:', err);
+      },
+    });
   }
 
   // Validador personalizado para la fortaleza de la contraseña
@@ -193,7 +230,6 @@ export class ProfileComponent implements OnInit {
           telefono: data?.telefono || '',
           direccion: {
             calle: data?.direccion?.calle || '',
-            ciudad: data?.direccion?.ciudad || '',
             estado: data?.direccion?.estado || '',
             codigo_postal: data?.direccion?.codigo_postal || '',
           },
@@ -235,11 +271,10 @@ export class ProfileComponent implements OnInit {
     this.isLoading = true;
     if (this.addressForm.valid) {
       const calle = this.addressForm.value.calle;
-      const ciudad = this.addressForm.value.ciudad;
       const codigo_postal = this.addressForm.value.codigo_postal;
       const estado = this.addressForm.value.estado;
 
-      const credentials = { calle, ciudad, codigo_postal, estado };
+      const credentials = { calle, codigo_postal, estado };
       this.userService.updateUserProfile(credentials).subscribe({
         next: () => {
           this.isLoading = false;
