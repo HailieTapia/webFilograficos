@@ -21,7 +21,7 @@
         <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
       </mat-error>
     </mat-form-field>
-    
+
     <div class="form-field logo-upload">
       <label class="upload-label">Logo de la Empresa</label>
       <div class="upload-button-container">
@@ -71,45 +71,21 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Ciudad</mat-label>
-        <input matInput formControlName="ciudad" />
-        <mat-error *ngIf="companyForm.get('direccion.ciudad')?.errors as errors">
-          <span *ngIf="!errors['pattern'] && errors['minlength']">La ciudad debe tener al menos 2 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">La ciudad no puede exceder los 50 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce una ciudad válida.</span>
-          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-field">
         <mat-label>Estado</mat-label>
-        <input matInput formControlName="estado" />
-        <mat-error *ngIf="companyForm.get('direccion.estado')?.errors as errors">
-          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un estado válido</span>
-          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
-        </mat-error>
+        <mat-select [(value)]="selectedEstado" (selectionChange)="loadCpPorEstado(selectedEstado)">
+          <mat-option *ngFor="let estado of estados" [value]="estado">
+            {{ estado }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Código Postal</mat-label>
-        <input matInput formControlName="codigo_postal" maxlength="5" />
-        <mat-error *ngIf="companyForm.get('direccion.codigo_postal')?.errors as errors">
-          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un código postal válido</span>
-          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>País</mat-label>
-        <input matInput formControlName="pais" />
-        <mat-error *ngIf="companyForm.get('direccion.pais')?.errors as errors">
-          <span *ngIf="!errors['pattern'] && errors['minlength']">Debe tener al menos 3 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['maxlength']">No puede exceder los 50 caracteres.</span>
-          <span *ngIf="!errors['xssDetected'] && errors['pattern']">Introduce un pais válido</span>
-          <span *ngIf="errors['xssDetected']">El campo contiene caracteres no permitidos.</span>
-        </mat-error>
+        <mat-select [(value)]="selectedCp">
+          <mat-option *ngFor="let codigo of cp" [value]="codigo">
+            {{ codigo }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 
