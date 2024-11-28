@@ -28,6 +28,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class RegulatoryDocumentComponent implements OnInit {
   @ViewChild('updateModal', { static: true }) updateModal!: TemplateRef<any>;
   @ViewChild('versionHistoryModal', { static: true }) versionHistoryModal!: TemplateRef<any>;
+  today: string = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+
   versionHistory: any[] = [];
   displayedColumnsH: string[] = ['version', 'contenido'];
 
