@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
       const url = `${this.baseUrl}/get_estados`;
       const params = new HttpParams().set('token', this.token);
       return this.http.get(url, { params });
+      
     }
   
     getCpPorEstado(estado: string): Observable<any> {
