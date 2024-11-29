@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   })
   export class CopomexService {
     private baseUrl = 'https://api.copomex.com/query';
-    private token = ''; 
+    private token = '546aa990-8984-4ae7-bd96-8accbb6efd4b'; 
   
     constructor(private http: HttpClient) {}
   
