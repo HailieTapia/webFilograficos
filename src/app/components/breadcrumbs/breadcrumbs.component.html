@@ -1,0 +1,15 @@
+<nav *ngIf="breadcrumbs.length" class="breadcrumb-container">
+  <ol class="breadcrumb">
+    <li *ngFor="let crumb of breadcrumbs; let last = last" class="breadcrumb-item" [class.active]="last">
+      <ng-container *ngIf="!last; else lastCrumb">
+        <a [routerLink]="['/' + crumb.toLowerCase()]">
+          {{ crumb }}
+        </a>
+        <span class="breadcrumb-separator">›</span>
+      </ng-container>
+      <ng-template #lastCrumb>
+        <span class="breadcrumb-current">{{ crumb }}</span>
+      </ng-template>
+    </li>
+  </ol>
+</nav>
