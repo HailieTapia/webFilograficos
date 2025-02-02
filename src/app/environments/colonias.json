@@ -1,0 +1,233 @@
+{
+    "colonias": [
+        {
+            "categoria": "Barrio",
+            "nombre": "Asta Bandera"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Cerro de las Animas"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Corregidora"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Cruz de los Ciegos"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "El Lobo"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "El lucero"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "El mosco"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Jardín colón"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "La alcantarilla"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "La españita"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "La surtidora"
+        },        
+        {
+            "categoria": "Barrio",
+            "nombre": "Las lajas"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Las lanchitas"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Patoni"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "San clemente"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "San francisco"
+        },
+        {
+            "categoria": "Barrio",
+            "nombre": "Santiago y arizpe"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Adolfo López Mateos 1ra Sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Adolfo López Mateos 3ra Sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Ampliación Felipe Ángeles"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Anáhuac"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Bulevares de san francisco"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Cabañitas"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Cerro de cubitos"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Cespedes"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Ciudad de los niños"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Colonias"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Cubitos"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Doctores"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Tezontle"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Ex-Hacienda de guadalupe"
+        },        {
+            "categoria": "Colonia",
+            "nombre": "Francisco I.Madero"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Guadalupe 1ra sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Guadalupe 2ra sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "ISSSTE"
+        },        
+        {
+            "categoria": "Colonia",
+            "nombre": "Jardín Colon"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Jorge rojo lugo"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Nueva Francisco I.Madero"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Las palmitas"
+        },       
+        {
+            "categoria": "Colonia",
+            "nombre": "Parque hidalgo"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Pirules"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "San Antonio"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "San Antonio Buenos Aires"
+        },      
+        {
+            "categoria": "Colonia",
+            "nombre": "Venta prieta"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Adolfo López Mateos 3ra Sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "La raza"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Adolfo López Mateos 2ra Sección"
+        },
+
+        {
+            "categoria": "Colonia",
+            "nombre": "Felipe Angeles"
+        },
+
+        {
+            "categoria": "Colonia",
+            "nombre": "Felipe Angeles 1ra sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Felipe Angeles 2ra sección"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Los rajes"
+        },
+        {
+            "categoria": "Colonia",
+            "nombre": "Rinconada de san francisco"
+        },
+        {
+            "categoria": "Fraccionamiento",
+            "nombre": "18 de Marzo"
+        },
+        {
+            "categoria": "Fraccionamiento",
+            "nombre": "20 de Noviembre"
+        },
+        {
+            "categoria": "Fraccionamiento",
+            "nombre": "Arboledas de santa elena"
+        },
+        {
+            "categoria": "Fraccionamiento",
+            "nombre": "Bosques del Peñar"
+        },
+        {
+            "categoria": "Fraccionamiento",
+            "nombre": "Club de Golf"
+        }
+    ]
+}

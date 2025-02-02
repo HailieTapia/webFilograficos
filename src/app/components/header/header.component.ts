@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router ,NavigationEnd} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { EmpresaService } from '../services/empresaService';
 import { MatMenuModule } from '@angular/material/menu';
@@ -25,7 +25,15 @@ export class HeaderComponent implements OnInit {
   companyInfo: any = null;
   isMenuOpen = false;
   logoPreview: string | ArrayBuffer | null = null;
-  constructor(private empresaStateService: EmpresaStateService, private authService: AuthService, private router: Router, private empresaService: EmpresaService) { }
+  constructor(private empresaStateService: EmpresaStateService, private authService: AuthService, private router: Router, private empresaService: EmpresaService) 
+  {
+    // Escuchar cambios de ruta
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isMenuOpen = false; // Cerrar el menú al cambiar de ruta
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.empresaStateService.getCompanyInfo().subscribe(company => {

@@ -1,9 +1,112 @@
-<div class="home-container">
-  <p class="welcome-text">BIENVENIDO A NUESTRO NEGOCIO</p>
-  <div class="bubbles">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+<div class="min-h-screen bg-gray-100">
+  <!-- Banner Principal -->
+  <div class="bg-cover bg-center h-96 flex items-center justify-center" style="background-image: url('https://via.placeholder.com/1500x500');">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-white mb-4">Crea productos únicos que reflejen tu estilo</h1>
+      <p class="text-xl text-white mb-8">Personaliza tus artículos favoritos en minutos.</p>
+      <a href="/registro" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300">
+        Comienza ahora
+      </a>
+    </div>
+  </div>
+
+  <!-- Categorías de Productos -->
+  <div class="container mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-center mb-8">Explora nuestras categorías</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Categoría 1 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/400x300" alt="Tazas personalizadas" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Tazas personalizadas</h3>
+          <p class="text-gray-600">Diseña tu taza con tus imágenes y textos favoritos.</p>
+        </div>
+      </div>
+      <!-- Categoría 2 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/400x300" alt="Camisetas únicas" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Camisetas únicas</h3>
+          <p class="text-gray-600">Crea camisetas con diseños exclusivos.</p>
+        </div>
+      </div>
+      <!-- Categoría 3 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/400x300" alt="Llaveros personalizados" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Llaveros personalizados</h3>
+          <p class="text-gray-600">Diseña llaveros con tus fotos o mensajes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Productos -->
+  <div class="container mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-center mb-8">Nuestros productos destacados</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Producto 1 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/300x300" alt="Producto 1" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Taza personalizada</h3>
+          <p class="text-gray-600 mb-4">$250 MXN</p>
+          <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            Ver detalles
+          </button>
+        </div>
+      </div>
+      <!-- Producto 2 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/300x300" alt="Producto 2" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Camiseta única gris</h3>
+          <p class="text-gray-600 mb-4">$300 MXN</p>
+          <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            Ver detalles
+          </button>
+        </div>
+      </div>
+      <!-- Producto 3 -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/300x300" alt="Producto 3" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Llavero personalizado</h3>
+          <p class="text-gray-600 mb-4">$100 MXN</p>
+          <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            Ver detalles
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/300x300" alt="Producto 4" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Llavero personalizado</h3>
+          <p class="text-gray-600 mb-4">$100 MXN</p>
+          <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            Ver detalles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="flex justify-center mt-8">
+      <button class="bg-gray-200 text-gray-700 px-4 py-2 mx-1 rounded-lg hover:bg-gray-300">1</button>
+      <button class="bg-gray-200 text-gray-700 px-4 py-2 mx-1 rounded-lg hover:bg-gray-300">2</button>
+      <button class="bg-gray-200 text-gray-700 px-4 py-2 mx-1 rounded-lg hover:bg-gray-300">3</button>
+    </div>
+  </div>
+
+  <!-- Recordatorio de Registro -->
+  <div class="bg-blue-600 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-2xl font-bold mb-4">¿Listo para comprar?</h2>
+      <p class="mb-6">Regístrate ahora para comenzar a personalizar y adquirir tus productos.</p>
+      <a href="/registro" class="bg-white text-blue-500 px-6 py-3 rounded-lg hover:bg-gray-100 transition duration-300">
+        Regístrate gratis
+      </a>
+    </div>
   </div>
 </div>
