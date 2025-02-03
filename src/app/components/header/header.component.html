@@ -1,90 +1,96 @@
 <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-  <nav class="container mx-auto flex justify-between items-center py-4 px-6">
+  <nav class="container mx-auto flex justify-between items-center py-2 px-6">
     <!-- Logo -->
     <div class="flex items-center space-x-2">
       <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" class="h-12 w-12">
-      <span class="text-2xl font-bold bg-gradient-to-r from-sky-600 to-green-500 bg-clip-text text-transparent font-sans">
+      <span
+        class="text-2xl font-bold bg-gradient-to-r from-sky-600 to-green-500 bg-clip-text text-transparent font-sans">
         {{ companyInfo?.nombre || 'Filográficos' }}
       </span>
     </div>
 
-    <!-- Menú de navegación -->
-    <div class="hidden md:flex">
-      <ul class="flex space-x-6 text-gray-600">
-        <li>
-          <a routerLink="/" routerLinkActive="active" class="hover:text-green-500 transition-colors duration-200">Inicio</a>
-        </li>
-        <li>
-          <a routerLink="/productos" routerLinkActive="active" class="hover:text-green-500 transition-colors duration-200">Productos</a>
-        </li>
-        <li>
-          <a routerLink="/categorias" routerLinkActive="active" class="hover:text-green-500 transition-colors duration-200">Categorías</a>
-        </li>
-        <div class="relative group">
-          <!-- Botón o ícono que activa la tarjeta -->
-          <button class="text-gray-600 hover:text-green-500 focus:outline-none transition duration-200">
-            <a>Contacto</a>
-          </button>
-        
-          <!-- Tarjeta de Contacto (se muestra al hacer hover o clic) -->
-          <div class="absolute left-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-4 hidden group-hover:block">
-            <h3 class="text-xs font-semibold text-gray-800 mb-4">Contáctanos</h3>
-        
-            <!-- Horario de atención -->
-            <div class="flex items-center space-x-3 mb-3">
-              <mat-icon class="text-gray-500">schedule</mat-icon>
-              <p class="text-sm text-gray-600">Lunes a Viernes: 9:00 AM - 6:00 PM</p>
-            </div>
-        
-            <!-- Teléfono -->
-            <a href="tel:+525512345678" class="flex items-center space-x-3 mb-3 hover:text-blue-500 transition duration-200">
-              <mat-icon class="text-gray-500">phone</mat-icon>
-              <p class="text-sm text-gray-600">+52 55 1234 5678</p>
-            </a>
-        
-            <!-- Correo electrónico -->
-            <a href="mailto:contacto@filograficos.com" class="flex items-center space-x-3 hover:text-blue-500 transition duration-200">
-              <mat-icon class="text-gray-500">email</mat-icon>
-              <p class="text-sm text-gray-600">contactofilograficos.com</p>
-            </a>
-          </div>
-        </div>
-      </ul>
+    <!-- Barra de búsqueda -->
+    <div class="flex-1 mx-10">
+      <input type="text" placeholder="Buscar productos..."
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
     </div>
 
-    <!-- Botones de Sesión / Menú para usuario autenticado -->
+    <!-- Iconos -->
     <div class="flex items-center space-x-4">
       <ng-container *ngIf="!tipoUsuario">
-        <a routerLink="/registro" class="bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700 transition-colors duration-200">Registro</a>
-        <a routerLink="/login" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200">Iniciar Sesión</a>
+        <a routerLink="/login" class="text-cyan-900 hover:text-green-500 transition-colors duration-200">
+          <i class="material-icons">account_circle</i>
+        </a>
+        <a routerLink="/registro" class="text-cyan-900 hover:text-green-500 transition-colors duration-200">
+          <i class="material-icons">person_add</i>
+        </a>
       </ng-container>
 
       <ng-container *ngIf="tipoUsuario">
         <!-- Menú desplegable -->
+        <a routerLink="/carrito" class="text-gray-700 hover:text-green-500 transition-colors duration-200">
+          <i class="material-icons">shopping_cart</i>
+        </a>
         <div class="relative">
-          <button (click)="toggleMenu()" class="text-gray-700 hover:text-green-500 focus:outline-none transition-colors duration-200">
+          <button (click)="toggleMenu()"
+            class="text-gray-700 hover:text-green-500 focus:outline-none transition-colors duration-200">
             <i class="material-icons">menu</i>
           </button>
 
-          <div *ngIf="isMenuOpen" class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-100">
+          <div *ngIf="isMenuOpen"
+            class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-100">
             <ng-container *ngIf="tipoUsuario === 'cliente'">
-              <a routerLink="/homecliente" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Inicio</a>
-              <a routerLink="/perfil" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Mi Perfil</a>
-              <button (click)="logout()" class="block w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Cerrar Sesión</button>
+              <a routerLink="/homecliente"
+                class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Inicio</a>
+              <a routerLink="/perfil" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Mi
+                Perfil</a>
+              <button (click)="logout()"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Cerrar
+                Sesión</button>
             </ng-container>
 
             <ng-container *ngIf="tipoUsuario === 'administrador'">
-              <a routerLink="/homeadmin" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Inicio</a>
-              <a routerLink="/empresa" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Panel de Empresa</a>
-              <a routerLink="/incidencia" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Incidencias</a>
-              <a routerLink="/type" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Tipo de Correo</a>
-              <a routerLink="/plantilla" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Plantillas de Correo</a>
-              <a routerLink="/regulatorio" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Documento Regulatorio</a>
-              <button (click)="logout()" class="block w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Cerrar Sesión</button>
+              <a routerLink="/homeadmin"
+                class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Inicio</a>
+              <a routerLink="/empresa" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Panel
+                de Empresa</a>
+              <a routerLink="/incidencia"
+                class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Incidencias</a>
+              <a routerLink="/type" class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Tipo de
+                Correo</a>
+              <a routerLink="/plantilla"
+                class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Plantillas de Correo</a>
+              <a routerLink="/regulatorio"
+                class="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Documento Regulatorio</a>
+              <button (click)="logout()"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors duration-200">Cerrar
+                Sesión</button>
             </ng-container>
           </div>
         </div>
       </ng-container>
     </div>
   </nav>
+
+  <!-- Menú de navegación -->
+  <div class="bg-white shadow-md">
+    <nav class="container mx-auto flex justify-left py-1 space-x-8 text-gray-700 font-normal">
+      <!-- Categorías -->
+      <div class="relative group">
+        <button class="flex items-center gap-1 px-4 py-2 hover:text-green-600">
+          Categorías <span class="material-icons text-sm">expand_more</span>
+        </button>
+        <div
+          class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden group-hover:block">
+          <a routerLink="/categoria1" class="block px-4 py-2 hover:bg-gray-100">Categoría 1</a>
+          <a routerLink="/categoria2" class="block px-4 py-2 hover:bg-gray-100">Categoría 2</a>
+          <a routerLink="/categoria3" class="block px-4 py-2 hover:bg-gray-100">Categoría 3</a>
+        </div>
+      </div>
+
+      <a routerLink="/home" class="px-4 py-2 hover:text-green-600">Productos Estándar</a>
+      <a routerLink="/homecliente" class="px-4 py-2 hover:text-green-600">Personalizables</a>
+      <a routerLink="/ofertas" class="px-4 py-2 hover:text-green-600">Ofertas</a>
+    </nav>
+  </div>
 </header>
